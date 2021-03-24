@@ -1,8 +1,8 @@
 # iOS Dependency Injection
 
-The lightweight library for dependency management in Swift
+The lightweight library for dependency injection in Swift
 
-## Instalation
+## Installation
 
 TBD
 
