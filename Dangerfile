@@ -6,7 +6,7 @@
 declared_trivial = github.pr_title.include?("#trivial") || github.pr_title.include?("[WIP]") || github.pr_body.include?("#trivial")
 
 # Uncomment following lines if you want to enforce CHANGELOG updates
-if git.lines_of_code > 50 && !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
+if git.lines_of_code > 50 && !git.modified_files.include?("CHANGELOG.md") && !git.added_files.include?("CHANGELOG.md") && !declared_trivial
     fail("No CHANGELOG changes made")
 end
 
