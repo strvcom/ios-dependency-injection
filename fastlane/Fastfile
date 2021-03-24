@@ -1,0 +1,9 @@
+default_platform(:ios)
+
+desc "Run tests"
+lane :tests do
+    spm(
+      command: "test",
+      enable_code_coverage: "true"
+    )
+end
