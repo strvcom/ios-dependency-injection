@@ -1,0 +1,48 @@
+### Integrations workflow ###
+#
+# Runs Danger checks, Swiftlint and tests.
+# 
+# github.token - is automatically assigned to your workflow by Github
+#
+# Note: To enable Fastlane tests, make sure that `CommonFastfile` is imported in Fastfile from the shared ios-fastlane repository.
+#
+
+name: Integrations
+
+# - by default this workflow is triggered on every change in a pull request - this can have cost implications when running on macos-latest
+# - read about other possible triggers on https://help.github.com/en/actions/reference/events-that-trigger-workflows
+on:
+  pull_request:
+      types: [opened, edited, reopened, synchronize]
+
+jobs:
+  integrations:
+    # runs-on: macos-latest # use this for repos outside of the STRV Github org
+    runs-on: [self-hosted, macOS, ios-integrations]
+    timeout-minutes: 10
+    steps:
+
+      # cancel in-progress integrations - not yet supported by Github Actions out of the box
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
+      # checkout the project repository
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      # install dependencies from Gemfile & CocoaPods
+      - name: Dependencies
+        run: |
+          bundle install
+
+      # run Danger
+      - name: Run Danger
+        run: bundle exec danger --fail-on-errors=true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # run tests
+      - name: Run tests
+        run: bundle exec fastlane tests
