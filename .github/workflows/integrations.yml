@@ -36,7 +36,6 @@ jobs:
       - name: Dependencies
         run: |
           bundle install
-          bundle exec fastlane install_dependencies
 
       # run Danger
       - name: Run Danger
