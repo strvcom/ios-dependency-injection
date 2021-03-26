@@ -10,11 +10,25 @@ import Foundation
 struct Registration {
     let identifier: RegistrationIdentfier
     let scope: DependencyScope
-    let factory: (DependencyResolving) -> Any
-    
+    let factory: (DependencyWithArgumentResolving, Any?) throws -> Any
+
     init<T>(type: T.Type, scope: DependencyScope, identifier: String?, factory: @escaping (DependencyResolving) -> T) {
         self.identifier = RegistrationIdentfier(type: type, identifier: identifier)
         self.scope = scope
-        self.factory = factory
+        self.factory = { resolver, _ in factory(resolver) }
+    }
+
+    init<T, Argument>(type: T.Type, scope: DependencyScope, identifier: String?, factory: @escaping (DependencyWithArgumentResolving, Argument) -> T) {
+        let registrationIdentifier = RegistrationIdentfier(type: type, identifier: identifier)
+        
+        self.identifier = registrationIdentifier
+        self.scope = scope
+        self.factory = { resolver, arg in
+            guard let argument = arg as? Argument else {
+                throw ResolvingError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept an argument of type \(Argument.self)")
+            }
+            
+            return factory(resolver, argument)
+        }
     }
 }

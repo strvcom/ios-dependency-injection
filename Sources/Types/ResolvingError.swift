@@ -9,14 +9,17 @@ import Foundation
 
 public enum ResolvingError: Error {
     case dependencyNotRegistered(message: String)
-    case unmatchingType(message: String)
-    
+    case unmatchingDependencyType(message: String)
+    case unmatchingArgumentType(message: String)
+
     var localizedDescription: String {
         switch self {
         case .dependencyNotRegistered(let message):
-            return message
-        case .unmatchingType(let message):
-            return message
+            return "Dependency not registered: \(message)"
+        case .unmatchingDependencyType(let message):
+            return "Unmatching dependency type: \(message)"
+        case .unmatchingArgumentType(let message):
+            return "Unmatching argument type: \(message)"
         }
     }
 }

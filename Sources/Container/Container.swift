@@ -40,7 +40,7 @@ public extension Container {
         }
     }
 
-    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, factory: @escaping (DependencyResolving) -> T) {
+    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, factory: @escaping Resolver<T>) {
         shared.register(type: type, in: scope, with: identifier, factory: factory)
     }
     
@@ -48,14 +48,28 @@ public extension Container {
         shared.register(type: type, in: scope, with: identifier, factory: { _ -> T in dependency() })
     }
     
+    static func register<T, Argument>(type: T.Type = T.self, with identifier: String? = nil, factory: @escaping ResolverWithArgument<T, Argument>) {
+        shared.register(type: type, with: identifier, factory: factory)
+    }
+    
     static func resolve<T>(type: T.Type = T.self, with identifier: String? = nil) -> T {
         shared.resolve(type: type, with: identifier)
+    }
+    
+    static func resolve<T, Argument>(type: T.Type = T.self, with identifier: String? = nil, argument: Argument) -> T {
+        shared.resolve(type: type, with: identifier, argument: argument)
     }
 }
 
 // MARK: Register
-extension Container: DependencyRegistering {
-    open func register<T>(type: T.Type, in scope: DependencyScope, with identifier: String?, factory: @escaping (DependencyResolving) -> T) {
+extension Container: DependencyWithArgumentRegistering {
+    public func register<T, Argument>(type: T.Type, with identifier: String?, factory: @escaping ResolverWithArgument<T, Argument>) {
+        let registration = Registration(type: type, scope: .new, identifier: identifier, factory: factory)
+        
+        registrations[registration.identifier] = registration
+    }
+    
+    open func register<T>(type: T.Type, in scope: DependencyScope, with identifier: String?, factory: @escaping Resolver<T>) {
         let registration = Registration(type: type, scope: scope, identifier: identifier, factory: factory)
         
         registrations[registration.identifier] = registration
@@ -63,38 +77,60 @@ extension Container: DependencyRegistering {
 }
 
 // MARK: Resolve
-extension Container: DependencyResolving {
+extension Container: DependencyWithArgumentResolving {
+    open func tryResolve<T, Argument>(type: T.Type, with identifier: String?, argument: Argument) throws -> T {
+        let identifier = RegistrationIdentfier(type: type, identifier: identifier)
+
+        let registration = try getRegistration(with: identifier)
+        
+        let dependency: T = try getDependency(from: registration, with: argument)
+
+        return dependency
+    }
+    
     open func tryResolve<T>(type: T.Type, with identifier: String?) throws -> T {
         let identifier = RegistrationIdentfier(type: type, identifier: identifier)
+
+        let registration = try getRegistration(with: identifier)
         
+        let dependency: T = try getDependency(from: registration)
+        
+        return dependency
+    }
+    
+    private func getRegistration(with identifier: RegistrationIdentfier) throws -> Registration {
         guard let registration = registrations[identifier] else {
             throw ResolvingError.dependencyNotRegistered(
                 message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
             )
         }
         
+        return registration
+    }
+    
+    private func getDependency<T>(from registration: Registration, with argument: Any? = nil) throws -> T {
         switch registration.scope {
         case .shared:
-            if let dependency = sharedInstances[identifier] as? T {
+            if let dependency = sharedInstances[registration.identifier] as? T {
                 return dependency
             }
         case .new:
             break
         }
         
-        guard let dependency = registration.factory(self) as? T else {
-            throw ResolvingError.unmatchingType(
-                message: "Registration of type \(identifier.description) doesn't return an instance of type \(type)"
+        guard let dependency = try registration.factory(self, argument) as? T else {
+            throw ResolvingError.unmatchingDependencyType(
+                message: "Registration of type \(registration.identifier.description) doesn't return an instance of type \(T.self)"
             )
         }
         
         switch registration.scope {
         case .shared:
-            sharedInstances[identifier] = dependency
+            sharedInstances[registration.identifier] = dependency
         case .new:
             break
         }
-        
+
         return dependency
     }
 }

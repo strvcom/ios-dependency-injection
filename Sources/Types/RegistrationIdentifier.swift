@@ -10,10 +10,18 @@ import Foundation
 struct RegistrationIdentfier {
     let typeIdentifier: ObjectIdentifier
     let customIdentifier: String?
+    let argumentIdentifiers: ObjectIdentifier?
+    
+    init<T, Argument>(type: T.Type, identifier: String?, argument: Argument.Type) {
+        self.typeIdentifier = ObjectIdentifier(type)
+        self.customIdentifier = identifier
+        self.argumentIdentifiers = ObjectIdentifier(type)
+    }
     
     init<T>(type: T.Type, identifier: String?) {
         self.typeIdentifier = ObjectIdentifier(type)
         self.customIdentifier = identifier
+        self.argumentIdentifiers = nil
     }
 }
 
