@@ -22,10 +22,10 @@ final class SharedContainerArgumentTests: XCTestCase {
         let id = UUID()
     }
     
-    override func setUp() {
-        super.setUp()
+    override func tearDown() {
+        super.tearDown()
         
-        Container.configure()
+        Container.clean()
     }
 
     func testRegistration() {

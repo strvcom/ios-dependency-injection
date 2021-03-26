@@ -11,10 +11,10 @@ import DependencyInjection
 final class SharedContainerIdentifierTests: XCTestCase {
     class Dependency {}
     
-    override func setUp() {
-        super.setUp()
+    override func tearDown() {
+        super.tearDown()
         
-        Container.configure()
+        Container.clean()
     }
     
     func testSimpleRegistration() {

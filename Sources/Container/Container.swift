@@ -8,15 +8,17 @@
 import Foundation
 
 open class Container {
-    private static var singleton: Container!
+    public static let shared: Container = {
+        Container()
+    }()
     
     private var registrations = [RegistrationIdentfier: Registration]()
     private var sharedInstances = [RegistrationIdentfier: Any]()
     
     public init() {}
     
-    open class func configure() {
-        Self.shared = Container()
+    open class func clean() {
+        shared.clean()
     }
     
     open func clean() {
@@ -27,19 +29,6 @@ open class Container {
 
 // MARK: Singleton methods
 public extension Container {
-    static var shared: Container {
-        get {
-            guard let shared = singleton else {
-                fatalError("Shared value hasn't been configured. Call 'Container.configure()' before you start using Container as a singleton")
-            }
-            
-            return shared
-        }
-        set {
-            singleton = newValue
-        }
-    }
-
     static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, factory: @escaping Resolver<T>) {
         shared.register(type: type, in: scope, with: identifier, factory: factory)
     }
