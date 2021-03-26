@@ -8,16 +8,33 @@
 import Foundation
 
 open class Container {
-    let text = "Hello world!"
-    
-    public static var shared: Container!
+    static var shared: Container!
     
     private var registrations = [RegistrationIdentfier: Registration]()
     private var sharedInstances = [RegistrationIdentfier: Any]()
     
+    open class func configure() {
+        Self.shared = Container()
+    }
+    
     open func clean() {
         registrations.removeAll()
         sharedInstances.removeAll()
+    }
+}
+
+// MARK: Static methods
+public extension Container {
+    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, factory: @escaping (DependencyResolving) -> T) {
+        shared.register(type: type, in: scope, factory: factory)
+    }
+    
+    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, dependency: @autoclosure @escaping () -> T) {
+        shared.register(type: type, in: scope, factory: { _ -> T in dependency() })
+    }
+    
+    static func resolve<T>(type: T.Type = T.self) -> T {
+        shared.resolve(type: type)
     }
 }
 
@@ -32,11 +49,13 @@ extension Container: DependencyRegistering {
 
 // MARK: Resolve
 extension Container: DependencyResolving {
-    open func resolve<T>(type: T.Type) -> T {
+    open func tryResolve<T>(type: T.Type) throws -> T {
         let identifier = RegistrationIdentfier(type: type)
         
         guard let registration = registrations[identifier] else {
-            fatalError("Dependency of type \(identifier.description) wasn't registered in container \(self)")
+            throw ResolvingError.dependencyNotRegistered(
+                message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
+            )
         }
         
         switch registration.scope {
@@ -49,7 +68,9 @@ extension Container: DependencyResolving {
         }
         
         guard let dependency = registration.factory(self) as? T else {
-            fatalError("Registration of type \(identifier.description) doesn't return an instance of type \(type)")
+            throw ResolvingError.unmatchingType(
+                message: "Registration of type \(identifier.description) doesn't return an instance of type \(type)"
+            )
         }
         
         switch registration.scope {

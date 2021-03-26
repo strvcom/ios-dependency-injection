@@ -12,12 +12,12 @@ public protocol DependencyRegistering {
 }
 
 public extension DependencyRegistering {
-    var defaultScope: DependencyScope {
+    static var defaultScope: DependencyScope {
         DependencyScope.shared
     }
     
     func register<T>(type: T.Type, factory: @escaping (DependencyResolving) -> T) {
-        register(type: type, in: defaultScope, factory: factory)
+        register(type: type, in: Self.defaultScope, factory: factory)
     }
     
     func register<T>(in scope: DependencyScope, factory: @escaping (DependencyResolving) -> T) {
@@ -25,11 +25,11 @@ public extension DependencyRegistering {
     }
     
     func register<T>(factory: @escaping (DependencyResolving) -> T) {
-        register(type: T.self, in: defaultScope, factory: factory)
+        register(type: T.self, in: Self.defaultScope, factory: factory)
     }
 
     func register<T>(type: T.Type, dependency: @autoclosure @escaping () -> T) {
-        register(type: type, in: defaultScope) { _ -> T in
+        register(type: type, in: Self.defaultScope) { _ -> T in
             dependency()
         }
     }
@@ -41,7 +41,7 @@ public extension DependencyRegistering {
     }
     
     func register<T>(dependency: @autoclosure @escaping () -> T) {
-        register(type: T.self, in: defaultScope) { _ -> T in
+        register(type: T.self, in: Self.defaultScope) { _ -> T in
             dependency()
         }
     }
