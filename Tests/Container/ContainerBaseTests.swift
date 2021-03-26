@@ -1,17 +1,15 @@
 //
-//  ContainerTests.swift
+//  ContainerBaseTests.swift
 //  
 //
 //  Created by Jan on 25.03.2021.
 //
 
 import XCTest
-@testable import DependencyInjection
+import DependencyInjection
 
-final class ContainerTests: XCTestCase {
-    class Dependency {
-        
-    }
+final class ContainerBaseTests: XCTestCase {
+    class Dependency {}
     
     func testSimpleRegistration() {
         let container = Container()

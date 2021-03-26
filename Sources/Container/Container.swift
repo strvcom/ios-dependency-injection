@@ -13,6 +13,8 @@ open class Container {
     private var registrations = [RegistrationIdentfier: Registration]()
     private var sharedInstances = [RegistrationIdentfier: Any]()
     
+    public init() {}
+    
     open class func configure() {
         Self.shared = Container()
     }
@@ -38,23 +40,23 @@ public extension Container {
         }
     }
 
-    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, factory: @escaping (DependencyResolving) -> T) {
-        shared.register(type: type, in: scope, factory: factory)
+    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, factory: @escaping (DependencyResolving) -> T) {
+        shared.register(type: type, in: scope, with: identifier, factory: factory)
     }
     
-    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, dependency: @autoclosure @escaping () -> T) {
-        shared.register(type: type, in: scope, factory: { _ -> T in dependency() })
+    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, dependency: @autoclosure @escaping () -> T) {
+        shared.register(type: type, in: scope, with: identifier, factory: { _ -> T in dependency() })
     }
     
-    static func resolve<T>(type: T.Type = T.self) -> T {
-        shared.resolve(type: type)
+    static func resolve<T>(type: T.Type = T.self, with identifier: String? = nil) -> T {
+        shared.resolve(type: type, with: identifier)
     }
 }
 
 // MARK: Register
 extension Container: DependencyRegistering {
-    open func register<T>(type: T.Type, in scope: DependencyScope, factory: @escaping (DependencyResolving) -> T) {
-        let registration = Registration(type: type, scope: scope, factory: factory)
+    open func register<T>(type: T.Type, in scope: DependencyScope, with identifier: String?, factory: @escaping (DependencyResolving) -> T) {
+        let registration = Registration(type: type, scope: scope, identifier: identifier, factory: factory)
         
         registrations[registration.identifier] = registration
     }
@@ -62,8 +64,8 @@ extension Container: DependencyRegistering {
 
 // MARK: Resolve
 extension Container: DependencyResolving {
-    open func tryResolve<T>(type: T.Type) throws -> T {
-        let identifier = RegistrationIdentfier(type: type)
+    open func tryResolve<T>(type: T.Type, with identifier: String?) throws -> T {
+        let identifier = RegistrationIdentfier(type: type, identifier: identifier)
         
         guard let registration = registrations[identifier] else {
             throw ResolvingError.dependencyNotRegistered(

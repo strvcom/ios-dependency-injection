@@ -8,40 +8,84 @@
 import Foundation
 
 public protocol DependencyRegistering {
-    func register<T>(type: T.Type, in scope: DependencyScope, factory: @escaping (DependencyResolving) -> T)
+    func register<T>(type: T.Type, in scope: DependencyScope, with identifier: String?, factory: @escaping (DependencyResolving) -> T)
 }
 
+// MARK: Overloaded factory methods
 public extension DependencyRegistering {
     static var defaultScope: DependencyScope {
         DependencyScope.shared
     }
     
+    func register<T>(type: T.Type, in scope: DependencyScope, factory: @escaping (DependencyResolving) -> T) {
+        register(type: type, in: Self.defaultScope, with: nil, factory: factory)
+    }
+    
+    func register<T>(type: T.Type, with identifier: String?, factory: @escaping (DependencyResolving) -> T) {
+        register(type: type, in: Self.defaultScope, with: identifier, factory: factory)
+    }
+    
+    func register<T>(in scope: DependencyScope, with identifier: String?, factory: @escaping (DependencyResolving) -> T) {
+        register(type: T.self, in: scope, with: identifier, factory: factory)
+    }
+
     func register<T>(type: T.Type, factory: @escaping (DependencyResolving) -> T) {
-        register(type: type, in: Self.defaultScope, factory: factory)
+        register(type: type, in: Self.defaultScope, with: nil, factory: factory)
     }
     
     func register<T>(in scope: DependencyScope, factory: @escaping (DependencyResolving) -> T) {
-        register(type: T.self, in: scope, factory: factory)
+        register(type: T.self, in: scope, with: nil, factory: factory)
     }
     
+    func register<T>(with identifier: String?, factory: @escaping (DependencyResolving) -> T) {
+        register(type: T.self, in: Self.defaultScope, with: identifier, factory: factory)
+    }
+
     func register<T>(factory: @escaping (DependencyResolving) -> T) {
-        register(type: T.self, in: Self.defaultScope, factory: factory)
+        register(type: T.self, in: Self.defaultScope, with: nil, factory: factory)
+    }
+}
+
+// MARK: Overloaded autoregistration methods
+public extension DependencyRegistering {
+    func register<T>(type: T.Type, in scope: DependencyScope, dependency: @autoclosure @escaping () -> T) {
+        register(type: type, in: scope, with: nil) { _ -> T in
+            dependency()
+        }
+    }
+    
+    func register<T>(type: T.Type, with identifier: String?, dependency: @autoclosure @escaping () -> T) {
+        register(type: type, in: Self.defaultScope, with: identifier) { _ -> T in
+            dependency()
+        }
+    }
+    
+    func register<T>(in scope: DependencyScope, with identifier: String?, dependency: @autoclosure @escaping () -> T) {
+        register(type: T.self, in: scope, with: identifier) { _ -> T in
+            dependency()
+        }
     }
 
     func register<T>(type: T.Type, dependency: @autoclosure @escaping () -> T) {
-        register(type: type, in: Self.defaultScope) { _ -> T in
+        register(type: type, in: Self.defaultScope, with: nil) { _ -> T in
             dependency()
         }
     }
     
     func register<T>(in scope: DependencyScope, dependency: @autoclosure @escaping () -> T) {
-        register(type: T.self, in: scope) { _ -> T in
+        register(type: T.self, in: scope, with: nil) { _ -> T in
             dependency()
         }
     }
     
+    func register<T>(with identifier: String?, dependency: @autoclosure @escaping () -> T) {
+        register(type: T.self, in: Self.defaultScope, with: identifier) { _ -> T in
+            dependency()
+        }
+    }
+
     func register<T>(dependency: @autoclosure @escaping () -> T) {
-        register(type: T.self, in: Self.defaultScope) { _ -> T in
+        register(type: T.self, in: Self.defaultScope, with: nil) { _ -> T in
             dependency()
         }
     }

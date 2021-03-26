@@ -8,10 +8,12 @@
 import Foundation
 
 struct RegistrationIdentfier {
-    let identifier: ObjectIdentifier
+    let typeIdentifier: ObjectIdentifier
+    let customIdentifier: String?
     
-    init<T>(type: T.Type) {
-        self.identifier = ObjectIdentifier(type)
+    init<T>(type: T.Type, identifier: String?) {
+        self.typeIdentifier = ObjectIdentifier(type)
+        self.customIdentifier = identifier
     }
 }
 
@@ -21,6 +23,9 @@ extension RegistrationIdentfier: Hashable {}
 // MARK: Debug information
 extension RegistrationIdentfier: CustomStringConvertible {
     var description: String {
-        identifier.debugDescription
+        """
+        Type: \(typeIdentifier.debugDescription)
+        Identifier: \(customIdentifier ?? "nil")
+        """
     }
 }

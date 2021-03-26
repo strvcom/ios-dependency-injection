@@ -1,17 +1,15 @@
 //
-//  SharedContainerTests.swift
+//  SharedContainerBaseTests.swift
 //  
 //
 //  Created by Jan on 25.03.2021.
 //
 
 import XCTest
-@testable import DependencyInjection
+import DependencyInjection
 
-final class SharedContainerTests: XCTestCase {
-    class Dependency {
-        
-    }
+final class SharedContainerBaseTests: XCTestCase {
+    class Dependency {}
     
     override func setUp() {
         super.setUp()
