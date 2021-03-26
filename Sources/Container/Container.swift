@@ -8,7 +8,7 @@
 import Foundation
 
 open class Container {
-    static var shared: Container!
+    private static var singleton: Container!
     
     private var registrations = [RegistrationIdentfier: Registration]()
     private var sharedInstances = [RegistrationIdentfier: Any]()
@@ -23,8 +23,21 @@ open class Container {
     }
 }
 
-// MARK: Static methods
+// MARK: Singleton methods
 public extension Container {
+    static var shared: Container {
+        get {
+            guard let shared = singleton else {
+                fatalError("Shared value hasn't been configured. Call 'Container.configure()' before you start using Container as a singleton")
+            }
+            
+            return shared
+        }
+        set {
+            singleton = newValue
+        }
+    }
+
     static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, factory: @escaping (DependencyResolving) -> T) {
         shared.register(type: type, in: scope, factory: factory)
     }
