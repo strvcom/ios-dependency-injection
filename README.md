@@ -16,7 +16,7 @@ TBD
 - [x] Register and resolve a new instance
 - [x] Register an instance with an identifier
 - [x] Register an instance with arguments
-- [ ] Convenient property wrapper
+- [x] Convenient property wrapper
 - [ ] SPM package
 - [ ] Container hierarchy
 - [ ] Thread-safety
