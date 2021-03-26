@@ -17,7 +17,7 @@ final class SharedContainerBaseTests: XCTestCase {
         Container.configure()
     }
     
-    func testSimpleRegistration() {
+    func testSharedAutoRegistration() {
         let dependency = Dependency()
         Container.register(dependency: dependency)
         
