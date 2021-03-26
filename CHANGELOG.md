@@ -15,3 +15,8 @@ __Sections__
 
 ### Added
 
+- Register and resolve a shared instance
+- Register and resolve a new instance
+- Register an instance with an identifier
+- Register an instance with arguments
+- Convenient property wrapper
