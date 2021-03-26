@@ -16,15 +16,7 @@ struct RegistrationIdentfier {
 }
 
 // MARK: Hashable
-extension RegistrationIdentfier: Hashable {
-    static func == (lhs: RegistrationIdentfier, rhs: RegistrationIdentfier) -> Bool {
-        lhs.identifier == rhs.identifier
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(identifier)
-    }
-}
+extension RegistrationIdentfier: Hashable {}
 
 // MARK: Debug information
 extension RegistrationIdentfier: CustomStringConvertible {
