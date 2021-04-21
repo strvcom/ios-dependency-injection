@@ -10,26 +10,23 @@ import DependencyInjection
 
 final class ContainerArgumentTests: XCTestCase {
     class Dependency {
-        let sub: Subdependency
+        let number: Int
         
-        init(sub: Subdependency) {
-            self.sub = sub
+        init(number: Int) {
+            self.number = number
         }
-    }
-    struct Subdependency {
-        let id = UUID()
     }
     
     func testRegistration() {
         let container = Container()
 
-        container.register { (resolver, sub: Subdependency) -> Dependency in
-            Dependency(sub: sub)
+        container.register { (resolver, number: Int) -> Dependency in
+            Dependency(number: number)
         }
         
-        let sub = Subdependency()
-        let resolvedDependency: Dependency = container.resolve(argument: sub)
+        let number = 48
+        let resolvedDependency: Dependency = container.resolve(argument: number)
         
-        XCTAssertEqual(sub.id, resolvedDependency.sub.id, "Container returned dependency with different argument")
+        XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
     }
 }

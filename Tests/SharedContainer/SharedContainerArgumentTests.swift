@@ -12,16 +12,13 @@ import DependencyInjection
 
 final class SharedContainerArgumentTests: XCTestCase {
     class Dependency {
-        let sub: Subdependency
+        let number: Int
         
-        init(sub: Subdependency) {
-            self.sub = sub
+        init(number: Int) {
+            self.number = number
         }
     }
-    struct Subdependency {
-        let id = UUID()
-    }
-    
+
     override func tearDown() {
         super.tearDown()
         
@@ -29,13 +26,13 @@ final class SharedContainerArgumentTests: XCTestCase {
     }
 
     func testRegistration() {
-        Container.register { (resolver, sub: Subdependency) -> Dependency in
-            Dependency(sub: sub)
+        Container.register { (resolver, number: Int) -> Dependency in
+            Dependency(number: number)
         }
         
-        let sub = Subdependency()
-        let resolvedDependency: Dependency = Container.resolve(argument: sub)
+        let number = 48
+        let resolvedDependency: Dependency = Container.resolve(argument: number)
         
-        XCTAssertEqual(sub.id, resolvedDependency.sub.id, "Container returned dependency with different argument")
+        XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
     }
 }
