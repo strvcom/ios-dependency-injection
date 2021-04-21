@@ -25,7 +25,7 @@ final class SharedContainerArgumentTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         
-        Container.clean()
+        Container.shared.clean()
     }
 
     func testRegistration() {

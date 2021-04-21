@@ -17,10 +17,6 @@ open class Container {
     
     public init() {}
     
-    open class func clean() {
-        shared.clean()
-    }
-    
     open func clean() {
         registrations.removeAll()
         sharedInstances.removeAll()

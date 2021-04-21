@@ -14,7 +14,7 @@ final class SharedContainerBaseTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         
-        Container.clean()
+        Container.shared.clean()
     }
     
     func testSharedAutoRegistration() {
