@@ -48,7 +48,7 @@ public extension Container {
 
 // MARK: Register
 extension Container: DependencyWithArgumentRegistering {
-    public func register<T, Argument>(type: T.Type, with identifier: String?, factory: @escaping ResolverWithArgument<T, Argument>) {
+    open func register<T, Argument>(type: T.Type, with identifier: String?, factory: @escaping ResolverWithArgument<T, Argument>) {
         let registration = Registration(type: type, scope: .new, identifier: identifier, factory: factory)
         
         registrations[registration.identifier] = registration
