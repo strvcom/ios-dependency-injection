@@ -38,8 +38,8 @@ extension Container: DependencyWithArgumentRegistering {
 
     /// Register a dependency with an argument
     ///
-    /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container e.g. container,
-    /// therefore, it needs to passed in `resolve` call
+    /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,
+    /// therefore, it needs to be passed in `resolve` call
     ///
     /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
     /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
