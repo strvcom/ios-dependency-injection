@@ -61,7 +61,7 @@ extension Container: DependencyWithArgumentResolving {
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws `ResolvingError.dependencyNotRegistered`
+    /// the method throws `ResolutionError.dependencyNotRegistered`
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
@@ -78,7 +78,7 @@ extension Container: DependencyWithArgumentResolving {
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type wasn't registered before this method call
-    /// the method throws `ResolvingError.dependencyNotRegistered`
+    /// the method throws `ResolutionError.dependencyNotRegistered`
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     open func tryResolve<T>(type: T.Type) throws -> T {
@@ -93,7 +93,7 @@ extension Container: DependencyWithArgumentResolving {
     
     private func getRegistration(with identifier: RegistrationIdentfier) throws -> Registration {
         guard let registration = registrations[identifier] else {
-            throw ResolvingError.dependencyNotRegistered(
+            throw ResolutionError.dependencyNotRegistered(
                 message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
             )
         }
@@ -112,7 +112,7 @@ extension Container: DependencyWithArgumentResolving {
         }
         
         guard let dependency = try registration.factory(self, argument) as? T else {
-            throw ResolvingError.unmatchingDependencyType(
+            throw ResolutionError.unmatchingDependencyType(
                 message: "Registration of type \(registration.identifier.description) doesn't return an instance of type \(T.self)"
             )
         }

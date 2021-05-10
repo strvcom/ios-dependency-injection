@@ -25,7 +25,7 @@ struct Registration {
         self.scope = scope
         self.factory = { resolver, arg in
             guard let argument = arg as? Argument else {
-                throw ResolvingError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept an argument of type \(Argument.self)")
+                throw ResolutionError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept an argument of type \(Argument.self)")
             }
             
             return factory(resolver, argument)

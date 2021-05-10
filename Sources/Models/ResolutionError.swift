@@ -1,5 +1,5 @@
 //
-//  ResolvingError.swift
+//  ResolutionError.swift
 //  
 //
 //  Created by Jan on 26.03.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ResolvingError: Error {
+public enum ResolutionError: Error {
     case dependencyNotRegistered(message: String)
     case unmatchingDependencyType(message: String)
     case unmatchingArgumentType(message: String)
