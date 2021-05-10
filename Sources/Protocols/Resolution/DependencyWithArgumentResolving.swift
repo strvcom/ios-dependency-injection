@@ -8,27 +8,23 @@
 import Foundation
 
 public protocol DependencyWithArgumentResolving: DependencyResolving {
-    func tryResolve<T, Argument>(type: T.Type, with identifier: String?, argument: Argument) throws -> T
+    /// Resolve a dependency that was previously registered
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    ///   - argument: Argument that will passed as an input parameter to the factory method
+    func tryResolve<T, Argument>(type: T.Type, argument: Argument) throws -> T
 }
 
 public extension DependencyWithArgumentResolving {
-    func resolve<T, Argument>(type: T.Type, with identifier: String?, argument: Argument) -> T {
+    func resolve<T, Argument>(type: T.Type, argument: Argument) -> T {
         do {
-            return try tryResolve(type: type, with: identifier, argument: argument)
+            return try tryResolve(type: type, argument: argument)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
     
-    func resolve<T, Argument>(type: T.Type, argument: Argument) -> T {
-        resolve(type: type, with: nil, argument: argument)
-    }
-    
-    func resolve<T, Argument>(with identifier: String?, argument: Argument) -> T {
-        resolve(type: T.self, with: identifier, argument: argument)
-    }
-
     func resolve<T, Argument>(argument: Argument) -> T {
-        resolve(type: T.self, with: nil, argument: argument)
+        resolve(type: T.self, argument: argument)
     }
 }

@@ -48,21 +48,6 @@ final class PropertyWrapperTests: XCTestCase {
         XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
     }
     
-    func testInjectionWithIdentifier() {
-        struct Module {
-            static let identifier = "1234"
-            
-            @Injected(identifier: Module.identifier) var resolvedDependency: Dependency
-        }
-
-        let dependency = Dependency()
-        Container.shared.register(with: Module.identifier, dependency: dependency)
-        
-        let module = Module()
-        
-        XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
-    }
-    
     func testLazyInjection() {
         struct Module {
             @LazyInjected var resolvedDependency: Dependency

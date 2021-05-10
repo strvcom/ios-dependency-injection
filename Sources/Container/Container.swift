@@ -25,14 +25,32 @@ open class Container {
 
 // MARK: Register
 extension Container: DependencyWithArgumentRegistering {
-    open func register<T, Argument>(type: T.Type, with identifier: String?, factory: @escaping ResolverWithArgument<T, Argument>) {
-        let registration = Registration(type: type, scope: .new, identifier: identifier, factory: factory)
+    /// Register a dependency
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - factory: Closure that is called once the dependency is being resolved
+    open func register<T>(type: T.Type, in scope: DependencyScope, factory: @escaping Resolver<T>) {
+        let registration = Registration(type: type, scope: scope, factory: factory)
         
         registrations[registration.identifier] = registration
     }
-    
-    open func register<T>(type: T.Type, in scope: DependencyScope, with identifier: String?, factory: @escaping Resolver<T>) {
-        let registration = Registration(type: type, scope: scope, identifier: identifier, factory: factory)
+
+    /// Register a dependency with an argument
+    ///
+    /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container e.g. container,
+    /// therefore, it needs to passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the argument conform to `Equatable` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called once the dependency is being resolved
+    open func register<T, Argument>(type: T.Type, factory: @escaping ResolverWithArgument<T, Argument>) {
+        let registration = Registration(type: type, scope: .new, factory: factory)
         
         registrations[registration.identifier] = registration
     }
@@ -40,8 +58,15 @@ extension Container: DependencyWithArgumentRegistering {
 
 // MARK: Resolve
 extension Container: DependencyWithArgumentResolving {
-    open func tryResolve<T, Argument>(type: T.Type, with identifier: String?, argument: Argument) throws -> T {
-        let identifier = RegistrationIdentfier(type: type, identifier: identifier)
+    /// Resolve a dependency that was previously registered with `register` method
+    ///
+    /// If a dependency of the given type with the given argument wasn't registered before this method call
+    /// the method throws `ResolvingError.dependencyNotRegistered`
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
+    open func tryResolve<T, Argument>(type: T.Type, argument: Argument) throws -> T {
+        let identifier = RegistrationIdentfier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
         
@@ -50,8 +75,14 @@ extension Container: DependencyWithArgumentResolving {
         return dependency
     }
     
-    open func tryResolve<T>(type: T.Type, with identifier: String?) throws -> T {
-        let identifier = RegistrationIdentfier(type: type, identifier: identifier)
+    /// Resolve a dependency that was previously registered with `register` method
+    ///
+    /// If a dependency of the given type wasn't registered before this method call
+    /// the method throws `ResolvingError.dependencyNotRegistered`
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    open func tryResolve<T>(type: T.Type) throws -> T {
+        let identifier = RegistrationIdentfier(type: type)
 
         let registration = try getRegistration(with: identifier)
         

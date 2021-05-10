@@ -11,7 +11,7 @@ import Foundation
 public struct Injected<T> {
     public let wrappedValue: T
 
-    public init(from container: Container = .shared, identifier: String? = nil) {
-        wrappedValue = container.resolve(with: identifier)
+    public init(from container: Container = .shared) {
+        wrappedValue = container.resolve(type: T.self)
     }
 }

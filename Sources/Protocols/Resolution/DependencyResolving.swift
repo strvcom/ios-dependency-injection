@@ -8,27 +8,22 @@
 import Foundation
 
 public protocol DependencyResolving {
-    func tryResolve<T>(type: T.Type, with identifier: String?) throws -> T
+    /// Resolve a dependency that was previously registered
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    func tryResolve<T>(type: T.Type) throws -> T
 }
 
 public extension DependencyResolving {
-    func resolve<T>(type: T.Type, with identifier: String?) -> T {
+    func resolve<T>(type: T.Type) -> T {
         do {
-            return try tryResolve(type: type, with: identifier)
+            return try tryResolve(type: type)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
     
-    func resolve<T>(type: T.Type) -> T {
-        resolve(type: type, with: nil)
-    }
-    
-    func resolve<T>(with identifier: String?) -> T {
-        resolve(type: T.self, with: identifier)
-    }
-
     func resolve<T>() -> T {
-        resolve(type: T.self, with: nil)
+        resolve(type: T.self)
     }
 }

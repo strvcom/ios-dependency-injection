@@ -9,18 +9,15 @@ import Foundation
 
 struct RegistrationIdentfier {
     let typeIdentifier: ObjectIdentifier
-    let customIdentifier: String?
     let argumentIdentifiers: ObjectIdentifier?
     
-    init<T, Argument>(type: T.Type, identifier: String?, argument: Argument.Type) {
+    init<T, Argument>(type: T.Type, argument: Argument.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
-        self.customIdentifier = identifier
         self.argumentIdentifiers = ObjectIdentifier(type)
     }
     
-    init<T>(type: T.Type, identifier: String?) {
+    init<T>(type: T.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
-        self.customIdentifier = identifier
         self.argumentIdentifiers = nil
     }
 }
@@ -33,7 +30,7 @@ extension RegistrationIdentfier: CustomStringConvertible {
     var description: String {
         """
         Type: \(typeIdentifier.debugDescription)
-        Identifier: \(customIdentifier ?? "nil")
+        Argument: \(argumentIdentifiers?.debugDescription ?? "nil")
         """
     }
 }

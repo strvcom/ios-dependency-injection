@@ -10,14 +10,12 @@ import Foundation
 @propertyWrapper
 public final class LazyInjected<T> {
     private let container: Container
-    private let identifier: String?
 
     public lazy var wrappedValue: T = {
-        container.resolve(with: identifier)
+        container.resolve(type: T.self)
     }()
 
-    public init(container: Container = .shared, identifier: String? = nil) {
+    public init(container: Container = .shared) {
         self.container = container
-        self.identifier = nil
     }
 }
