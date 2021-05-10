@@ -23,29 +23,6 @@ open class Container {
     }
 }
 
-// MARK: Singleton methods
-public extension Container {
-    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, factory: @escaping Resolver<T>) {
-        shared.register(type: type, in: scope, with: identifier, factory: factory)
-    }
-    
-    static func register<T>(type: T.Type = T.self, in scope: DependencyScope = Container.defaultScope, with identifier: String? = nil, dependency: @autoclosure @escaping () -> T) {
-        shared.register(type: type, in: scope, with: identifier, factory: { _ -> T in dependency() })
-    }
-    
-    static func register<T, Argument>(type: T.Type = T.self, with identifier: String? = nil, factory: @escaping ResolverWithArgument<T, Argument>) {
-        shared.register(type: type, with: identifier, factory: factory)
-    }
-    
-    static func resolve<T>(type: T.Type = T.self, with identifier: String? = nil) -> T {
-        shared.resolve(type: type, with: identifier)
-    }
-    
-    static func resolve<T, Argument>(type: T.Type = T.self, with identifier: String? = nil, argument: Argument) -> T {
-        shared.resolve(type: type, with: identifier, argument: argument)
-    }
-}
-
 // MARK: Register
 extension Container: DependencyWithArgumentRegistering {
     open func register<T, Argument>(type: T.Type, with identifier: String?, factory: @escaping ResolverWithArgument<T, Argument>) {

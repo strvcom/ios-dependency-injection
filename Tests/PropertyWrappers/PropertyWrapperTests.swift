@@ -23,7 +23,7 @@ final class PropertyWrapperTests: XCTestCase {
         }
 
         let dependency = Dependency()
-        Container.register(dependency: dependency)
+        Container.shared.register(dependency: dependency)
         
         let module = Module()
         
@@ -56,7 +56,7 @@ final class PropertyWrapperTests: XCTestCase {
         }
 
         let dependency = Dependency()
-        Container.register(with: Module.identifier, dependency: dependency)
+        Container.shared.register(with: Module.identifier, dependency: dependency)
         
         let module = Module()
         
@@ -73,7 +73,7 @@ final class PropertyWrapperTests: XCTestCase {
 
         // 2: Only after that register the dependency
         let dependency = Dependency()
-        Container.register(dependency: dependency)
+        Container.shared.register(dependency: dependency)
         
         // 3: Get resolved dependency
         XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
