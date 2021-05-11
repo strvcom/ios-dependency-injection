@@ -12,11 +12,12 @@ TBD
 
 ## Roadmap
 
-- [ ] Register and resolve a container instance
-- [ ] Register and resolve a transient instance
-- [ ] Convenient property wrapper
-- [ ] Register an instance with an identifier
-- [ ] Register an instance with arguments
+- [x] Register and resolve a shared instance
+- [x] Register and resolve a new instance
+- [x] Register an instance with an identifier
+- [x] Register an instance with an argument
+- [x] Convenient property wrapper
+- [ ] SPM package
+- [ ] Register an instance with multiple arguments
 - [ ] Container hierarchy
 - [ ] Thread-safety
-- [ ] SPM package
