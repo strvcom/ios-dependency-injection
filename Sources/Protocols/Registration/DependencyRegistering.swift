@@ -37,7 +37,7 @@ public extension DependencyRegistering {
     }
 }
 
-// MARK: Overloaded autoregistration methods
+// MARK: Overloaded autoclosure methods
 public extension DependencyRegistering {
     func register<T>(type: T.Type, in scope: DependencyScope, dependency: @autoclosure @escaping () -> T) {
         register(type: type, in: scope) { _ -> T in

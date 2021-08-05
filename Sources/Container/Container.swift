@@ -23,8 +23,8 @@ open class Container {
     }
 }
 
-// MARK: Register
-extension Container: DependencyWithArgumentRegistering {
+// MARK: Register, Autoregister
+extension Container: DependencyAutoregistering {
     /// Register a dependency
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -35,7 +35,10 @@ extension Container: DependencyWithArgumentRegistering {
         
         registrations[registration.identifier] = registration
     }
+}
 
+// MARK: Register, Autoregister with argument
+extension Container: DependencyWithArgumentAutoregistering {
     /// Register a dependency with an argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,

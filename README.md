@@ -17,6 +17,7 @@ TBD
 - [x] Register an instance with an identifier
 - [x] Register an instance with an argument
 - [x] Convenient property wrapper
+- [x] Autoregister
 - [ ] SPM package
 - [ ] Register an instance with multiple arguments
 - [ ] Container hierarchy
