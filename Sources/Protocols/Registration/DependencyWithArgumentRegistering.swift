@@ -10,7 +10,7 @@ import Foundation
 public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     typealias ResolverWithArgument<Dependency, Argument> = (DependencyWithArgumentResolving, Argument) -> Dependency
     
-    /// Register a dependency with an argument
+    /// Register a dependency with a variable argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same resolver e.g. container,
     /// therefore, it needs to be passed in `resolve` call
