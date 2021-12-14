@@ -9,39 +9,43 @@ import Foundation
 
 public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentRegistering {
     // MARK: Initializer with argument and 1 parameter
-    func autoregister<T, Argument, A>(
-        type: T.Type,
+    func autoregister<Dependency, Argument, A>(
+        type: Dependency.Type,
         argument: Argument.Type,
-        initializer: @escaping (Argument, A) -> T
+        initializer: @escaping (Argument, A) -> Dependency
     )
-    func autoregister<T, Argument, A>(
-        type: T.Type,
+    func autoregister<Dependency, Argument, A>(
+        type: Dependency.Type,
         argument: Argument.Type,
-        initializer: @escaping (A, Argument) -> T
+        initializer: @escaping (A, Argument) -> Dependency
     )
     
     // MARK: Initializer with argument and 2 parameters
-    func autoregister<T, Argument, A, B>(
-        type: T.Type,
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type,
         argument: Argument.Type,
-        initializer: @escaping (Argument, A, B) -> T
+        initializer: @escaping (Argument, A, B) -> Dependency
     )
-    func autoregister<T, Argument, A, B>(
-        type: T.Type,
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type,
         argument: Argument.Type,
-        initializer: @escaping (A, Argument, B) -> T
+        initializer: @escaping (A, Argument, B) -> Dependency
     )
-    func autoregister<T, Argument, A, B>(
-        type: T.Type,
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type,
         argument: Argument.Type,
-        initializer: @escaping (A, B, Argument) -> T
+        initializer: @escaping (A, B, Argument) -> Dependency
     )
 }
 
 // MARK: Default implementation for initializer with argument and 1 parameter
 public extension DependencyWithArgumentAutoregistering {
-    func autoregister<T, Argument, A>(type: T.Type = T.self, argument: Argument.Type, initializer: @escaping (Argument, A) -> T) {
-        let factory: ResolverWithArgument<T, Argument> = { resolver, argument in
+    func autoregister<Dependency, Argument, A>(
+        type: Dependency.Type = Dependency.self,
+        argument: Argument.Type,
+        initializer: @escaping (Argument, A) -> Dependency
+    ) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: A.self)
@@ -51,8 +55,8 @@ public extension DependencyWithArgumentAutoregistering {
         register(type: type, factory: factory)
     }
     
-    func autoregister<T, Argument, A>(type: T.Type = T.self, argument: Argument.Type, initializer: @escaping (A, Argument) -> T) {
-        let factory: ResolverWithArgument<T, Argument> = { resolver, argument in
+    func autoregister<Dependency, Argument, A>(type: Dependency.Type = Dependency.self, argument: Argument.Type, initializer: @escaping (A, Argument) -> Dependency) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: A.self),
                 argument
@@ -65,8 +69,12 @@ public extension DependencyWithArgumentAutoregistering {
 
 // MARK: Default implementation for initializer with argument and 2 parameters
 public extension DependencyWithArgumentAutoregistering {
-    func autoregister<T, Argument, A, B>(type: T.Type = T.self, argument: Argument.Type, initializer: @escaping (Argument, A, B) -> T) {
-        let factory: ResolverWithArgument<T, Argument> = { resolver, argument in
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type = Dependency.self,
+        argument: Argument.Type,
+        initializer: @escaping (Argument, A, B) -> Dependency
+    ) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: A.self),
@@ -77,8 +85,12 @@ public extension DependencyWithArgumentAutoregistering {
         register(type: type, factory: factory)
     }
 
-    func autoregister<T, Argument, A, B>(type: T.Type = T.self, argument: Argument.Type, initializer: @escaping (A, Argument, B) -> T) {
-        let factory: ResolverWithArgument<T, Argument> = { resolver, argument in
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type = Dependency.self,
+        argument: Argument.Type,
+        initializer: @escaping (A, Argument, B) -> Dependency
+    ) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: A.self),
                 argument,
@@ -89,8 +101,12 @@ public extension DependencyWithArgumentAutoregistering {
         register(type: type, factory: factory)
     }
 
-    func autoregister<T, Argument, A, B>(type: T.Type = T.self, argument: Argument.Type, initializer: @escaping (A, B, Argument) -> T) {
-        let factory: ResolverWithArgument<T, Argument> = { resolver, argument in
+    func autoregister<Dependency, Argument, A, B>(
+        type: Dependency.Type = Dependency.self,
+        argument: Argument.Type,
+        initializer: @escaping (A, B, Argument) -> Dependency
+    ) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: A.self),
                 resolver.resolve(type: B.self),

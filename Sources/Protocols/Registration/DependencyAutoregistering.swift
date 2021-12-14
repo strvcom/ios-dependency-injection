@@ -8,70 +8,109 @@
 import Foundation
 
 public protocol DependencyAutoregistering: DependencyRegistering {
-    
-    func autoregister<T, A>(type: T.Type, in scope: DependencyScope, initializer: @escaping (A) -> T)
-    func autoregister<T, A, B>(type: T.Type, in scope: DependencyScope, initializer: @escaping (A, B) -> T)
-    func autoregister<T, A, B, C>(type: T.Type, in scope: DependencyScope, initializer: @escaping (A, B, C) -> T)
-    func autoregister<T, A, B, C, D>(type: T.Type, in scope: DependencyScope, initializer: @escaping (A, B, C, D) -> T)
-    func autoregister<T, A, B, C, D, E>(type: T.Type, in scope: DependencyScope, initializer: @escaping (A, B, C, D, E) -> T)
+    func autoregister<Dependency, Parameter1>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping (Parameter1) -> Dependency
+    )
+    func autoregister<Dependency, Parameter1, Parameter2>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping (Parameter1, Parameter2) -> Dependency
+    )
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3) -> Dependency
+    )
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4) -> Dependency
+    )
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4, Parameter5>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4, Parameter5) -> Dependency
+    )
 }
 
 // MARK: Default implementation
 public extension DependencyAutoregistering {
-    func autoregister<T, A>(type: T.Type = T.self, in scope: DependencyScope = Self.defaultScope, initializer: @escaping (A) -> T) {
-        let factory: Resolver<T> = { resolver in
+    func autoregister<Dependency, Parameter1>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping (Parameter1) -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { resolver in
             initializer(
-                resolver.resolve(type: A.self)
+                resolver.resolve(type: Parameter1.self)
             )
         }
         
         register(type: type, in: scope, factory: factory)
     }
     
-    func autoregister<T, A, B>(type: T.Type = T.self, in scope: DependencyScope = Self.defaultScope, initializer: @escaping (A, B) -> T) {
-        let factory: Resolver<T> = { resolver in
+    func autoregister<Dependency, Parameter1, Parameter2>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping (Parameter1, Parameter2) -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { resolver in
             initializer(
-                resolver.resolve(type: A.self),
-                resolver.resolve(type: B.self)
+                resolver.resolve(type: Parameter1.self),
+                resolver.resolve(type: Parameter2.self)
             )
         }
         
         register(type: type, in: scope, factory: factory)
     }
     
-    func autoregister<T, A, B, C>(type: T.Type = T.self, in scope: DependencyScope = Self.defaultScope, initializer: @escaping (A, B, C) -> T) {
-        let factory: Resolver<T> = { resolver in
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3) -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { resolver in
             initializer(
-                resolver.resolve(type: A.self),
-                resolver.resolve(type: B.self),
-                resolver.resolve(type: C.self)
+                resolver.resolve(type: Parameter1.self),
+                resolver.resolve(type: Parameter2.self),
+                resolver.resolve(type: Parameter3.self)
             )
         }
         
         register(type: type, in: scope, factory: factory)
     }
     
-    func autoregister<T, A, B, C, D>(type: T.Type = T.self, in scope: DependencyScope = Self.defaultScope, initializer: @escaping (A, B, C, D) -> T) {
-        let factory: Resolver<T> = { resolver in
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4) -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { resolver in
             initializer(
-                resolver.resolve(type: A.self),
-                resolver.resolve(type: B.self),
-                resolver.resolve(type: C.self),
-                resolver.resolve(type: D.self)
+                resolver.resolve(type: Parameter1.self),
+                resolver.resolve(type: Parameter2.self),
+                resolver.resolve(type: Parameter3.self),
+                resolver.resolve(type: Parameter4.self)
             )
         }
         
         register(type: type, in: scope, factory: factory)
     }
     
-    func autoregister<T, A, B, C, D, E>(type: T.Type = T.self, in scope: DependencyScope = Self.defaultScope, initializer: @escaping (A, B, C, D, E) -> T) {
-        let factory: Resolver<T> = { resolver in
+    func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4, Parameter5>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4, Parameter5) -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { resolver in
             initializer(
-                resolver.resolve(type: A.self),
-                resolver.resolve(type: B.self),
-                resolver.resolve(type: C.self),
-                resolver.resolve(type: D.self),
-                resolver.resolve(type: E.self)
+                resolver.resolve(type: Parameter1.self),
+                resolver.resolve(type: Parameter2.self),
+                resolver.resolve(type: Parameter3.self),
+                resolver.resolve(type: Parameter4.self),
+                resolver.resolve(type: Parameter5.self)
             )
         }
         

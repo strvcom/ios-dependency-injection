@@ -8,11 +8,11 @@
 import Foundation
 
 @propertyWrapper
-public final class LazyInjected<T> {
+public final class LazyInjected<Dependency> {
     private let container: Container
 
-    public lazy var wrappedValue: T = {
-        container.resolve(type: T.self)
+    public lazy var wrappedValue: Dependency = {
+        container.resolve(type: Dependency.self)
     }()
 
     public init(container: Container = .shared) {

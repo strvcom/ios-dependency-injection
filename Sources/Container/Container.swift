@@ -30,7 +30,7 @@ extension Container: DependencyAutoregistering {
     ///   - type: Type of the dependency to register
     ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
     ///   - factory: Closure that is called once the dependency is being resolved
-    open func register<T>(type: T.Type, in scope: DependencyScope, factory: @escaping Resolver<T>) {
+    open func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Resolver<Dependency>) {
         let registration = Registration(type: type, scope: scope, factory: factory)
         
         registrations[registration.identifier] = registration
@@ -52,7 +52,7 @@ extension Container: DependencyWithArgumentAutoregistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called once the dependency is being resolved
-    open func register<T, Argument>(type: T.Type, factory: @escaping ResolverWithArgument<T, Argument>) {
+    open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping ResolverWithArgument<Dependency, Argument>) {
         let registration = Registration(type: type, scope: .new, factory: factory)
         
         registrations[registration.identifier] = registration
@@ -68,12 +68,12 @@ extension Container: DependencyWithArgumentResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<T, Argument>(type: T.Type, argument: Argument) throws -> T {
+    open func tryResolve<Dependency, Argument>(type: Dependency.Type, argument: Argument) throws -> Dependency {
         let identifier = RegistrationIdentfier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
         
-        let dependency: T = try getDependency(from: registration, with: argument)
+        let dependency: Dependency = try getDependency(from: registration, with: argument)
 
         return dependency
     }
@@ -84,12 +84,12 @@ extension Container: DependencyWithArgumentResolving {
     /// the method throws `ResolutionError.dependencyNotRegistered`
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    open func tryResolve<T>(type: T.Type) throws -> T {
+    open func tryResolve<Dependency>(type: Dependency.Type) throws -> Dependency {
         let identifier = RegistrationIdentfier(type: type)
 
         let registration = try getRegistration(with: identifier)
         
-        let dependency: T = try getDependency(from: registration)
+        let dependency: Dependency = try getDependency(from: registration)
         
         return dependency
     }
@@ -104,19 +104,19 @@ extension Container: DependencyWithArgumentResolving {
         return registration
     }
     
-    private func getDependency<T>(from registration: Registration, with argument: Any? = nil) throws -> T {
+    private func getDependency<Dependency>(from registration: Registration, with argument: Any? = nil) throws -> Dependency {
         switch registration.scope {
         case .shared:
-            if let dependency = sharedInstances[registration.identifier] as? T {
+            if let dependency = sharedInstances[registration.identifier] as? Dependency {
                 return dependency
             }
         case .new:
             break
         }
         
-        guard let dependency = try registration.factory(self, argument) as? T else {
+        guard let dependency = try registration.factory(self, argument) as? Dependency else {
             throw ResolutionError.unmatchingDependencyType(
-                message: "Registration of type \(registration.identifier.description) doesn't return an instance of type \(T.self)"
+                message: "Registration of type \(registration.identifier.description) doesn't return an instance of type \(Dependency.self)"
             )
         }
         
