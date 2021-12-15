@@ -29,4 +29,17 @@ final class ContainerArgumentTests: XCTestCase {
         
         XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
     }
+    
+    func testRegistrationWithExplicitType() {
+        let container = Container()
+
+        container.register(type: Dependency.self) { (resolver, number: Int) in
+            Dependency(number: number)
+        }
+        
+        let number = 48
+        let resolvedDependency: Dependency = container.resolve(argument: number)
+        
+        XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
+    }
 }

@@ -84,4 +84,17 @@ final class ContainerBaseTests: XCTestCase {
 
         XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
     }
+
+    func testNonSharedDependencyWithExplicitType() {
+        let container = Container()
+        
+        container.register(type: Dependency.self, in: .new) { _ in
+            Dependency()
+        }
+        
+        let resolvedDependency1: Dependency = container.resolve()
+        let resolvedDependency2: Dependency = container.resolve()
+
+        XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
+    }
 }
