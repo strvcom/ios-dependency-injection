@@ -9,15 +9,13 @@ import XCTest
 import DependencyInjection
 
 final class ContainerBaseTests: XCTestCase {
-    class Dependency {}
-    
     func testAutoclosureDependency() {
         let container = Container()
         
-        let dependency = Dependency()
+        let dependency = SimpleDependency()
         container.register(dependency: dependency)
         
-        let resolvedDependency: Dependency = container.resolve()
+        let resolvedDependency: SimpleDependency = container.resolve()
         
         XCTAssertTrue(dependency === resolvedDependency, "Container returned different instance")
     }
@@ -25,10 +23,10 @@ final class ContainerBaseTests: XCTestCase {
     func testAutoclosureDependencyWithExplicitType() {
         let container = Container()
         
-        let dependency = Dependency()
-        container.register(type: Dependency.self, dependency: dependency)
+        let dependency = SimpleDependency()
+        container.register(type: SimpleDependency.self, dependency: dependency)
         
-        let resolvedDependency: Dependency = container.resolve()
+        let resolvedDependency: SimpleDependency = container.resolve()
         
         XCTAssertTrue(dependency === resolvedDependency, "Container returned different instance")
     }
@@ -36,12 +34,12 @@ final class ContainerBaseTests: XCTestCase {
     func testDependencyRegisteredInDefaultScope() {
         let container = Container()
         
-        container.register() { _ -> Dependency in
-            Dependency()
+        container.register() { _ -> SimpleDependency in
+            SimpleDependency()
         }
         
-        let resolvedDependency1: Dependency = container.resolve()
-        let resolvedDependency2: Dependency = container.resolve()
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
     }
@@ -49,12 +47,12 @@ final class ContainerBaseTests: XCTestCase {
     func testDependencyRegisteredInDefaultScopeWithExplicitType() {
         let container = Container()
         
-        container.register(type: Dependency.self) { _ -> Dependency in
-            Dependency()
+        container.register(type: SimpleDependency.self) { _ -> SimpleDependency in
+            SimpleDependency()
         }
         
-        let resolvedDependency1: Dependency = container.resolve()
-        let resolvedDependency2: Dependency = container.resolve()
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
     }
@@ -62,12 +60,12 @@ final class ContainerBaseTests: XCTestCase {
     func testSharedDependency() {
         let container = Container()
         
-        container.register(in: .shared) { _ -> Dependency in
-            Dependency()
+        container.register(in: .shared) { _ -> SimpleDependency in
+            SimpleDependency()
         }
         
-        let resolvedDependency1: Dependency = container.resolve()
-        let resolvedDependency2: Dependency = container.resolve()
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
     }
@@ -75,12 +73,12 @@ final class ContainerBaseTests: XCTestCase {
     func testNonSharedDependency() {
         let container = Container()
         
-        container.register(in: .new) { _ -> Dependency in
-            Dependency()
+        container.register(in: .new) { _ -> SimpleDependency in
+            SimpleDependency()
         }
         
-        let resolvedDependency1: Dependency = container.resolve()
-        let resolvedDependency2: Dependency = container.resolve()
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
 
         XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
     }
@@ -88,12 +86,12 @@ final class ContainerBaseTests: XCTestCase {
     func testNonSharedDependencyWithExplicitType() {
         let container = Container()
         
-        container.register(type: Dependency.self, in: .new) { _ in
-            Dependency()
+        container.register(type: SimpleDependency.self, in: .new) { _ in
+            SimpleDependency()
         }
         
-        let resolvedDependency1: Dependency = container.resolve()
-        let resolvedDependency2: Dependency = container.resolve()
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
 
         XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
     }

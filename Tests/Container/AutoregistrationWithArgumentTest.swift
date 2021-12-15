@@ -9,30 +9,18 @@ import XCTest
 import DependencyInjection
 
 final class AutoregistrationWithArgumentTest: XCTestCase {
-    class Dependency {
-        let number: Int
-        let subdependency: Subdependency
-
-        init(number: Int, subdependency: Subdependency) {
-            self.number = number
-            self.subdependency = subdependency
-        }
-    }
-    
-    class Subdependency {}
-
     func testRegistration() {
         let container = Container()
 
-        let subdependency = Subdependency()
-        container.register(dependency: subdependency)
-        container.autoregister(argument: Int.self, initializer: Dependency.init)
+        let subDependency = SimpleDependency()
+        container.register(dependency: subDependency)
+        container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter2.init)
 
-        let number = 48
-        let firstResolved: Dependency = container.resolve(argument: number)
+        let argument = DependencyWithValueTypeParameter()
+        let firstResolved: DependencyWithParameter2 = container.resolve(argument: argument)
         
-        XCTAssertEqual(number, firstResolved.number, "Container returned dependency with different argument")
+        XCTAssertTrue(argument === firstResolved.subDependency2, "Container returned dependency with different argument")
         
-        XCTAssertTrue(subdependency === firstResolved.subdependency, "Different instances of subdependencies")
+        XCTAssertTrue(subDependency === firstResolved.subDependency1, "Different instances of subdependencies")
     }
 }

@@ -9,37 +9,29 @@ import XCTest
 import DependencyInjection
 
 final class ContainerArgumentTests: XCTestCase {
-    class Dependency {
-        let number: Int
-        
-        init(number: Int) {
-            self.number = number
-        }
-    }
-    
     func testRegistration() {
         let container = Container()
 
-        container.register { (resolver, number: Int) -> Dependency in
-            Dependency(number: number)
+        container.register { (resolver, argument: StructureDependency) -> DependencyWithValueTypeParameter in
+            DependencyWithValueTypeParameter(subDependency: argument)
         }
         
-        let number = 48
-        let resolvedDependency: Dependency = container.resolve(argument: number)
+        let argument = StructureDependency(property1: "48")
+        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
         
-        XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
+        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
     
     func testRegistrationWithExplicitType() {
         let container = Container()
 
-        container.register(type: Dependency.self) { (resolver, number: Int) in
-            Dependency(number: number)
+        container.register(type: DependencyWithValueTypeParameter.self) { (resolver, argument: StructureDependency) in
+            DependencyWithValueTypeParameter(subDependency: argument)
         }
         
-        let number = 48
-        let resolvedDependency: Dependency = container.resolve(argument: number)
+        let argument = StructureDependency(property1: "48")
+        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
         
-        XCTAssertEqual(number, resolvedDependency.number, "Container returned dependency with different argument")
+        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
 }

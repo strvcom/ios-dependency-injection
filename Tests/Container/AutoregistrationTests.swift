@@ -9,25 +9,15 @@ import XCTest
 import DependencyInjection
 
 final class AutoregistrationTests: XCTestCase {
-    class Dependency {
-        let subdependency: Subdependency
-        
-        init(subdependency: Subdependency) {
-            self.subdependency = subdependency
-        }
-    }
-    
-    class Subdependency {}
-    
     func testSharedAutoRegistration() {
         let container = Container()
         
-        let subdependency = Subdependency()
+        let subdependency = SimpleDependency()
         container.register(dependency: subdependency)
-        container.autoregister(initializer: Dependency.init)
+        container.autoregister(initializer: DependencyWithParameter.init)
         
-        let firstResolved: Dependency = container.resolve()
-        let secondResolved: Dependency = container.resolve()
+        let firstResolved: DependencyWithParameter = container.resolve()
+        let secondResolved: DependencyWithParameter = container.resolve()
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
