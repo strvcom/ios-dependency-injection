@@ -8,6 +8,11 @@
 import Foundation
 
 public protocol DependencyAutoregistering: DependencyRegistering {
+    func autoregister<Dependency>(
+        type: Dependency.Type,
+        in scope: DependencyScope,
+        initializer: @escaping () -> Dependency
+    )
     func autoregister<Dependency, Parameter1>(
         type: Dependency.Type,
         in scope: DependencyScope,
@@ -37,6 +42,18 @@ public protocol DependencyAutoregistering: DependencyRegistering {
 
 // MARK: Default implementation
 public extension DependencyAutoregistering {
+    func autoregister<Dependency>(
+        type: Dependency.Type = Dependency.self,
+        in scope: DependencyScope = Self.defaultScope,
+        initializer: @escaping () -> Dependency
+    ) {
+        let factory: Resolver<Dependency> = { _ in
+            initializer()
+        }
+        
+        register(type: type, in: scope, factory: factory)
+    }
+    
     func autoregister<Dependency, Parameter1>(
         type: Dependency.Type = Dependency.self,
         in scope: DependencyScope = Self.defaultScope,
