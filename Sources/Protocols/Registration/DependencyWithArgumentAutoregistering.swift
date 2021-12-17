@@ -8,6 +8,13 @@
 import Foundation
 
 public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentRegistering {
+    // MARK: Initializer with argument and no other parameter
+    func autoregister<Dependency, Argument>(
+        type: Dependency.Type,
+        argument: Argument.Type,
+        initializer: @escaping (Argument) -> Dependency
+    )
+    
     // MARK: Initializer with argument and 1 parameter
 
     /// Autoregister a dependency with the provided initializer method and with a variable argument
@@ -57,6 +64,20 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
 
 // MARK: Default implementation for initializer with argument and 1 parameter
 public extension DependencyWithArgumentAutoregistering {
+    func autoregister<Dependency, Argument>(
+        type: Dependency.Type = Dependency.self,
+        argument: Argument.Type,
+        initializer: @escaping (Argument) -> Dependency
+    ) {
+        let factory: ResolverWithArgument<Dependency, Argument> = { resolver, argument in
+            initializer(
+                argument
+            )
+        }
+        
+        register(type: type, factory: factory)
+    }
+    
     func autoregister<Dependency, Argument, Parameter1>(
         type: Dependency.Type = Dependency.self,
         argument: Argument.Type,
