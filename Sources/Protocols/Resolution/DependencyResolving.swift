@@ -16,11 +16,7 @@ public protocol DependencyResolving {
 
 public extension DependencyResolving {
     func resolve<T>(type: T.Type) -> T {
-        do {
-            return try tryResolve(type: type)
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+        try! tryResolve(type: type)
     }
     
     func resolve<T>() -> T {

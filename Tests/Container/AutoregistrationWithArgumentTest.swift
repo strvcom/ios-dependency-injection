@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import DependencyInjection
+@testable import DependencyInjectionModule
 
 final class AutoregistrationWithArgumentTest: XCTestCase {
     func testRegistrationWithoutParameter() {
