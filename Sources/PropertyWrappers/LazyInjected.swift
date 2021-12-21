@@ -15,7 +15,7 @@ public final class LazyInjected<Dependency> {
         container.resolve(type: Dependency.self)
     }()
 
-    public init(container: Container = .shared) {
+    public init(from container: Container = .shared) {
         self.container = container
     }
 }
