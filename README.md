@@ -1,5 +1,7 @@
 # iOS Dependency Injection
 
+![build](https://github.com/strvcom/ios-dependency-injection/actions/workflows/integrations.yml/badge.svg)
+
 The lightweight library for dependency injection in Swift
 
 ## Installation
