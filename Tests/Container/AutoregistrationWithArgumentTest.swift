@@ -8,10 +8,8 @@
 import XCTest
 @testable import DependencyInjectionModule
 
-final class AutoregistrationWithArgumentTest: XCTestCase {
+final class AutoregistrationWithArgumentTest: DITestCase {
     func testRegistrationWithoutParameter() {
-        let container = Container()
-
         container.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
         
         let argument = StructureDependency(property1: "48")
@@ -21,8 +19,6 @@ final class AutoregistrationWithArgumentTest: XCTestCase {
     }
     
     func testRegistrationWithOneParameterFirstPermutation() {
-        let container = Container()
-
         let subDependency = DependencyWithValueTypeParameter()
         container.register(dependency: subDependency)
         container.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter2.init)
@@ -39,8 +35,6 @@ final class AutoregistrationWithArgumentTest: XCTestCase {
     }
     
     func testRegistrationWithOneParameterSecondPermutation() {
-        let container = Container()
-
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter2.init)
 
@@ -56,8 +50,6 @@ final class AutoregistrationWithArgumentTest: XCTestCase {
     }
     
     func testRegistrationWithTwoParameterFirstPermutation() {
-        let container = Container()
-
         let subDependency = DependencyWithValueTypeParameter()
         container.register(dependency: subDependency)
         container.autoregister(initializer: SimpleDependency.init)
@@ -77,8 +69,6 @@ final class AutoregistrationWithArgumentTest: XCTestCase {
     }
     
     func testRegistrationWithTwoParameterSecondPermutation() {
-        let container = Container()
-
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(initializer: DependencyWithParameter.init)
         container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter3.init)
@@ -96,8 +86,6 @@ final class AutoregistrationWithArgumentTest: XCTestCase {
     }
 
     func testRegistrationWithTwoParameterThirdPermutation() {
-        let container = Container()
-
         let subDependency = DependencyWithValueTypeParameter()
         container.register(dependency: subDependency)
         container.autoregister(initializer: SimpleDependency.init)

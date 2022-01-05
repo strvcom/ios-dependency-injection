@@ -1,5 +1,5 @@
 //
-//  ContainerBaseTests.swift
+//  BaseTests.swift
 //  
 //
 //  Created by Jan on 25.03.2021.
@@ -8,10 +8,8 @@
 import XCTest
 @testable import DependencyInjectionModule
 
-final class ContainerBaseTests: XCTestCase {
+final class BaseTests: DITestCase {
     func testAutoclosureDependency() {
-        let container = Container()
-        
         let dependency = SimpleDependency()
         container.register(dependency: dependency)
         
@@ -21,8 +19,6 @@ final class ContainerBaseTests: XCTestCase {
     }
     
     func testAutoclosureDependencyWithExplicitType() {
-        let container = Container()
-        
         let dependency = SimpleDependency()
         container.register(type: SimpleDependency.self, dependency: dependency)
         
@@ -32,8 +28,6 @@ final class ContainerBaseTests: XCTestCase {
     }
 
     func testDependencyRegisteredInDefaultScope() {
-        let container = Container()
-        
         container.register() { _ -> SimpleDependency in
             SimpleDependency()
         }
@@ -45,8 +39,6 @@ final class ContainerBaseTests: XCTestCase {
     }
 
     func testDependencyRegisteredInDefaultScopeWithExplicitType() {
-        let container = Container()
-        
         container.register(type: SimpleDependency.self) { _ -> SimpleDependency in
             SimpleDependency()
         }
@@ -58,8 +50,6 @@ final class ContainerBaseTests: XCTestCase {
     }
 
     func testSharedDependency() {
-        let container = Container()
-        
         container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
@@ -71,8 +61,6 @@ final class ContainerBaseTests: XCTestCase {
     }
 
     func testNonSharedDependency() {
-        let container = Container()
-        
         container.register(in: .new) { _ -> SimpleDependency in
             SimpleDependency()
         }
@@ -84,8 +72,6 @@ final class ContainerBaseTests: XCTestCase {
     }
 
     func testNonSharedDependencyWithExplicitType() {
-        let container = Container()
-        
         container.register(type: SimpleDependency.self, in: .new) { _ in
             SimpleDependency()
         }
@@ -97,8 +83,6 @@ final class ContainerBaseTests: XCTestCase {
     }
     
     func testUnregisteredDependency() {
-        let container = Container()
-        
         XCTAssertThrowsError(
             try container.tryResolve(type: SimpleDependency.self),
             "Resolver didn't throw an error") { error in

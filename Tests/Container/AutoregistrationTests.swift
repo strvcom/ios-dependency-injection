@@ -8,10 +8,8 @@
 import XCTest
 @testable import DependencyInjectionModule
 
-final class AutoregistrationTests: XCTestCase {
+final class AutoregistrationTests: DITestCase {
     func testSharedAutoRegistrationWithoutParameter() {
-        let container = Container()
-        
         container.autoregister(initializer: SimpleDependency.init)
         
         let firstResolved: SimpleDependency = container.resolve()
@@ -21,8 +19,6 @@ final class AutoregistrationTests: XCTestCase {
     }
     
     func testSharedAutoRegistrationOneParameter() {
-        let container = Container()
-        
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(initializer: DependencyWithParameter.init)
         
@@ -33,8 +29,6 @@ final class AutoregistrationTests: XCTestCase {
     }
     
     func testSharedAutoRegistrationTwoParameters() {
-        let container = Container()
-        
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
         container.register(dependency: subDependency)
@@ -47,8 +41,6 @@ final class AutoregistrationTests: XCTestCase {
     }
     
     func testSharedAutoRegistrationThreeParameters() {
-        let container = Container()
-        
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
         container.register(dependency: subDependency)
@@ -62,8 +54,6 @@ final class AutoregistrationTests: XCTestCase {
     }
     
     func testSharedAutoRegistrationFourParameters() {
-        let container = Container()
-        
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
         container.register(dependency: subDependency)
@@ -78,8 +68,6 @@ final class AutoregistrationTests: XCTestCase {
     }
     
     func testSharedAutoRegistrationFiveParameters() {
-        let container = Container()
-        
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
         container.register(dependency: subDependency)

@@ -8,11 +8,11 @@
 import XCTest
 @testable import DependencyInjectionModule
 
-final class PropertyWrapperTests: XCTestCase {
-    override func tearDown() {
-        super.tearDown()
-        
+final class PropertyWrapperTests: DITestCase {
+    override func tearDown() {        
         Container.shared.clean()
+
+        super.tearDown()
     }
     
     func testInjectionWithSharedContainer() {
@@ -35,8 +35,6 @@ final class PropertyWrapperTests: XCTestCase {
             @Injected(from: container) var resolvedDependency: SimpleDependency
         }
 
-        let container = Container()
-        
         let dependency = SimpleDependency()
         container.register(dependency: dependency)
         
@@ -69,7 +67,6 @@ final class PropertyWrapperTests: XCTestCase {
             @LazyInjected(from: container) var resolvedDependency: SimpleDependency
         }
 
-        let container = Container()
         Module.container = container
 
         // 1: Create a module instance

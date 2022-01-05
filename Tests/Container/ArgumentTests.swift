@@ -8,10 +8,8 @@
 import XCTest
 @testable import DependencyInjectionModule
 
-final class ContainerArgumentTests: XCTestCase {
+final class ContainerArgumentTests: DITestCase {
     func testRegistration() {
-        let container = Container()
-
         container.register { (resolver, argument: StructureDependency) -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
@@ -23,8 +21,6 @@ final class ContainerArgumentTests: XCTestCase {
     }
     
     func testRegistrationWithExplicitType() {
-        let container = Container()
-
         container.register(type: DependencyWithValueTypeParameter.self) { (resolver, argument: StructureDependency) in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
@@ -36,8 +32,6 @@ final class ContainerArgumentTests: XCTestCase {
     }
     
     func testUnmatchingArgumentType() {
-        let container = Container()
-
         container.register { (resolver, argument: StructureDependency) -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
