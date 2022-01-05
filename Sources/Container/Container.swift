@@ -34,6 +34,10 @@ extension Container: DependencyAutoregistering {
         let registration = Registration(type: type, scope: scope, factory: factory)
         
         registrations[registration.identifier] = registration
+        
+        // With a new registration we should clean all shared instances
+        // because the new registered factory most likely returns diffent objects and we have no way to tell
+        sharedInstances[registration.identifier] = nil
     }
 }
 
