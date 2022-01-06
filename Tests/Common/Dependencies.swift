@@ -7,13 +7,15 @@
 
 import Foundation
 
-struct StructureDependency: Equatable {
+protocol DIProtocol {}
+
+struct StructureDependency: Equatable, DIProtocol {
     static let `default` = StructureDependency(property1: "test")
     
     let property1: String
 }
 
-class SimpleDependency {}
+class SimpleDependency: DIProtocol {}
 
 class DependencyWithValueTypeParameter {
     let subDependency: StructureDependency
