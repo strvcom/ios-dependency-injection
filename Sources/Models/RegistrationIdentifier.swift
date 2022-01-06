@@ -11,12 +11,12 @@ struct RegistrationIdentfier {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: ObjectIdentifier?
     
-    init<T, Argument>(type: T.Type, argument: Argument.Type) {
+    init<Dependency, Argument>(type: Dependency.Type, argument: Argument.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
         self.argumentIdentifiers = ObjectIdentifier(type)
     }
     
-    init<T>(type: T.Type) {
+    init<Dependency>(type: Dependency.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
         self.argumentIdentifiers = nil
     }

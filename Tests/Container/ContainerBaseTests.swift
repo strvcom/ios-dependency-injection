@@ -11,7 +11,7 @@ import DependencyInjection
 final class ContainerBaseTests: XCTestCase {
     class Dependency {}
     
-    func testSharedAutoRegistration() {
+    func testSharedAutoclosureRegistration() {
         let container = Container()
         
         let dependency = Dependency()
