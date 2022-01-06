@@ -21,3 +21,4 @@ __Sections__
 - Register an instance with arguments
 - Convenient property wrapper
 - Autoregister an instance i.e. possibility to specify only an initializer instead of manually initializing an instance in the resolving closure
+- 100% test coverage
