@@ -2,7 +2,7 @@
 //  ContainerArgumentTests.swift
 //  
 //
-//  Created by Jan on 26.03.2021.
+//  Created by Jan Schwarz on 26.03.2021.
 //
 
 import XCTest
@@ -10,7 +10,7 @@ import XCTest
 
 final class ContainerArgumentTests: DITestCase {
     func testRegistration() {
-        container.register { (resolver, argument: StructureDependency) -> DependencyWithValueTypeParameter in
+        container.register { (resolver, argument) -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
         
@@ -21,7 +21,7 @@ final class ContainerArgumentTests: DITestCase {
     }
     
     func testRegistrationWithExplicitType() {
-        container.register(type: DependencyWithValueTypeParameter.self) { (resolver, argument: StructureDependency) in
+        container.register(type: DependencyWithValueTypeParameter.self) { (resolver, argument) in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
         
@@ -32,7 +32,7 @@ final class ContainerArgumentTests: DITestCase {
     }
     
     func testUnmatchingArgumentType() {
-        container.register { (resolver, argument: StructureDependency) -> DependencyWithValueTypeParameter in
+        container.register { (resolver, argument) -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
         
@@ -42,7 +42,7 @@ final class ContainerArgumentTests: DITestCase {
             try container.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument),
             "Resolver didn't throw an error") { error in
                 guard let resolutionError = error as? ResolutionError else {
-                    XCTFail("Error of a wrong type")
+                    XCTFail("Incorrect error type")
                     return
                 }
                 
@@ -50,7 +50,7 @@ final class ContainerArgumentTests: DITestCase {
                 case .unmatchingArgumentType:
                     XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
                 default:
-                    XCTFail("Error of a wrong type")
+                    XCTFail("Incorrect resolution error")
                 }
             }
     }

@@ -2,7 +2,7 @@
 //  AutoregistrationWithArgumentTest.swift
 //  
 //
-//  Created by Jan on 05.08.2021.
+//  Created by Jan Schwarz on 05.08.2021.
 //
 
 import XCTest

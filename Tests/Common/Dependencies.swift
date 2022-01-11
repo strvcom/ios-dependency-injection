@@ -2,7 +2,7 @@
 //  Dependencies.swift
 //  
 //
-//  Created by Jan on 15.12.2021.
+//  Created by Jan Schwarz on 15.12.2021.
 //
 
 import Foundation

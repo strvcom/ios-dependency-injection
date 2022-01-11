@@ -2,7 +2,7 @@
 //  BaseTests.swift
 //  
 //
-//  Created by Jan on 25.03.2021.
+//  Created by Jan Schwarz on 25.03.2021.
 //
 
 import XCTest
@@ -28,7 +28,7 @@ final class BaseTests: DITestCase {
     }
 
     func testDependencyRegisteredInDefaultScope() {
-        container.register() { _ -> SimpleDependency in
+        container.register { _ -> SimpleDependency in
             SimpleDependency()
         }
         
@@ -87,7 +87,7 @@ final class BaseTests: DITestCase {
             try container.tryResolve(type: SimpleDependency.self),
             "Resolver didn't throw an error") { error in
                 guard let resolutionError = error as? ResolutionError else {
-                    XCTFail("Error of a wrong type")
+                    XCTFail("Incorrect error type")
                     return
                 }
                 
@@ -95,7 +95,7 @@ final class BaseTests: DITestCase {
                 case .dependencyNotRegistered:
                     XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
                 default:
-                    XCTFail("Error of a wrong type")
+                    XCTFail("Incorrect resolution error")
                 }
             }
     }

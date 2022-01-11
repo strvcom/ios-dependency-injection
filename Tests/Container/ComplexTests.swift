@@ -2,7 +2,7 @@
 //  ComplexTests.swift
 //  
 //
-//  Created by Jan on 04.01.2022.
+//  Created by Jan Schwarz on 04.01.2022.
 //
 
 import XCTest
@@ -91,7 +91,7 @@ final class ComplexTests: DITestCase {
         XCTAssertNotEqual(
             resolvedDependency3.subDependency2.subDependency.property1,
             resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instancies with the same argument"
+            "Resolved instances with the same argument"
         )
     }
     
@@ -104,11 +104,12 @@ final class ComplexTests: DITestCase {
                 subDependency: resolver.resolve()
             )
         }
-        container.register() { resolver, argument in
+        container.register { resolver, argument in
             DependencyWithParameter3(
                 subDependency1: resolver.resolve(),
                 subDependency2: argument,
-                subDependency3: resolver.resolve())
+                subDependency3: resolver.resolve()
+            )
         }
         
         let argumentDependency1 = DependencyWithValueTypeParameter(
@@ -134,7 +135,7 @@ final class ComplexTests: DITestCase {
         XCTAssertNotEqual(
             resolvedDependency3.subDependency2.subDependency.property1,
             resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instancies with the same argument"
+            "Resolved instances with the same argument"
         )
     }
 }

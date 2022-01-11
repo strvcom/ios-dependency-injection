@@ -2,7 +2,7 @@
 //  DependencyRegistering.swift
 //  
 //
-//  Created by Jan on 25.03.2021.
+//  Created by Jan Schwarz on 25.03.2021.
 //
 
 import Foundation
@@ -43,7 +43,7 @@ public extension DependencyRegistering {
     /// Register a dependency
     ///
     /// DISCUSSION: Registration methods with autoclosures don't have any scope parameter for a reason.
-    /// The resolver always return the same instance of the dependency because the autoclosure simply wraps the instance passed as a parameter and returns it whenever it is called
+    /// The resolver always returns the same instance of the dependency because the autoclosure simply wraps the instance passed as a parameter and returns it whenever it is called
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register

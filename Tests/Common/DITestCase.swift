@@ -2,7 +2,7 @@
 //  DITestCase.swift
 //  
 //
-//  Created by Jan on 04.01.2022.
+//  Created by Jan Schwarz on 04.01.2022.
 //
 
 import XCTest
