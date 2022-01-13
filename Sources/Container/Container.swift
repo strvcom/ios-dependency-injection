@@ -36,7 +36,7 @@ extension Container: DependencyAutoregistering {
         registrations[registration.identifier] = registration
         
         // With a new registration we should clean all shared instances
-        // because the new registered factory most likely returns diffent objects and we have no way to tell
+        // because the new registered factory most likely returns different objects and we have no way to tell
         sharedInstances[registration.identifier] = nil
     }
 }
