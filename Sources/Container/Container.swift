@@ -1,5 +1,5 @@
 //
-//  DIContainer.swift
+//  Container.swift
 //  
 //
 //  Created by Jan Schwarz on 24.03.2021.
@@ -34,6 +34,10 @@ extension Container: DependencyAutoregistering {
         let registration = Registration(type: type, scope: scope, factory: factory)
         
         registrations[registration.identifier] = registration
+        
+        // With a new registration we should clean all shared instances
+        // because the new registered factory most likely returns different objects and we have no way to tell
+        sharedInstances[registration.identifier] = nil
     }
 }
 
@@ -114,11 +118,10 @@ extension Container: DependencyWithArgumentResolving {
             break
         }
         
-        guard let dependency = try registration.factory(self, argument) as? Dependency else {
-            throw ResolutionError.unmatchingDependencyType(
-                message: "Registration of type \(registration.identifier.description) doesn't return an instance of type \(Dependency.self)"
-            )
-        }
+        // We use force cast here because we are sure that the type-casting always succeed
+        // The reason why the `factory` closure returns `Any` is that we have to erase the generic type in order to store the registration
+        // When the registration is created it can be initialized just with a `factory` that returns the matching type
+        let dependency = try registration.factory(self, argument) as! Dependency
         
         switch registration.scope {
         case .shared:

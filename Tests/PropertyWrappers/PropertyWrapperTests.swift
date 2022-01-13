@@ -2,27 +2,25 @@
 //  PropertyWrapperTests.swift
 //  
 //
-//  Created by Jan on 26.03.2021.
+//  Created by Jan Schwarz on 26.03.2021.
 //
 
 import XCTest
-import DependencyInjection
+@testable import DependencyInjectionModule
 
-final class PropertyWrapperTests: XCTestCase {
-    class Dependency {}
-    
-    override func tearDown() {
-        super.tearDown()
-        
+final class PropertyWrapperTests: DITestCase {
+    override func tearDown() {        
         Container.shared.clean()
+
+        super.tearDown()
     }
     
-    func testInjection() {
+    func testInjectionWithSharedContainer() {
         struct Module {
-            @Injected var resolvedDependency: Dependency
+            @Injected var resolvedDependency: SimpleDependency
         }
 
-        let dependency = Dependency()
+        let dependency = SimpleDependency()
         Container.shared.register(dependency: dependency)
         
         let module = Module()
@@ -30,16 +28,14 @@ final class PropertyWrapperTests: XCTestCase {
         XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
     }
     
-    func testInjectionCustomContainer() {
+    func testInjectionWithCustomContainer() {
         struct Module {
             static var container: Container!
             
-            @Injected(from: container) var resolvedDependency: Dependency
+            @Injected(from: container) var resolvedDependency: SimpleDependency
         }
 
-        let container = Container()
-        
-        let dependency = Dependency()
+        let dependency = SimpleDependency()
         container.register(dependency: dependency)
         
         Module.container = container
@@ -48,17 +44,37 @@ final class PropertyWrapperTests: XCTestCase {
         XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
     }
     
-    func testLazyInjection() {
+    func testLazyInjectionWithSharedContainer() {
         struct Module {
-            @LazyInjected var resolvedDependency: Dependency
+            @LazyInjected var resolvedDependency: SimpleDependency
         }
         
         // 1: Create a module instance
         let module = Module()
 
         // 2: Only after that register the dependency
-        let dependency = Dependency()
+        let dependency = SimpleDependency()
         Container.shared.register(dependency: dependency)
+        
+        // 3: Get resolved dependency
+        XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")
+    }
+    
+    func testLazyInjectionWithCustomContainer() {
+        struct Module {
+            static var container: Container!
+            
+            @LazyInjected(from: container) var resolvedDependency: SimpleDependency
+        }
+
+        Module.container = container
+
+        // 1: Create a module instance
+        let module = Module()
+
+        // 2: Only after that register the dependency
+        let dependency = SimpleDependency()
+        container.register(dependency: dependency)
         
         // 3: Get resolved dependency
         XCTAssertTrue(dependency === module.resolvedDependency, "Container returned different instance")

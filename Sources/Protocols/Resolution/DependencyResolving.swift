@@ -2,7 +2,7 @@
 //  File.swift
 //  
 //
-//  Created by Jan on 25.03.2021.
+//  Created by Jan Schwarz on 25.03.2021.
 //
 
 import Foundation
@@ -16,11 +16,7 @@ public protocol DependencyResolving {
 
 public extension DependencyResolving {
     func resolve<T>(type: T.Type) -> T {
-        do {
-            return try tryResolve(type: type)
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+        try! tryResolve(type: type)
     }
     
     func resolve<T>() -> T {

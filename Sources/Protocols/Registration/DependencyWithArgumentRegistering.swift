@@ -2,7 +2,7 @@
 //  DependencyWithArgumentRegistering.swift
 //  
 //
-//  Created by Jan on 26.03.2021.
+//  Created by Jan Schwarz on 26.03.2021.
 //
 
 import Foundation
@@ -20,6 +20,7 @@ public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     /// Should the argument conform to `Equatable` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
     /// Shared instances are typically not dependent on variable input parameters by definition.
     /// If you need to support this usecase, please, keep references to the variable singletons outside of the resolver.
+    /// 
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called once the dependency is being resolved

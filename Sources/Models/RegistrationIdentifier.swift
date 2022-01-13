@@ -2,23 +2,23 @@
 //  RegistrationIdentfier.swift
 //  
 //
-//  Created by Jan on 25.03.2021.
+//  Created by Jan Schwarz on 25.03.2021.
 //
 
 import Foundation
 
 struct RegistrationIdentfier {
     let typeIdentifier: ObjectIdentifier
-    let argumentIdentifiers: ObjectIdentifier?
+    let argumentIdentifier: ObjectIdentifier?
     
     init<Dependency, Argument>(type: Dependency.Type, argument: Argument.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
-        self.argumentIdentifiers = ObjectIdentifier(type)
+        self.argumentIdentifier = ObjectIdentifier(type)
     }
     
     init<Dependency>(type: Dependency.Type) {
         self.typeIdentifier = ObjectIdentifier(type)
-        self.argumentIdentifiers = nil
+        self.argumentIdentifier = nil
     }
 }
 
@@ -30,7 +30,7 @@ extension RegistrationIdentfier: CustomStringConvertible {
     var description: String {
         """
         Type: \(typeIdentifier.debugDescription)
-        Argument: \(argumentIdentifiers?.debugDescription ?? "nil")
+        Argument: \(argumentIdentifier?.debugDescription ?? "nil")
         """
     }
 }
