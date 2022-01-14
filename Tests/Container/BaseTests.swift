@@ -27,6 +27,15 @@ final class BaseTests: DITestCase {
         XCTAssertTrue(dependency === resolvedDependency, "Container returned different instance")
     }
 
+    func testRepeatedlyResolvedAutoclosureDependency() {
+        container.register(dependency: SimpleDependency())
+        
+        let resolvedDependency1: SimpleDependency = container.resolve()
+        let resolvedDependency2: SimpleDependency = container.resolve()
+
+        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
+    }
+    
     func testDependencyRegisteredInDefaultScope() {
         container.register { _ -> SimpleDependency in
             SimpleDependency()
