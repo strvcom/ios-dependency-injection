@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Object that uniquely identifies a registered dependency
 struct RegistrationIdentfier {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifier: ObjectIdentifier?
