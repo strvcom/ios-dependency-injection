@@ -22,7 +22,7 @@ import Foundation
     }()
 
     /// Property wrapper initializer
-    /// - Parameter container: `Container` that will be used to resolve the dependency
+    /// - Parameter container: Container that will be used to resolve the dependency
     public init(from container: Container = .shared) {
         self.container = container
     }

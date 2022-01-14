@@ -23,7 +23,7 @@ public protocol DependencyRegistering {
 
 // MARK: Overloaded factory methods
 public extension DependencyRegistering {
-    /// Default `DependencyScope` value
+    /// Default ``DependencyScope`` value
     ///
     /// The default value is `shared`
     static var defaultScope: DependencyScope {

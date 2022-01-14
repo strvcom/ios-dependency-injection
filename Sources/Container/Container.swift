@@ -9,7 +9,7 @@ import Foundation
 
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved i.e. resolved
 open class Container {
-    /// Shared `Container` singleton
+    /// Shared singleton
     public static let shared: Container = {
         Container()
     }()
@@ -17,7 +17,7 @@ open class Container {
     private var registrations = [RegistrationIdentfier: Registration]()
     private var sharedInstances = [RegistrationIdentfier: Any]()
     
-    /// Create new instance of `Container`
+    /// Create new instance of ``Container``
     public init() {}
     
     /// Remove all registrations and already instantiated shared instances from the container
@@ -55,7 +55,7 @@ extension Container: DependencyWithArgumentAutoregistering {
     ///
     /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
     /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to `Equatable` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
+    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
     /// Shared instances are typically not dependent on variable input parameters by definition.
     /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
@@ -74,7 +74,7 @@ extension Container: DependencyWithArgumentResolving {
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws `ResolutionError.dependencyNotRegistered`
+    /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
@@ -92,7 +92,7 @@ extension Container: DependencyWithArgumentResolving {
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type wasn't registered before this method call
-    /// the method throws `ResolutionError.dependencyNotRegistered`
+    /// the method throws ``ResolutionError.dependencyNotRegistered``
     /// 
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
@@ -130,7 +130,7 @@ private extension Container {
         }
         
         // We use force cast here because we are sure that the type-casting always succeed
-        // The reason why the `factory` closure returns `Any` is that we have to erase the generic type in order to store the registration
+        // The reason why the `factory` closure returns ``Any`` is that we have to erase the generic type in order to store the registration
         // When the registration is created it can be initialized just with a `factory` that returns the matching type
         let dependency = try registration.factory(self, argument) as! Dependency
         
