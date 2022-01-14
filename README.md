@@ -1,7 +1,7 @@
 # Dependency Injection
 
 [![build](https://github.com/strvcom/ios-dependency-injection/actions/workflows/integrations.yml/badge.svg)](https://github.com/strvcom/ios-dependency-injection/actions/workflows/integrations.yml/badge.svg)
-[![Coverage](https://img.shields.io/badge/Coverage-100%-darkgreen?style=flat-square)](https://img.shields.io/badge/Coverage-100%-darkgreen?style=flat-square)
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-darkgreen?style=flat-square)](https://img.shields.io/badge/Coverage-100%25-darkgreen?style=flat-square)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)
 [![Swift](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)
 
