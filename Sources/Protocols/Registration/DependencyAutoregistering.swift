@@ -95,7 +95,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping () -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { _ in
+        let factory: Factory<Dependency> = { _ in
             initializer()
         }
         
@@ -113,7 +113,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping (Parameter) -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { resolver in
+        let factory: Factory<Dependency> = { resolver in
             initializer(
                 resolver.resolve(type: Parameter.self)
             )
@@ -133,7 +133,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping (Parameter1, Parameter2) -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { resolver in
+        let factory: Factory<Dependency> = { resolver in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self)
@@ -154,7 +154,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping (Parameter1, Parameter2, Parameter3) -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { resolver in
+        let factory: Factory<Dependency> = { resolver in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self),
@@ -176,7 +176,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4) -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { resolver in
+        let factory: Factory<Dependency> = { resolver in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self),
@@ -199,7 +199,7 @@ public extension DependencyAutoregistering {
         in scope: DependencyScope = Self.defaultScope,
         initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4, Parameter5) -> Dependency
     ) {
-        let factory: Resolver<Dependency> = { resolver in
+        let factory: Factory<Dependency> = { resolver in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self),

@@ -35,7 +35,7 @@ extension Container: DependencyAutoregistering {
     ///   - type: Type of the dependency to register
     ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
     ///   - factory: Closure that is called once the dependency is being resolved
-    open func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Resolver<Dependency>) {
+    open func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) {
         let registration = Registration(type: type, scope: scope, factory: factory)
         
         registrations[registration.identifier] = registration
@@ -62,7 +62,7 @@ extension Container: DependencyWithArgumentAutoregistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called once the dependency is being resolved
-    open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping ResolverWithArgument<Dependency, Argument>) {
+    open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) {
         let registration = Registration(type: type, scope: .new, factory: factory)
         
         registrations[registration.identifier] = registration
