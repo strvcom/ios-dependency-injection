@@ -31,7 +31,7 @@ public extension DependencyWithArgumentResolving {
         try! tryResolve(type: type, argument: argument)
     }
     
-    /// Resolve a dependency with a variable argument that was previously registered within the container. A type of the required dependency is inferred from the return type
+    /// Resolve a dependency with a variable argument that was previously registered within the container. The type of the required dependency is inferred from the return type
     ///
     /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs
     ///

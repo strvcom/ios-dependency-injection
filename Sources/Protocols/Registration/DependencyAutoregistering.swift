@@ -13,7 +13,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency>(
         type: Dependency.Type,
@@ -25,7 +25,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter>(
         type: Dependency.Type,
@@ -37,7 +37,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2>(
         type: Dependency.Type,
@@ -49,7 +49,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3>(
         type: Dependency.Type,
@@ -61,7 +61,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4>(
         type: Dependency.Type,
@@ -73,7 +73,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4, Parameter5>(
         type: Dependency.Type,
@@ -88,7 +88,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency>(
         type: Dependency.Type = Dependency.self,
@@ -106,7 +106,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter>(
         type: Dependency.Type = Dependency.self,
@@ -126,7 +126,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2>(
         type: Dependency.Type = Dependency.self,
@@ -147,7 +147,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3>(
         type: Dependency.Type = Dependency.self,
@@ -169,7 +169,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4>(
         type: Dependency.Type = Dependency.self,
@@ -192,7 +192,7 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Parameter1, Parameter2, Parameter3, Parameter4, Parameter5>(
         type: Dependency.Type = Dependency.self,

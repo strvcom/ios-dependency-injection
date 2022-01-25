@@ -29,17 +29,17 @@ If you are new to the concept of Dependency Injection, you can check [Wikipedia]
 
 ## Usage
 
-A container is a key component of Dependency Injection. A container manages dependencies of your codebase. First, you register your dependencies within the container identified by either their types, or protocols or classes they conform to or inherit from respectively. Then, you use the container to get, i.e. resolve instances of the registered dependencies. The class [Container](Sources/Container/Container.swift) represents the Dependency Injection container.
+A container is a key component of Dependency Injection. A container manages dependencies of your codebase. First, you register your dependencies within the container identified by either their types, or protocols or classes they conform to or inherit from respectively. Then, you use the container to get (i.e. resolve) instances of the registered dependencies. The class [Container](Sources/Container/Container.swift) represents the Dependency Injection container.
 
 Other terminology that might be useful:
 
 - **[Factory](Sources/Protocols/Registration/DependencyRegistering.swift)** - A function or closure instantiating a dependency
-- **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependendency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependendency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests i.e. it is a singleton
+- **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependendency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependendency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests, i.e. it is a singleton
 - **[Registration with an argument](Sources/Protocols/Registration/DependencyWithArgumentRegistering.swift)** - All dependencies must be initialized and their initializers often have parameters. Typically, the objects that are passed as the input parameters are resolved from the same container. But you might want to have a registered dependency which requires a parameter in its initializer that can't be registered in the container. In such case, you register the dependency with a variable argument and you specify a value of the argument when the dependency is being resolved; the value is passed as an input parameter to the dependency factory.
 
 ### Registration
 
-A dependency is registered with the `register` method of the container. A dependency is registered with a type that is either its own type, or a protocol or a class that the dependency conform to or inherit from respectively. Next, a scope of registration must be specified (see the terminology above). Finally, a factory closure or function that returns an instance of the dependency must be provided.
+A dependency is registered with the `register` method of the container. A dependency is registered with a type that is either its own type, or a protocol or a class that the dependency conforms to or inherits from respectively. Next, a scope of registration must be specified (see the terminology above). Finally, a factory closure or function that returns an instance of the dependency must be provided.
 
 It can look like this:
 ```swift
@@ -69,7 +69,7 @@ container.register(dependency: SimpleDependency())
 
 See the terminology above to understand what we mean by the registration with an argument.
 
-_DISCUSSION: The registration with an argument doesn't have any scope parameter and it is for a reason. The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined. Should the argument conform to `Equatable` to compare the arguments to tell whether a shared instance with a given argument was already resolved? Shared instances are typically not dependent on variable input parameters by definition. If you need to support this usecase, please, keep references to the variable singletons outside of the container._
+_DISCUSSION: The registration with an argument doesn't have any scope parameter and it is for a reason. The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined. Should the argument conform to `Equatable` to compare the arguments to tell whether a shared instance with a given argument was already resolved? Shared instances are typically not dependent on variable input parameters by definition._
 
 Let's assume that our dependency from above needs also an integer that is determined right before the dependency is supposed to be resolved from the container. There is no point in registering the integer as a dependency in the container, moreover, we typically don't even want to register simple types like integers. For such case, we have the registration with an argument:
 ```swift
@@ -111,12 +111,12 @@ container.register { container, number in
 With the following:
 ```swift
 let container = Container()
-container.autoregister(argument: Int.self)(initializer: Dependency.init)
+container.autoregister(argument: Int.self, initializer: Dependency.init)
 ```
 
 ### Resolution
 
-Dependency resolution is very straightforward. You can use either container's `tryResolve` method that throws an error when something goes wrong, or simply `resolve` which returns the resolved non-optional dependency but is anything goes wrong, your app will crash.
+Dependency resolution is very straightforward. You can use either the container's `tryResolve` method that throws an error when something goes wrong, or simply `resolve` which returns the resolved non-optional dependency but if anything goes wrong, your app will crash.
 
 You can resolve a registered dependency like this:
 ```swift

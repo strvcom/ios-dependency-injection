@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved i.e. resolved
+/// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
 open class Container {
     /// Shared singleton
     public static let shared: Container = {
@@ -33,8 +33,8 @@ extension Container: DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all upcoming `resolve` calls i.e. it is a singleton
-    ///   - factory: Closure that is called once the dependency is being resolved
+    ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
+    ///   - factory: Closure that is called when the dependency is being resolved
     open func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) {
         let registration = Registration(type: type, scope: scope, factory: factory)
         
@@ -61,7 +61,7 @@ extension Container: DependencyWithArgumentAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
-    ///   - factory: Closure that is called once the dependency is being resolved
+    ///   - factory: Closure that is called when the dependency is being resolved
     open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) {
         let registration = Registration(type: type, scope: .new, factory: factory)
         

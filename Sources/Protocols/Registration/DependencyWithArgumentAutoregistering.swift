@@ -34,7 +34,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
-    /// However, `Parameter` is a dependency registered in the same resolver i.e. container,
+    /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -57,7 +57,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
-    /// However, `Parameter` is a dependency registered in the same resolver i.e. container,
+    /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -82,7 +82,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -105,7 +105,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -128,7 +128,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -183,7 +183,7 @@ public extension DependencyWithArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
-    /// However, `Parameter` is a dependency registered in the same resolver i.e. container,
+    /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -215,7 +215,7 @@ public extension DependencyWithArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
-    /// However, `Parameter` is a dependency registered in the same resolver i.e. container,
+    /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -246,7 +246,7 @@ public extension DependencyWithArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -279,7 +279,7 @@ public extension DependencyWithArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///
@@ -312,7 +312,7 @@ public extension DependencyWithArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
-    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver i.e. container,
+    /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
     ///

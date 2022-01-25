@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Object that represents a registered dependency and stores a closure i.e. factory that returns the desired dependency
+/// Object that represents a registered dependency and stores a closure, i.e. a factory that returns the desired dependency
 struct Registration {
     let identifier: RegistrationIdentfier
     let scope: DependencyScope

@@ -13,7 +13,7 @@ import Foundation
 ///
 /// The dependency is resolved when the wrapped value is accessed for the first time
 ///
-/// The property wrapper is a class in order to be able to modify the wrapped value when the dependency is resolved, regardless the type of the object where the property wrapper is stored
+/// The property wrapper is a class in order to be able to modify the wrapped value when the dependency is resolved, regardless of the type of the object where the property wrapper is stored
 @propertyWrapper public final class LazyInjected<Dependency> {
     private let container: Container
 
