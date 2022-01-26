@@ -14,8 +14,8 @@ open class Container {
         Container()
     }()
     
-    private var registrations = [RegistrationIdentfier: Registration]()
-    private var sharedInstances = [RegistrationIdentfier: Any]()
+    private var registrations = [RegistrationIdentifier: Registration]()
+    private var sharedInstances = [RegistrationIdentifier: Any]()
     
     /// Create new instance of ``Container``
     public init() {}
@@ -80,7 +80,7 @@ extension Container: DependencyWithArgumentResolving {
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
     open func tryResolve<Dependency, Argument>(type: Dependency.Type, argument: Argument) throws -> Dependency {
-        let identifier = RegistrationIdentfier(type: type, argument: Argument.self)
+        let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
         
@@ -97,7 +97,7 @@ extension Container: DependencyWithArgumentResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     open func tryResolve<Dependency>(type: Dependency.Type) throws -> Dependency {
-        let identifier = RegistrationIdentfier(type: type)
+        let identifier = RegistrationIdentifier(type: type)
 
         let registration = try getRegistration(with: identifier)
         
@@ -109,7 +109,7 @@ extension Container: DependencyWithArgumentResolving {
 
 // MARK: Private methods
 private extension Container {
-    func getRegistration(with identifier: RegistrationIdentfier) throws -> Registration {
+    func getRegistration(with identifier: RegistrationIdentifier) throws -> Registration {
         guard let registration = registrations[identifier] else {
             throw ResolutionError.dependencyNotRegistered(
                 message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"

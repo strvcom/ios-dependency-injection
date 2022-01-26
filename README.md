@@ -34,7 +34,7 @@ A container is a key component of Dependency Injection. A container manages depe
 Other terminology that might be useful:
 
 - **[Factory](Sources/Protocols/Registration/DependencyRegistering.swift)** - A function or closure instantiating a dependency
-- **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependendency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependendency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests, i.e. it is a singleton
+- **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests, i.e. it is a singleton
 - **[Registration with an argument](Sources/Protocols/Registration/DependencyWithArgumentRegistering.swift)** - All dependencies must be initialized and their initializers often have parameters. Typically, the objects that are passed as the input parameters are resolved from the same container. But you might want to have a registered dependency which requires a parameter in its initializer that can't be registered in the container. In such case, you register the dependency with a variable argument and you specify a value of the argument when the dependency is being resolved; the value is passed as an input parameter to the dependency factory.
 
 ### Registration
@@ -131,7 +131,7 @@ let dependency = container.resolve(type: Dependency.self)
 let dependency2: Dependency = container.resolve()
 ```
 
-Or a dependendency registered with an argument like this:
+Or a dependency registered with an argument like this:
 ```swift
 let container = Container()
 container.register { container, number in
@@ -144,6 +144,41 @@ container.register { container, number in
 let dependency = container.resolve(type: Dependency.self, argument: 42)
 let dependency2: Dependency = container.resolve(argument: 42)
 ```
+
+### Property wrappers
+
+The package contains also two convenient property wrappers `@Injected` and `@LazyInjected`. As long as you are fine with using the `Container.shared` or any other static container instance, you can use the following syntactic sugar to resolve dependencies:
+```swift
+let container = Container()
+container.autoregister(initializer: Dependency.init)
+
+class Object {
+  @Injected(from: container) var dependency: Dependency
+}
+```
+Or if you use the `Container.shared` singleton, then you can write simply:
+```swift
+class Object {
+  @Injected var dependency: Dependency
+}
+```
+When using the `@Injected` property wrapper, the dependency is resolved right in the moment when the property is instantiated. If you prefer to resolve the dependency only when it is accessed for the first time, you should rather use `@LazyInjected`:
+```swift
+let container = Container()
+container.autoregister(initializer: Dependency.init)
+
+class Object {
+  @LazyInjected(from: container) var dependency: Dependency
+  // Resolve from `Container.shared`
+  @LazyInjected var dependency2: Dependency
+  
+  func doStuff() {
+    dependency.doStuff()
+    dependency2.doStuff()
+  }
+}
+```
+In the example above the dependencies aren't resolved immediately when an instance of `Object` is initialized but only when the `doStuff` method is called for the first time. 
 
 ## Roadmap
 
