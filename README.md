@@ -149,11 +149,16 @@ let dependency2: Dependency = container.resolve(argument: 42)
 
 The package contains also two convenient property wrappers `@Injected` and `@LazyInjected`. As long as you are fine with using the `Container.shared` or any other static container instance, you can use the following syntactic sugar to resolve dependencies:
 ```swift
-let container = Container()
-container.autoregister(initializer: Dependency.init)
+class Singletons {
+  static let container = Container()
+  
+  static func configure() {
+    container.autoregister(initializer: Dependency.init)
+  }
+}
 
 class Object {
-  @Injected(from: container) var dependency: Dependency
+  @Injected(from: Singletons.container) var dependency: Dependency
 }
 ```
 Or if you use the `Container.shared` singleton, then you can write simply:
