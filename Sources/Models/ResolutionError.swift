@@ -7,8 +7,12 @@
 
 import Foundation
 
+/// Errors that might occur when a dependency is being resolved
 public enum ResolutionError: Error {
+    /// No dependency with the required type is registered within the container
     case dependencyNotRegistered(message: String)
+    
+    /// The dependency with the required type is registered within the container but the factory closure expects a different argument type
     case unmatchingArgumentType(message: String)
 
     public var localizedDescription: String {
