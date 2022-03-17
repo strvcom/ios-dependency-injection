@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import DependencyInjectionModule
+import DependencyInjectionModule
 
 class DITestCase: XCTestCase {
     var container: Container!

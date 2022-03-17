@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import DependencyInjectionModule
+import DependencyInjectionModule
 
 final class AutoregistrationTests: DITestCase {
     func testSharedAutoRegistrationWithoutParameter() {
