@@ -15,3 +15,11 @@ __Sections__
 
 ### Added
 
+- Register and resolve a shared instance
+- Register and resolve a new instance
+- Register an instance with an identifier
+- Register an instance with arguments
+- Convenient property wrapper
+- Autoregister an instance i.e. possibility to specify only an initializer instead of manually initializing an instance in the resolving closure
+- 100% test coverage
+- Documentation

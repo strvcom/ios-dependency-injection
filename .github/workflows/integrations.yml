@@ -46,3 +46,5 @@ jobs:
       # run tests
       - name: Run tests
         run: bundle exec fastlane tests
+        env:
+          DEVICES: "iPhone 13,iPad Air,Apple TV,My Mac,Apple Watch Series 6"
