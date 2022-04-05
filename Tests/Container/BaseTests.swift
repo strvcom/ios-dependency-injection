@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import DependencyInjectionModule
+import DependencyInjection
 
 final class BaseTests: DITestCase {
     func testAutoclosureDependency() {
