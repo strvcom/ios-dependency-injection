@@ -11,7 +11,18 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
- ## [1.0.0]
+## [1.0.1]
+
+### Added
+
+- Swift and linker flags to suppress application extensions API warning
+
+### Changed 
+
+- Swift tools version updated to 5.6
+- Main target name updated to a more friendly version
+
+## [1.0.0]
 
 ### Added
 
