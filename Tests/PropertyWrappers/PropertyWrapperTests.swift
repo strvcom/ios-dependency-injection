@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import DependencyInjectionModule
+import DependencyInjection
 
 final class PropertyWrapperTests: DITestCase {
     override func tearDown() {        

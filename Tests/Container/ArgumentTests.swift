@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import DependencyInjectionModule
+import DependencyInjection
 
 final class ContainerArgumentTests: DITestCase {
     func testRegistration() {
