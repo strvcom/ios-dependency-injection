@@ -23,6 +23,26 @@ final class ComplexTests: DITestCase {
         XCTAssertNil(unresolvedDependency, "Dependency wasn't cleaned")
     }
     
+    func testReleaseSharedInstances() {
+        container.autoregister(in: .shared, initializer: SimpleDependency.init)
+        
+        var resolvedDependency1: SimpleDependency? = container.resolve(type: SimpleDependency.self)
+        weak var resolvedDependency2 = container.resolve(type: SimpleDependency.self)
+
+        XCTAssertNotNil(resolvedDependency1, "Shared instance wasn't resolved")
+        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Different instancies of a shared dependency")
+
+        container.releaseSharedInstances()
+        
+        let resolvedDependency3 = container.resolve(type: SimpleDependency.self)
+
+        XCTAssertFalse(resolvedDependency1 === resolvedDependency3, "Shared instance wasn't released")
+        
+        resolvedDependency1 = nil
+        
+        XCTAssertNil(resolvedDependency1, "Shared instance wasn't released")
+    }
+    
     func testReregistration() {
         container.register(type: DIProtocol.self, in: .shared) { _ in
             SimpleDependency()

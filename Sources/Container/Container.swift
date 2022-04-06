@@ -23,6 +23,12 @@ open class Container {
     /// Remove all registrations and already instantiated shared instances from the container
     open func clean() {
         registrations.removeAll()
+        
+        releaseSharedInstances()
+    }
+    
+    /// Remove already instantiated shared instances from the container
+    open func releaseSharedInstances() {
         sharedInstances.removeAll()
     }
 }
