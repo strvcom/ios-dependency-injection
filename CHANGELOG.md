@@ -11,6 +11,13 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+## [1.0.2]
+
+### Added
+
+- Method to remove already instantiated shared instances from the container
+
+
 ## [1.0.1]
 
 ### Added
@@ -21,6 +28,7 @@ __Sections__
 
 - Swift tools version updated to 5.6
 - Main target name updated to a more friendly version
+
 
 ## [1.0.0]
 

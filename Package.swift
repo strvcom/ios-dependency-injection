@@ -24,9 +24,6 @@ let package = Package(
             path: "Sources",
             swiftSettings: [
                 .define("APPLICATION_EXTENSION_API_ONLY=YES")
-            ],
-            linkerSettings: [
-                .unsafeFlags(["-Xlinker", "-no_application_extension"])
             ]
         ),
         .testTarget(
