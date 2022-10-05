@@ -11,6 +11,14 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+## [1.0.3]
+
+### Fixed
+
+- Container methods for registering and resolving dependencies were moved from extensions to the class body in order to make them overrideable
+- 'APPLICATION_EXTENSION_API_ONLY' flag was added in order to get rid of warnings in app extensions
+
+
 ## [1.0.2]
 
 ### Added
