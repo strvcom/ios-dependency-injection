@@ -23,7 +23,7 @@ let package = Package(
             dependencies: [],
             path: "Sources",
             swiftSettings: [
-                .define("APPLICATION_EXTENSION_API_ONLY=YES")
+                .define("APPLICATION_EXTENSION_API_ONLY")
             ]
         ),
         .testTarget(

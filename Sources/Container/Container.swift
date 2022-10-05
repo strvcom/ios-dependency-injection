@@ -8,7 +8,7 @@
 import Foundation
 
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
-open class Container {
+open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving {
     /// Shared singleton
     public static let shared: Container = {
         Container()
@@ -31,10 +31,9 @@ open class Container {
     open func releaseSharedInstances() {
         sharedInstances.removeAll()
     }
-}
 
-// MARK: Register, Autoregister
-extension Container: DependencyAutoregistering {
+    // MARK: Register dependency, Autoregister dependency
+
     /// Register a dependency
     ///
     /// - Parameters:
@@ -50,10 +49,9 @@ extension Container: DependencyAutoregistering {
         // because the new registered factory most likely returns different objects and we have no way to tell
         sharedInstances[registration.identifier] = nil
     }
-}
 
-// MARK: Register with argument, Autoregister with argument
-extension Container: DependencyWithArgumentAutoregistering {
+    // MARK: Register dependency with argument, Autoregister dependency with argument
+
     /// Register a dependency with an argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,
@@ -73,10 +71,9 @@ extension Container: DependencyWithArgumentAutoregistering {
         
         registrations[registration.identifier] = registration
     }
-}
 
-// MARK: Resolve
-extension Container: DependencyWithArgumentResolving {
+    // MARK: Resolve dependency
+
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type with the given argument wasn't registered before this method call
