@@ -6,5 +6,5 @@
 //
 
 public protocol ModuleRegistration {
-    func registerDependencies(in container: AsyncContainer) async
+    static func registerDependencies(in container: AsyncContainer) async
 }
