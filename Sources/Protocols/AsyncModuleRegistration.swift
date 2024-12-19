@@ -5,6 +5,7 @@
 //  Created by Róbert Oravec on 17.12.2024.
 //
 
-public protocol ModuleRegistration {
+/// Protocol used to enforce common naming of registration in a module.
+public protocol AsyncModuleRegistration {
     static func registerDependencies(in container: AsyncContainer) async
 }
