@@ -15,7 +15,7 @@ public protocol AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    func tryResolve<T>(type: T.Type) async throws -> T
+    func tryResolve<T: Sendable>(type: T.Type) async throws -> T
     
     /// Resolve a dependency with a variable argument that was previously registered within the container
     ///
@@ -24,7 +24,7 @@ public protocol AsyncDependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func tryResolve<T, Argument>(type: T.Type, argument: Argument) async throws -> T
+    func tryResolve<T: Sendable, Argument: Sendable>(type: T.Type, argument: Argument) async throws -> T
 }
 
 public extension AsyncDependencyResolving {
@@ -34,7 +34,7 @@ public extension AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    func resolve<T>(type: T.Type) async -> T {
+    func resolve<T: Sendable>(type: T.Type) async -> T {
         try! await tryResolve(type: type)
     }
     
@@ -44,7 +44,7 @@ public extension AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    func resolve<T>() async -> T {
+    func resolve<T: Sendable>() async -> T {
         await resolve(type: T.self)
     }
     
@@ -55,7 +55,7 @@ public extension AsyncDependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func resolve<T, Argument>(type: T.Type, argument: Argument) async -> T {
+    func resolve<T: Sendable, Argument: Sendable>(type: T.Type, argument: Argument) async -> T {
         try! await tryResolve(type: type, argument: argument)
     }
     
@@ -66,7 +66,7 @@ public extension AsyncDependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func resolve<T, Argument>(argument: Argument) async -> T {
+    func resolve<T: Sendable, Argument: Sendable>(argument: Argument) async -> T {
         await resolve(type: T.self, argument: argument)
     }
 }

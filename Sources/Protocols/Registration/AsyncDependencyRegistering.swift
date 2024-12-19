@@ -10,10 +10,10 @@ import Foundation
 /// A type that is able to register a dependency
 public protocol AsyncDependencyRegistering {
     /// Factory closure that instantiates the required dependency
-    typealias Factory<Dependency> = (any AsyncDependencyResolving) async -> Dependency
+    typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependency
     
     /// Factory closure that instantiates the required dependency with the given variable argument
-    typealias FactoryWithArgument<Dependency, Argument> = (any AsyncDependencyResolving, Argument) async -> Dependency
+    typealias FactoryWithArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
     
     /// Register a dependency
     ///
@@ -21,7 +21,7 @@ public protocol AsyncDependencyRegistering {
     ///   - type: Type of the dependency to register
     ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) async
+    func register<Dependency: Sendable>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) async
     
     /// Register a dependency with a variable argument
     ///
@@ -37,7 +37,7 @@ public protocol AsyncDependencyRegistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async
+    func register<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async
 }
 
 // MARK: Overloaded factory methods
@@ -54,7 +54,7 @@ public extension AsyncDependencyRegistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency>(type: Dependency.Type, factory: @escaping Factory<Dependency>) async {
+    func register<Dependency: Sendable>(type: Dependency.Type, factory: @escaping Factory<Dependency>) async {
         await register(type: type, in: Self.defaultScope, factory: factory)
     }
     
@@ -63,7 +63,7 @@ public extension AsyncDependencyRegistering {
     /// - Parameters:
     ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency>(in scope: DependencyScope, factory: @escaping Factory<Dependency>) async {
+    func register<Dependency: Sendable>(in scope: DependencyScope, factory: @escaping Factory<Dependency>) async {
         await register(type: Dependency.self, in: scope, factory: factory)
     }
 
@@ -71,7 +71,7 @@ public extension AsyncDependencyRegistering {
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency>(factory: @escaping Factory<Dependency>) async {
+    func register<Dependency: Sendable>(factory: @escaping Factory<Dependency>) async {
         await register(type: Dependency.self, in: Self.defaultScope, factory: factory)
     }
     
@@ -88,7 +88,7 @@ public extension AsyncDependencyRegistering {
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency, Argument>(factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
+    func register<Dependency: Sendable, Argument: Sendable>(factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
         await register(type: Dependency.self, factory: factory)
     }
 }

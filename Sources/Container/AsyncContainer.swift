@@ -21,14 +21,14 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public init() {}
     
     /// Remove all registrations and already instantiated shared instances from the container
-    func clean() {
+    public func clean() {
         registrations.removeAll()
         
         releaseSharedInstances()
     }
     
     /// Remove already instantiated shared instances from the container
-    func releaseSharedInstances() {
+    public func releaseSharedInstances() {
         sharedInstances.removeAll()
     }
 
@@ -87,7 +87,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    public func tryResolve<Dependency, Argument>(type: Dependency.Type, argument: Argument) async throws -> Dependency {
+    public func tryResolve<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, argument: Argument) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
@@ -104,7 +104,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    public func tryResolve<Dependency>(type: Dependency.Type) async throws -> Dependency {
+    public func tryResolve<Dependency: Sendable>(type: Dependency.Type) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type)
 
         let registration = try getRegistration(with: identifier)
@@ -127,7 +127,7 @@ private extension AsyncContainer {
         return registration
     }
     
-    func getDependency<Dependency>(from registration: AsyncRegistration, with argument: Any? = nil) async throws -> Dependency {
+    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Scope of a dependency
-public enum DependencyScope {
+public enum DependencyScope: Sendable {
     /// A new instance of the dependency is created each time the dependency is resolved from the container.
     case new
     
