@@ -1,5 +1,5 @@
 //
-//  ModileRegistration.swift
+//  AsyncModuleRegistration.swift
 //  DependencyInjection
 //
 //  Created by Róbert Oravec on 17.12.2024.
