@@ -13,13 +13,13 @@ typealias AsyncRegistrationFactory = @Sendable (any AsyncDependencyResolving, (a
 struct AsyncRegistration: Sendable {
     let identifier: RegistrationIdentifier
     let scope: DependencyScope
-    let factory: AsyncRegistrationFactory
+    let asyncRegistrationFactory: AsyncRegistrationFactory
     
     /// Initializer for registrations that don't need any variable argument
     init<T: Sendable>(type: T.Type, scope: DependencyScope, factory: @Sendable @escaping (any AsyncDependencyResolving) async -> T) {
         self.identifier = RegistrationIdentifier(type: type)
         self.scope = scope
-        self.factory = { resolver, _ in await factory(resolver) }
+        self.asyncRegistrationFactory = { resolver, _ in await factory(resolver) }
     }
 
     /// Initializer for registrations that expect a variable argument passed to the factory closure when the dependency is being resolved
@@ -28,7 +28,7 @@ struct AsyncRegistration: Sendable {
         
         self.identifier = registrationIdentifier
         self.scope = scope
-        self.factory = { resolver, arg in
+        self.asyncRegistrationFactory = { resolver, arg in
             guard let argument = arg as? Argument else {
                 throw ResolutionError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept an argument of type \(Argument.self)")
             }
