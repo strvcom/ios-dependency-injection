@@ -42,8 +42,6 @@ public extension AsyncDependencyResolving {
     ///
     /// If the container doesn't contain any registration for a dependency with the given type, a runtime error occurs
     ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
     func resolve<T: Sendable>() async -> T {
         await resolve(type: T.self)
     }
@@ -64,7 +62,6 @@ public extension AsyncDependencyResolving {
     /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs
     ///
     /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
     ///   - argument: Argument that will be passed as an input parameter to the factory method
     func resolve<T: Sendable, Argument: Sendable>(argument: Argument) async -> T {
         await resolve(type: T.self, argument: argument)

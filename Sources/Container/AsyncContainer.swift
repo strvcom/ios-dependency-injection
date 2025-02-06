@@ -34,7 +34,6 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
 
     // MARK: Register dependency, Autoregister dependency
     
-
     /// Register a dependency
     ///
     /// - Parameters:
