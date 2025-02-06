@@ -99,3 +99,11 @@ final class DependencyWithParameter5: Sendable {
         self.subDependency5 = subDependency5
     }
 }
+
+final class DependencyWithAsyncInitWithParameter: Sendable {
+    let subDependency: StructureDependency
+
+    init(subDependency: StructureDependency = .default) async {
+        self.subDependency = subDependency
+    }
+}

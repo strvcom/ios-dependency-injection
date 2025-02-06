@@ -56,4 +56,15 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
             }
         }
     }
+
+    func testRegistrationWithAsyncInit() async {
+        await container.register { (resolver, argument) -> DependencyWithAsyncInitWithParameter in
+            await DependencyWithAsyncInitWithParameter(subDependency: argument)
+        }
+
+        let argument = StructureDependency(property1: "48")
+        let resolvedDependency: DependencyWithAsyncInitWithParameter = await container.resolve(argument: argument)
+
+        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
+    }
 }
