@@ -17,7 +17,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
     private var sharedInstances = [RegistrationIdentifier: Any]()
     
-    /// Create new instance of ``Container``
+    /// Create new instance of ``AsyncContainer``
     public init() {}
     
     /// Remove all registrations and already instantiated shared instances from the container
