@@ -3,7 +3,7 @@
 # STRV
 
 source 'https://rubygems.org'
-gem 'bundler', '~> 2.4.20'
+gem 'bundler', '~> 2.4.13'
 gem 'danger', '~> 8.2.0'
 gem 'fastlane', '~> 2.178.0'
 
