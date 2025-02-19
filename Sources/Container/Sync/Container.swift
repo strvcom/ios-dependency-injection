@@ -8,7 +8,7 @@
 import Foundation
 
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
-open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving {
+open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving, @unchecked Sendable {
     /// Shared singleton
     public static let shared: Container = {
         Container()

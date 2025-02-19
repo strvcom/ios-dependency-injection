@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DIProtocol {}
+protocol DIProtocol: Sendable {}
 
 struct StructureDependency: Equatable, DIProtocol {
     static let `default` = StructureDependency(property1: "test")
@@ -15,9 +15,9 @@ struct StructureDependency: Equatable, DIProtocol {
     let property1: String
 }
 
-class SimpleDependency: DIProtocol {}
+final class SimpleDependency: DIProtocol {}
 
-class DependencyWithValueTypeParameter {
+final class DependencyWithValueTypeParameter: Sendable {
     let subDependency: StructureDependency
     
     init(subDependency: StructureDependency = .default) {
@@ -25,7 +25,7 @@ class DependencyWithValueTypeParameter {
     }
 }
 
-class DependencyWithParameter {
+final class DependencyWithParameter: Sendable {
     let subDependency: SimpleDependency
     
     init(subDependency: SimpleDependency) {
@@ -33,7 +33,7 @@ class DependencyWithParameter {
     }
 }
 
-class DependencyWithParameter2 {
+final class DependencyWithParameter2: Sendable {
     let subDependency1: SimpleDependency
     let subDependency2: DependencyWithValueTypeParameter
 
@@ -43,7 +43,7 @@ class DependencyWithParameter2 {
     }
 }
 
-class DependencyWithParameter3 {
+final class DependencyWithParameter3: Sendable {
     let subDependency1: SimpleDependency
     let subDependency2: DependencyWithValueTypeParameter
     let subDependency3: DependencyWithParameter
@@ -59,7 +59,7 @@ class DependencyWithParameter3 {
     }
 }
 
-class DependencyWithParameter4 {
+final class DependencyWithParameter4: Sendable {
     let subDependency1: SimpleDependency
     let subDependency2: DependencyWithValueTypeParameter
     let subDependency3: DependencyWithParameter
@@ -78,7 +78,7 @@ class DependencyWithParameter4 {
     }
 }
 
-class DependencyWithParameter5 {
+final class DependencyWithParameter5: Sendable {
     let subDependency1: SimpleDependency
     let subDependency2: DependencyWithValueTypeParameter
     let subDependency3: DependencyWithParameter
@@ -97,5 +97,13 @@ class DependencyWithParameter5 {
         self.subDependency3 = subDependency3
         self.subDependency4 = subDependency4
         self.subDependency5 = subDependency5
+    }
+}
+
+final class DependencyWithAsyncInitWithParameter: Sendable {
+    let subDependency: StructureDependency
+
+    init(subDependency: StructureDependency = .default) async {
+        self.subDependency = subDependency
     }
 }

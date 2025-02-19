@@ -18,6 +18,8 @@ __Sections__
 - Container methods for registering and resolving dependencies were moved from extensions to the class body in order to make them overrideable
 - 'APPLICATION_EXTENSION_API_ONLY' flag was added in order to get rid of warnings in app extensions
 
+### Added
+- Support for async dependency injection
 
 ## [1.0.2]
 
