@@ -54,7 +54,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         sharedInstances[registration.identifier] = nil
     }
 
-    // MARK: Register dependency with argument, Autoregister dependency with argument
+    // MARK: Register dependency with argument
 
     /// Register a dependency with an argument
     ///
