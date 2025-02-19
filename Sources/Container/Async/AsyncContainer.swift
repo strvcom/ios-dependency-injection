@@ -32,7 +32,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         sharedInstances.removeAll()
     }
 
-    // MARK: Register dependency, Autoregister dependency
+    // MARK: Register dependency
     
     /// Register a dependency
     ///
@@ -54,7 +54,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         sharedInstances[registration.identifier] = nil
     }
 
-    // MARK: Register dependency with argument, Autoregister dependency with argument
+    // MARK: Register dependency with argument
 
     /// Register a dependency with an argument
     ///
