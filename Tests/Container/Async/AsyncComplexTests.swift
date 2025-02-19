@@ -44,7 +44,7 @@ final class AsyncComplexTests: AsyncDITestCase {
         
         resolvedDependency1 = nil
         
-        XCTAssertNil(resolvedDependency1, "Shared instance wasn't released")
+        XCTAssertNil(resolvedDependency2, "Shared instance wasn't released")
     }
     
     func testReregistration() async {
