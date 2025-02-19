@@ -32,7 +32,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         sharedInstances.removeAll()
     }
 
-    // MARK: Register dependency, Autoregister dependency
+    // MARK: Register dependency
     
     /// Register a dependency
     ///
