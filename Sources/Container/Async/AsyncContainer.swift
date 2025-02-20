@@ -8,7 +8,8 @@
 import Foundation
 
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
-public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegistering {
+@MainActor
+public class AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegistering {
     /// Shared singleton
     public static let shared: AsyncContainer = {
         AsyncContainer()
