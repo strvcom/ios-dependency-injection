@@ -1,5 +1,5 @@
 //
-//  DependencyWithArgumentRegistering.swift
+//  DependencyWithOneArgumentRegistering.swift
 //
 //
 //  Created by Jan Schwarz on 26.03.2021.
@@ -8,9 +8,9 @@
 import Foundation
 
 /// A type that is able to register a dependency that needs a variable argument in order to be resolved later
-public protocol DependencyWithArgumentRegistering: DependencyRegistering {
+public protocol DependencyWithOneArgumentRegistering: DependencyRegistering {
     /// Factory closure that instantiates the required dependency with the given variable argument
-    typealias FactoryWithOneArgument<Dependency, Argument> = (DependencyWithArgumentResolving, Argument) -> Dependency
+    typealias FactoryWithOneArgument<Dependency, Argument> = (DependencyWithOneArgumentResolving, Argument) -> Dependency
 
     /// Register a dependency with a variable argument
     ///
@@ -30,7 +30,7 @@ public protocol DependencyWithArgumentRegistering: DependencyRegistering {
 }
 
 // MARK: Overloaded factory methods
-public extension DependencyWithArgumentRegistering {
+public extension DependencyWithOneArgumentRegistering {
     /// Register a dependency with a variable argument. The type of the dependency is determined implicitly based on the factory closure return type
     ///
     /// The argument is typically a parameter in an initializer of the dependency that is not registered in the same resolver (i.e. container),

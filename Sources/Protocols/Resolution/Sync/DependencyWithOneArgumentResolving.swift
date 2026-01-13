@@ -1,5 +1,5 @@
 //
-//  DependencyWithArgumentResolving.swift
+//  DependencyWithOneArgumentResolving.swift
 //
 //
 //  Created by Jan Schwarz on 26.03.2021.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A type that is able to resolve a dependency with a given variable argument
-public protocol DependencyWithArgumentResolving: DependencyResolving {
+public protocol DependencyWithOneArgumentResolving: DependencyResolving {
     /// Resolve a dependency with a variable argument that was previously registered within the container
     ///
     /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, ``ResolutionError`` is thrown
@@ -19,7 +19,7 @@ public protocol DependencyWithArgumentResolving: DependencyResolving {
     func tryResolve<T, Argument>(type: T.Type, argument: Argument) throws -> T
 }
 
-public extension DependencyWithArgumentResolving {
+public extension DependencyWithOneArgumentResolving {
     /// Resolve a dependency with a variable argument that was previously registered within the container
     ///
     /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs

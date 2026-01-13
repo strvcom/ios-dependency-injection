@@ -11,7 +11,7 @@ import Foundation
 struct Registration {
     let identifier: RegistrationIdentifier
     let scope: DependencyScope
-    let factory: (DependencyWithArgumentResolving, Any?) throws -> Any
+    let factory: (DependencyWithOneArgumentResolving, Any?) throws -> Any
 
     /// Initializer for registrations that don't need any variable argument
     init<T>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyResolving) -> T) {
@@ -21,7 +21,7 @@ struct Registration {
     }
 
     /// Initializer for registrations that expect a variable argument passed to the factory closure when the dependency is being resolved
-    init<T, Argument>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithArgumentResolving, Argument) -> T) {
+    init<T, Argument>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithOneArgumentResolving, Argument) -> T) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argument: Argument.self)
 
         identifier = registrationIdentifier
@@ -36,7 +36,7 @@ struct Registration {
     }
 
     /// Initializer for registrations that expect two variable arguments passed to the factory closure when the dependency is being resolved
-    init<T, Argument1, Argument2>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithArgumentResolving, Argument1, Argument2) -> T) {
+    init<T, Argument1, Argument2>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithOneArgumentResolving, Argument1, Argument2) -> T) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
 
         identifier = registrationIdentifier
@@ -51,7 +51,7 @@ struct Registration {
     }
 
     /// Initializer for registrations that expect three variable arguments passed to the factory closure when the dependency is being resolved
-    init<T, Argument1, Argument2, Argument3>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithArgumentResolving, Argument1, Argument2, Argument3) -> T) {
+    init<T, Argument1, Argument2, Argument3>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithOneArgumentResolving, Argument1, Argument2, Argument3) -> T) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
 
         identifier = registrationIdentifier

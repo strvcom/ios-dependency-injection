@@ -10,7 +10,7 @@ import Foundation
 /// A type that is able to register a dependency that needs three variable arguments in order to be resolved later
 public protocol DependencyWithThreeArgumentsRegistering: DependencyRegistering {
     /// Factory closure that instantiates the required dependency with three given variable arguments
-    typealias FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3> = (DependencyWithArgumentResolving, Argument1, Argument2, Argument3) -> Dependency
+    typealias FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3> = (DependencyWithOneArgumentResolving, Argument1, Argument2, Argument3) -> Dependency
 
     /// Register a dependency with three variable arguments
     ///

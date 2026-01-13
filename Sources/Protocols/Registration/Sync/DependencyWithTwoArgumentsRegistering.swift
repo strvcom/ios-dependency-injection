@@ -10,7 +10,7 @@ import Foundation
 /// A type that is able to register a dependency that needs two variable arguments in order to be resolved later
 public protocol DependencyWithTwoArgumentsRegistering: DependencyRegistering {
     /// Factory closure that instantiates the required dependency with two given variable arguments
-    typealias FactoryWithTwoArguments<Dependency, Argument1, Argument2> = (DependencyWithArgumentResolving, Argument1, Argument2) -> Dependency
+    typealias FactoryWithTwoArguments<Dependency, Argument1, Argument2> = (DependencyWithOneArgumentResolving, Argument1, Argument2) -> Dependency
 
     /// Register a dependency with two variable arguments
     ///

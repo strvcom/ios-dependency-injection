@@ -1,5 +1,5 @@
 //
-//  DependencyWithArgumentAutoregistering.swift
+//  DependencyWithOneArgumentAutoregistering.swift
 //
 //
 //  Created by Jan Schwarz on 05.08.2021.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// A type that is able to register a dependency that needs a variable argument in order to be resolved later. The dependency is registered with a given initializer instead of a factory closure. All the initializer's parameters must be resolvable from the same container
-public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentRegistering {
+public protocol DependencyWithOneArgumentAutoregistering: DependencyWithOneArgumentRegistering {
     // MARK: Initializer with a variable argument and no other parameter
 
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has one parameter where the variable argument is passed
@@ -150,7 +150,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
 }
 
 // MARK: Default implementation for an initializer with a variable argument
-public extension DependencyWithArgumentAutoregistering {
+public extension DependencyWithOneArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has just one parameter where the variable argument is passed
     ///
     /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
@@ -179,7 +179,7 @@ public extension DependencyWithArgumentAutoregistering {
 }
 
 // MARK: Default implementation for an initializer with a variable argument and 1 parameter
-public extension DependencyWithArgumentAutoregistering {
+public extension DependencyWithOneArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
@@ -242,7 +242,7 @@ public extension DependencyWithArgumentAutoregistering {
 }
 
 // MARK: Default implementation for an initializer with a variable argument and 2 parameters
-public extension DependencyWithArgumentAutoregistering {
+public extension DependencyWithOneArgumentAutoregistering {
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
