@@ -8,7 +8,7 @@
 import Foundation
 
 /// A type that is able to register a dependency that needs a variable argument in order to be resolved later. The dependency is registered with a given initializer instead of a factory closure. All the initializer's parameters must be resolvable from the same container
-public protocol DependencyWithOneArgumentAutoregistering: DependencyWithOneArgumentRegistering {
+public protocol DependencyWithOneArgumentAutoregistering: DependencyRegistering {
     // MARK: Initializer with a variable argument and no other parameter
 
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has one parameter where the variable argument is passed
