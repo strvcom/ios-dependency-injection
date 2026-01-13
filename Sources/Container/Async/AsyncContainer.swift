@@ -70,7 +70,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    public func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
+    public func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async {
         let registration = AsyncRegistration(type: type, scope: .new, factory: factory)
         
         registrations[registration.identifier] = registration

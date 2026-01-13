@@ -168,7 +168,7 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument) -> Dependency
     ) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument
             )
@@ -202,7 +202,7 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter) -> Dependency
     ) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: Parameter.self)
@@ -230,7 +230,7 @@ public extension DependencyWithArgumentAutoregistering {
     ///   - argument: Type of the variable argument
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Argument, Parameter>(type: Dependency.Type = Dependency.self, argument: Argument.Type, initializer: @escaping (Parameter, Argument) -> Dependency) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter.self),
                 argument
@@ -265,7 +265,7 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter1, Parameter2) -> Dependency
     ) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: Parameter1.self),
@@ -298,7 +298,7 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Parameter1, Argument, Parameter2) -> Dependency
     ) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 argument,
@@ -331,7 +331,7 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Parameter1, Parameter2, Argument) -> Dependency
     ) {
-        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self),

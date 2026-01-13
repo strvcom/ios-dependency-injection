@@ -13,7 +13,13 @@ public protocol AsyncDependencyRegistering {
     typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependency
     
     /// Factory closure that instantiates the required dependency with the given variable argument
-    typealias FactoryWithArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
+    typealias FactoryWithOneArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
+    
+    /// Factory closure that instantiates the required dependency with two variable arguments
+    typealias FactoryWithTwoArgument<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2) async -> Dependency
+    
+    /// Factory closure that instantiates the required dependency with three variable arguments
+    typealias FactoryWithThreeArgument<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2, Argument3) async -> Dependency
     
     /// Register a dependency
     ///
@@ -37,7 +43,7 @@ public protocol AsyncDependencyRegistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async
+    func register<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async
 }
 
 // MARK: Overloaded factory methods
@@ -88,7 +94,7 @@ public extension AsyncDependencyRegistering {
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency: Sendable, Argument: Sendable>(factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
+    func register<Dependency: Sendable, Argument: Sendable>(factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async {
         await register(type: Dependency.self, factory: factory)
     }
 }

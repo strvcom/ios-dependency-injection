@@ -10,7 +10,7 @@ import Foundation
 /// A type that is able to register a dependency that needs a variable argument in order to be resolved later
 public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     /// Factory closure that instantiates the required dependency with the given variable argument
-    typealias FactoryWithArgument<Dependency, Argument> = (DependencyWithArgumentResolving, Argument) -> Dependency
+    typealias FactoryWithOneArgument<Dependency, Argument> = (DependencyWithArgumentResolving, Argument) -> Dependency
     
     /// Register a dependency with a variable argument
     ///
@@ -26,7 +26,7 @@ public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>)
+    func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>)
 }
 
 // MARK: Overloaded factory methods
@@ -44,7 +44,7 @@ public extension DependencyWithArgumentRegistering {
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency, Argument>(factory: @escaping FactoryWithArgument<Dependency, Argument>) {
+    func register<Dependency, Argument>(factory: @escaping FactoryWithOneArgument<Dependency, Argument>) {
         register(type: Dependency.self, factory: factory)
     }
 }
