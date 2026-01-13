@@ -48,7 +48,7 @@ final class ContainerArgumentTests: DITestCase {
             }
 
             switch resolutionError {
-            case .unmatchingArgumentType:
+            case .dependencyNotRegistered:
                 XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
             default:
                 XCTFail("Incorrect resolution error")

@@ -49,7 +49,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
             }
 
             switch resolutionError {
-            case .unmatchingArgumentType:
+            case .dependencyNotRegistered:
                 XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
             default:
                 XCTFail("Incorrect resolution error")
