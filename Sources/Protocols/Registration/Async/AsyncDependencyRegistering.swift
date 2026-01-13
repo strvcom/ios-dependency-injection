@@ -13,8 +13,14 @@ public protocol AsyncDependencyRegistering {
     typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependency
 
     /// Factory closure that instantiates the required dependency with the given variable argument
-    typealias FactoryWithArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
+    typealias FactoryWithOneArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
 
+    /// Factory closure that instantiates the required dependency with two variable arguments
+    typealias FactoryWithTwoArguments<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2) async -> Dependency
+    
+    /// Factory closure that instantiates the required dependency with three variable arguments
+    typealias FactoryWithThreeArguments<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2, Argument3) async -> Dependency
+    
     /// Register a dependency
     ///
     /// - Parameters:
@@ -37,7 +43,39 @@ public protocol AsyncDependencyRegistering {
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async
+    func register<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async
+
+    /// Register a dependency with two variable arguments
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called when the dependency is being resolved
+    func register<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithTwoArguments<Dependency, Argument1, Argument2>) async
+
+    /// Register a dependency with three variable arguments
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called when the dependency is being resolved
+    func register<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3>) async
 }
 
 // MARK: Overloaded factory methods
@@ -88,7 +126,41 @@ public extension AsyncDependencyRegistering {
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
-    func register<Dependency: Sendable, Argument: Sendable>(factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
+    func register<Dependency: Sendable, Argument: Sendable>(factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async {
+        await register(type: Dependency.self, factory: factory)
+    }
+
+    /// Register a dependency with two variable arguments. The type of the dependency is determined implicitly based on the factory closure return type
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - factory: Closure that is called when the dependency is being resolved
+    func register<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable>(factory: @escaping FactoryWithTwoArguments<Dependency, Argument1, Argument2>) async {
+        await register(type: Dependency.self, factory: factory)
+    }
+
+    /// Register a dependency with three variable arguments. The type of the dependency is determined implicitly based on the factory closure return type
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - factory: Closure that is called when the dependency is being resolved
+    func register<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable>(factory: @escaping FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3>) async {
         await register(type: Dependency.self, factory: factory)
     }
 }

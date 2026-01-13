@@ -34,4 +34,34 @@ struct Registration {
             return factory(resolver, argument)
         }
     }
+
+    /// Initializer for registrations that expect two variable arguments passed to the factory closure when the dependency is being resolved
+    init<T, Argument1, Argument2>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithArgumentResolving, Argument1, Argument2) -> T) {
+        let registrationIdentifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
+
+        identifier = registrationIdentifier
+        self.scope = scope
+        self.factory = { resolver, arg in
+            guard let arguments = arg as? (Argument1, Argument2) else {
+                throw ResolutionError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept arguments of type (\(Argument1.self), \(Argument2.self))")
+            }
+
+            return factory(resolver, arguments.0, arguments.1)
+        }
+    }
+
+    /// Initializer for registrations that expect three variable arguments passed to the factory closure when the dependency is being resolved
+    init<T, Argument1, Argument2, Argument3>(type: T.Type, scope: DependencyScope, factory: @escaping (DependencyWithArgumentResolving, Argument1, Argument2, Argument3) -> T) {
+        let registrationIdentifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
+
+        identifier = registrationIdentifier
+        self.scope = scope
+        self.factory = { resolver, arg in
+            guard let arguments = arg as? (Argument1, Argument2, Argument3) else {
+                throw ResolutionError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept arguments of type (\(Argument1.self), \(Argument2.self), \(Argument3.self))")
+            }
+
+            return factory(resolver, arguments.0, arguments.1, arguments.2)
+        }
+    }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
-open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving, @unchecked Sendable {
+open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving, DependencyWithTwoArgumentsRegistering, DependencyWithThreeArgumentsRegistering, DependencyWithTwoArgumentsResolving, DependencyWithThreeArgumentsResolving, @unchecked Sendable {
     /// Shared singleton
     public static let shared: Container = .init()
 
@@ -70,6 +70,50 @@ open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregis
         registrations[registration.identifier] = registration
     }
 
+    // MARK: Register dependency with two arguments
+
+    /// Register a dependency with two arguments
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called when the dependency is being resolved
+    open func register<Dependency, Argument1, Argument2>(type: Dependency.Type, factory: @escaping FactoryWithTwoArguments<Dependency, Argument1, Argument2>) {
+        let registration = Registration(type: type, scope: .new, factory: factory)
+
+        registrations[registration.identifier] = registration
+    }
+
+    // MARK: Register dependency with three arguments
+
+    /// Register a dependency with three arguments
+    ///
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
+    /// therefore, they need to be passed in `resolve` call
+    ///
+    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
+    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
+    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
+    /// Shared instances are typically not dependent on variable input parameters by definition.
+    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called when the dependency is being resolved
+    open func register<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, factory: @escaping FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3>) {
+        let registration = Registration(type: type, scope: .new, factory: factory)
+
+        registrations[registration.identifier] = registration
+    }
+
     // MARK: Resolve dependency
 
     /// Resolve a dependency that was previously registered with `register` method
@@ -101,6 +145,41 @@ open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregis
         let registration = try getRegistration(with: identifier)
 
         return try getDependency(from: registration) as Dependency
+    }
+
+    /// Resolve a dependency that was previously registered with `register` method
+    ///
+    /// If a dependency of the given type with the given arguments wasn't registered before this method call
+    /// the method throws ``ResolutionError.dependencyNotRegistered``
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
+    open func tryResolve<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
+
+        let registration = try getRegistration(with: identifier)
+
+        return try getDependency(from: registration, with: (argument1, argument2)) as Dependency
+    }
+
+    /// Resolve a dependency that was previously registered with `register` method
+    ///
+    /// If a dependency of the given type with the given arguments wasn't registered before this method call
+    /// the method throws ``ResolutionError.dependencyNotRegistered``
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - argument3: Third argument that will passed as an input parameter to the factory method that was defined with `register` method
+    open func tryResolve<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
+
+        let registration = try getRegistration(with: identifier)
+
+        return try getDependency(from: registration, with: (argument1, argument2, argument3)) as Dependency
     }
 }
 
