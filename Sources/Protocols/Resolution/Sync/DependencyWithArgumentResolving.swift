@@ -1,6 +1,6 @@
 //
 //  DependencyWithArgumentResolving.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 26.03.2021.
 //
@@ -30,7 +30,7 @@ public extension DependencyWithArgumentResolving {
     func resolve<T, Argument>(type: T.Type, argument: Argument) -> T {
         try! tryResolve(type: type, argument: argument)
     }
-    
+
     /// Resolve a dependency with a variable argument that was previously registered within the container. The type of the required dependency is inferred from the return type
     ///
     /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs

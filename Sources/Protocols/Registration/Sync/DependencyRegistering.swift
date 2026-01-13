@@ -1,6 +1,6 @@
 //
 //  DependencyRegistering.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 25.03.2021.
 //
@@ -11,7 +11,7 @@ import Foundation
 public protocol DependencyRegistering {
     /// Factory closure that instantiates the required dependency
     typealias Factory<Dependency> = (DependencyResolving) -> Dependency
-    
+
     /// Register a dependency
     ///
     /// - Parameters:
@@ -29,7 +29,7 @@ public extension DependencyRegistering {
     static var defaultScope: DependencyScope {
         DependencyScope.shared
     }
-    
+
     /// Register a dependency in the default ``DependencyScope``, i.e. in the `shared` scope
     ///
     /// - Parameters:
@@ -38,7 +38,7 @@ public extension DependencyRegistering {
     func register<Dependency>(type: Dependency.Type, factory: @escaping Factory<Dependency>) {
         register(type: type, in: Self.defaultScope, factory: factory)
     }
-    
+
     /// Register a dependency with an implicit type determined by the factory closure return type
     ///
     /// - Parameters:
@@ -72,7 +72,7 @@ public extension DependencyRegistering {
             dependency()
         }
     }
-    
+
     /// Register a dependency with an implicit type determined by the factory closure return type
     ///
     /// DISCUSSION: Registration methods with autoclosures don't have any scope parameter for a reason.

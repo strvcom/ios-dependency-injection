@@ -1,6 +1,6 @@
 //
 //  DependencyWithArgumentAutoregistering.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 05.08.2021.
 //
@@ -10,7 +10,7 @@ import Foundation
 /// A type that is able to register a dependency that needs a variable argument in order to be resolved later. The dependency is registered with a given initializer instead of a factory closure. All the initializer's parameters must be resolvable from the same container
 public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentRegistering {
     // MARK: Initializer with a variable argument and no other parameter
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has one parameter where the variable argument is passed
     ///
     /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
@@ -28,7 +28,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
         argument: Argument.Type,
         initializer: @escaping (Argument) -> Dependency
     )
-    
+
     // MARK: Initializer with a variable argument and 1 parameter
 
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
@@ -53,7 +53,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter) -> Dependency
     )
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
@@ -76,9 +76,9 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
         argument: Argument.Type,
         initializer: @escaping (Parameter, Argument) -> Dependency
     )
-    
+
     // MARK: Initializer with a variable argument and 2 parameters
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
@@ -101,7 +101,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter1, Parameter2) -> Dependency
     )
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
@@ -124,7 +124,7 @@ public protocol DependencyWithArgumentAutoregistering: DependencyWithArgumentReg
         argument: Argument.Type,
         initializer: @escaping (Parameter1, Argument, Parameter2) -> Dependency
     )
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
@@ -168,12 +168,12 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument) -> Dependency
     ) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { _, argument in
             initializer(
                 argument
             )
         }
-        
+
         register(type: type, factory: factory)
     }
 }
@@ -202,16 +202,16 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter) -> Dependency
     ) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: Parameter.self)
             )
         }
-        
+
         register(type: type, factory: factory)
     }
-    
+
     /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
@@ -230,13 +230,13 @@ public extension DependencyWithArgumentAutoregistering {
     ///   - argument: Type of the variable argument
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, Argument, Parameter>(type: Dependency.Type = Dependency.self, argument: Argument.Type, initializer: @escaping (Parameter, Argument) -> Dependency) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter.self),
                 argument
             )
         }
-        
+
         register(type: type, factory: factory)
     }
 }
@@ -265,14 +265,14 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Argument, Parameter1, Parameter2) -> Dependency
     ) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 argument,
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self)
             )
         }
-        
+
         register(type: type, factory: factory)
     }
 
@@ -298,14 +298,14 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Parameter1, Argument, Parameter2) -> Dependency
     ) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 argument,
                 resolver.resolve(type: Parameter2.self)
             )
         }
-        
+
         register(type: type, factory: factory)
     }
 
@@ -331,14 +331,14 @@ public extension DependencyWithArgumentAutoregistering {
         argument: Argument.Type,
         initializer: @escaping (Parameter1, Parameter2, Argument) -> Dependency
     ) {
-        let factory: FactoryWithOneArgument<Dependency, Argument> = { resolver, argument in
+        let factory: FactoryWithArgument<Dependency, Argument> = { resolver, argument in
             initializer(
                 resolver.resolve(type: Parameter1.self),
                 resolver.resolve(type: Parameter2.self),
                 argument
             )
         }
-        
+
         register(type: type, factory: factory)
     }
 }

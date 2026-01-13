@@ -10,30 +10,28 @@ import Foundation
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
 public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegistering {
     /// Shared singleton
-    public static let shared: AsyncContainer = {
-        AsyncContainer()
-    }()
-    
+    public static let shared: AsyncContainer = .init()
+
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
     private var sharedInstances = [RegistrationIdentifier: Any]()
-    
+
     /// Create new instance of ``AsyncContainer``
     public init() {}
-    
+
     /// Remove all registrations and already instantiated shared instances from the container
     public func clean() {
         registrations.removeAll()
-        
+
         releaseSharedInstances()
     }
-    
+
     /// Remove already instantiated shared instances from the container
     public func releaseSharedInstances() {
         sharedInstances.removeAll()
     }
 
     // MARK: Register dependency
-    
+
     /// Register a dependency
     ///
     /// - Parameters:
@@ -46,9 +44,9 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         factory: @escaping Factory<Dependency>
     ) async {
         let registration = AsyncRegistration(type: type, scope: scope, factory: factory)
-        
+
         registrations[registration.identifier] = registration
-        
+
         // With a new registration we should clean all shared instances
         // because the new registered factory most likely returns different objects and we have no way to tell
         sharedInstances[registration.identifier] = nil
@@ -72,7 +70,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///   - factory: Closure that is called when the dependency is being resolved
     public func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>) async {
         let registration = AsyncRegistration(type: type, scope: .new, factory: factory)
-        
+
         registrations[registration.identifier] = registration
     }
 
@@ -90,12 +88,10 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
-        
-        let dependency: Dependency = try await getDependency(from: registration, with: argument)
 
-        return dependency
+        return try await getDependency(from: registration, with: argument) as Dependency
     }
-    
+
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type wasn't registered before this method call
@@ -107,10 +103,8 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         let identifier = RegistrationIdentifier(type: type)
 
         let registration = try getRegistration(with: identifier)
-        
-        let dependency: Dependency = try await getDependency(from: registration)
-        
-        return dependency
+
+        return try await getDependency(from: registration) as Dependency
     }
 }
 
@@ -122,10 +116,10 @@ private extension AsyncContainer {
                 message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
             )
         }
-        
+
         return registration
     }
-    
+
     func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {
         switch registration.scope {
         case .shared:
@@ -135,12 +129,12 @@ private extension AsyncContainer {
         case .new:
             break
         }
-        
+
         // We use force cast here because we are sure that the type-casting always succeed
         // The reason why the `factory` closure returns ``Any`` is that we have to erase the generic type in order to store the registration
         // When the registration is created it can be initialized just with a `factory` that returns the matching type
         let dependency = try await registration.asyncRegistrationFactory(self, argument) as! Dependency
-        
+
         switch registration.scope {
         case .shared:
             sharedInstances[registration.identifier] = dependency

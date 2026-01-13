@@ -1,0 +1,209 @@
+#
+# SwiftLint configuration file commonly used in STRV (v 0.1.3)
+#
+# Feel free to send pull request or suggest improvements!
+# 
+
+
+#
+# Rule identifiers to exclude from running.
+#
+disabled_rules:
+- trailing_comma
+
+#
+# Rules that are run only with running analyzer
+#
+analyzer_rules:
+  - unused_declaration
+  - unused_import
+
+#
+# Some rules are only opt-in. Find all the available rules by running: swiftlint rules
+#
+opt_in_rules:
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - conditional_returns_on_newline
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - convenience_type
+  - direct_return
+  - discouraged_none_name
+  - discouraged_object_literal
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - empty_xctest_method
+  - enum_case_associated_values_count
+  - explicit_init
+  - extension_access_modifier
+  - fallthrough
+  - fatal_error_message
+  - file_name
+  - file_name_no_space
+  - file_types_order
+  - first_where
+  - flatmap_over_map_reduce
+  - force_unwrapping
+  - identical_operands
+  - implicit_return
+  - implicitly_unwrapped_optional
+  - indentation_width
+  - joined_default_parameter
+  - last_where
+  - legacy_multiple
+  - literal_expression_end_indentation
+  - local_doc_comment
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_arguments
+  - multiline_arguments_brackets
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - multiline_parameters_brackets
+  - nimble_operator
+  - no_magic_numbers
+  - non_overridable_class_declaration
+  - nslocalizedstring_key
+  - object_literal
+  - operator_usage_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - optional_enum_case_matching
+  - pattern_matching_keywords
+  - prefer_self_type_over_type_of_self
+  - prefer_zero_over_explicit_init
+  - private_action
+  - private_outlet
+  - private_subject
+  - private_swiftui_state
+  - prohibited_interface_builder
+  - prohibited_super_call
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
+  - reduce_into
+  - redundant_nil_coalescing
+  - redundant_objc_attribute
+  - redundant_type_annotation
+  - return_value_from_void_function
+  - shorthand_optional_binding
+  - single_test_class
+  - sorted_first_last
+  - sorted_imports
+  - static_operator
+  - strict_fileprivate
+  - strong_iboutlet
+  - switch_case_on_newline
+  - test_case_accessibility
+  - toggle_bool
+  - unavailable_function
+  - unneeded_parentheses_in_closure_argument
+  - unowned_variable_capture
+  - untyped_error_in_catch
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - weak_delegate
+  - xct_specific_matcher
+  - yoda_condition
+
+#
+# Paths to include during linting. `--path` is ignored if present.
+#
+included:
+
+#
+# Paths to ignore during linting. Takes precedence over `included`.
+#
+excluded:
+  - Carthage
+  - Pods
+  - Tests
+  - Scripts
+  - vendor
+  - fastlane
+  - R.generated.swift
+  - App/R.generated.swift
+  - Tuist
+  - Modules/*/*/Derived
+  - App/Derived
+
+#
+# Configure individual rules below.
+#
+vertical_whitespace:
+  max_empty_lines: 2
+
+force_cast: error
+
+identifier_name:
+  excluded:
+    - id
+
+empty_count:
+  severity: warning
+
+trailing_whitespace:
+  ignores_empty_lines: true
+
+line_length:
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+  error: 300
+  warning: 200
+
+function_body_length:
+  error: 150
+  warning: 100
+
+type_body_length:
+  error: 900
+  warning: 600
+
+file_length:
+  error: 1000
+  warning: 700
+
+type_name:
+  max_length:
+    warning: 45
+
+opening_brace:
+  ignore_multiline_statement_conditions: true
+
+# Custom rules definitions
+custom_rules:
+  comments_space: # From https://github.com/brandenr/swiftlintconfig
+    name: "Space After Comment"
+    regex: "(^ *//\\w+)"
+    message: "There should be a space after //"
+    severity: warning
+
+  force_https: # From https://github.com/Twigz/Game
+    name: "Force HTTPS over HTTP"
+    regex: "((?i)http(?!s))"
+    match_kinds: string
+    message: "HTTPS should be favored over HTTP"
+    severity: warning
+
+  double_space: # From https://github.com/IBM-Swift/Package-Builder
+    include: "*.swift"
+    name: "Double space"
+    regex: "([a-z,A-Z] \\s+)"
+    message: "Double space between keywords"
+    match_kinds: keyword
+    severity: warning
+
+  disable_print:
+    included: ".*\\.swift"
+    name: "Print usage"
+    regex: "((\\bprint)|(Swift\\.print))\\s*\\("
+    message: "Prefer AppLogger over print"
+    severity: warning

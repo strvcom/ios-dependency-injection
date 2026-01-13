@@ -1,6 +1,6 @@
 //
 //  Dependencies.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 15.12.2021.
 //
@@ -11,7 +11,7 @@ protocol DIProtocol: Sendable {}
 
 struct StructureDependency: Equatable, DIProtocol {
     static let `default` = StructureDependency(property1: "test")
-    
+
     let property1: String
 }
 
@@ -19,7 +19,7 @@ final class SimpleDependency: DIProtocol {}
 
 final class DependencyWithValueTypeParameter: Sendable {
     let subDependency: StructureDependency
-    
+
     init(subDependency: StructureDependency = .default) {
         self.subDependency = subDependency
     }
@@ -27,7 +27,7 @@ final class DependencyWithValueTypeParameter: Sendable {
 
 final class DependencyWithParameter: Sendable {
     let subDependency: SimpleDependency
-    
+
     init(subDependency: SimpleDependency) {
         self.subDependency = subDependency
     }

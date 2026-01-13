@@ -1,45 +1,45 @@
 //
 //  AutoregistrationTests.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 05.08.2021.
 //
 
-import XCTest
 import DependencyInjection
+import XCTest
 
 final class AutoregistrationTests: DITestCase {
     func testSharedAutoRegistrationWithoutParameter() {
         container.autoregister(initializer: SimpleDependency.init)
-        
+
         let firstResolved: SimpleDependency = container.resolve()
         let secondResolved: SimpleDependency = container.resolve()
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
-    
+
     func testSharedAutoRegistrationOneParameter() {
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(initializer: DependencyWithParameter.init)
-        
+
         let firstResolved: DependencyWithParameter = container.resolve()
         let secondResolved: DependencyWithParameter = container.resolve()
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
-    
+
     func testSharedAutoRegistrationTwoParameters() {
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
         container.register(dependency: subDependency)
         container.autoregister(initializer: DependencyWithParameter2.init)
-        
+
         let firstResolved: DependencyWithParameter2 = container.resolve()
         let secondResolved: DependencyWithParameter2 = container.resolve()
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
-    
+
     func testSharedAutoRegistrationThreeParameters() {
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
@@ -52,7 +52,7 @@ final class AutoregistrationTests: DITestCase {
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
-    
+
     func testSharedAutoRegistrationFourParameters() {
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
@@ -66,7 +66,7 @@ final class AutoregistrationTests: DITestCase {
 
         XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
     }
-    
+
     func testSharedAutoRegistrationFiveParameters() {
         let subDependency = DependencyWithValueTypeParameter()
         container.autoregister(initializer: SimpleDependency.init)
