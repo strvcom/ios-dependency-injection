@@ -6,95 +6,108 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class AsyncComplexTests: AsyncDITestCase {
-    func testCleanContainer() async {
-        await container.register { _ in
+struct AsyncComplexTests {
+    @Test func cleanContainer() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _ in
             SimpleDependency()
         }
 
-        let resolvedDependency = try? await container.tryResolve(type: SimpleDependency.self)
+        // When
+        let resolvedDependency = try? await subject.tryResolve(type: SimpleDependency.self)
+        #expect(resolvedDependency != nil)
 
-        XCTAssertNotNil(resolvedDependency, "Couldn't resolve dependency")
+        await subject.clean()
 
-        await container.clean()
-
-        let unresolvedDependency = try? await container.tryResolve(type: SimpleDependency.self)
-
-        XCTAssertNil(unresolvedDependency, "Dependency wasn't cleaned")
+        // Then
+        let unresolvedDependency = try? await subject.tryResolve(type: SimpleDependency.self)
+        #expect(unresolvedDependency == nil)
     }
 
-    func testReleaseSharedInstances() async {
-        await container.register(in: .shared) { _ in
+    @Test func releaseSharedInstances() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(in: .shared) { _ in
             SimpleDependency()
         }
 
-        var resolvedDependency1: SimpleDependency? = await container.resolve(type: SimpleDependency.self)
-        weak var resolvedDependency2 = await container.resolve(type: SimpleDependency.self)
+        // When
+        var resolvedDependency1: SimpleDependency? = await subject.resolve(type: SimpleDependency.self)
+        weak var resolvedDependency2 = await subject.resolve(type: SimpleDependency.self)
 
-        XCTAssertNotNil(resolvedDependency1, "Shared instance wasn't resolved")
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Different instancies of a shared dependency")
+        #expect(resolvedDependency1 != nil)
+        #expect(resolvedDependency1 === resolvedDependency2)
 
-        await container.releaseSharedInstances()
+        await subject.releaseSharedInstances()
 
-        let resolvedDependency3 = await container.resolve(type: SimpleDependency.self)
+        let resolvedDependency3 = await subject.resolve(type: SimpleDependency.self)
 
-        XCTAssertFalse(resolvedDependency1 === resolvedDependency3, "Shared instance wasn't released")
+        // Then
+        #expect(resolvedDependency1 !== resolvedDependency3)
 
         resolvedDependency1 = nil
 
-        XCTAssertNil(resolvedDependency2, "Shared instance wasn't released")
+        #expect(resolvedDependency2 == nil)
     }
 
-    func testReregistration() async {
-        await container.register(type: DIProtocol.self, in: .shared) { _ in
+    @Test func reregistration() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: DIProtocol.self, in: .shared) { _ in
             SimpleDependency()
         }
 
-        let resolvedSimpleDependency = await container.resolve(type: DIProtocol.self)
+        // When
+        let resolvedSimpleDependency = await subject.resolve(type: DIProtocol.self)
 
-        XCTAssertTrue(resolvedSimpleDependency is SimpleDependency, "Resolved dependency of wrong type")
+        // Then
+        #expect(resolvedSimpleDependency is SimpleDependency)
 
-        await container.register(type: DIProtocol.self, in: .shared) { _ in
+        // When
+        await subject.register(type: DIProtocol.self, in: .shared) { _ in
             StructureDependency.default
         }
 
-        let resolvedStructureDependency = await container.resolve(type: DIProtocol.self)
+        let resolvedStructureDependency = await subject.resolve(type: DIProtocol.self)
 
-        XCTAssertTrue(resolvedStructureDependency is StructureDependency, "Resolved dependency of wrong type")
+        // Then
+        #expect(resolvedStructureDependency is StructureDependency)
     }
 
-    func testSameDependencyTypeRegisteredWithDifferentTypes() async {
-        await container.register(type: DIProtocol.self, in: .shared) { _ in
+    @Test func sameDependencyTypeRegisteredWithDifferentTypes() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: DIProtocol.self, in: .shared) { _ in
             StructureDependency(property1: "first")
         }
 
-        await container.register(type: StructureDependency.self, in: .shared) { _ in
+        await subject.register(type: StructureDependency.self, in: .shared) { _ in
             StructureDependency(property1: "second")
         }
 
-        let resolvedProtocolDependency: DIProtocol = await container.resolve()
-        let resolvedTypeDependency: StructureDependency = await container.resolve()
+        // When
+        let resolvedProtocolDependency: DIProtocol = await subject.resolve()
+        let resolvedTypeDependency: StructureDependency = await subject.resolve()
 
-        XCTAssertTrue(resolvedProtocolDependency is StructureDependency, "Resolved dependency of wrong type")
-        XCTAssertEqual(resolvedTypeDependency.property1, "second", "Resolved dependency from a wrong factory")
-
-        XCTAssertNotEqual(
-            (resolvedProtocolDependency as? StructureDependency)?.property1,
-            resolvedTypeDependency.property1,
-            "Resolved same instances"
-        )
+        // Then
+        #expect(resolvedProtocolDependency is StructureDependency)
+        #expect(resolvedTypeDependency.property1 == "second")
+        #expect((resolvedProtocolDependency as? StructureDependency)?.property1 != resolvedTypeDependency.property1)
     }
 
-    func testCombiningSharedAndNonsharedDependencies() async {
-        await container.register(in: .new) { _ in
+    @Test func combiningSharedAndNonsharedDependencies() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(in: .new) { _ in
             SimpleDependency()
         }
-        await container.register(in: .shared) {
+        await subject.register(in: .shared) {
             DependencyWithParameter(subDependency: await $0.resolve())
         }
-        await container.register {
+        await subject.register {
             DependencyWithParameter3(
                 subDependency1: await $0.resolve(),
                 subDependency2: $1,
@@ -109,36 +122,33 @@ final class AsyncComplexTests: AsyncDITestCase {
             subDependency: StructureDependency(property1: "second")
         )
 
-        let resolvedDependency1: DependencyWithParameter = await container.resolve()
-        let resolvedDependency2: DependencyWithParameter = await container.resolve()
-        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        // When
+        let resolvedDependency1: DependencyWithParameter = await subject.resolve()
+        let resolvedDependency2: DependencyWithParameter = await subject.resolve()
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
-        XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
-
-        XCTAssertFalse(resolvedDependency1.subDependency === resolvedDependency3.subDependency1, "Resolved the same instance for a subdependency")
-        XCTAssertFalse(resolvedDependency3.subDependency1 === resolvedDependency4.subDependency1, "Resolved the same instance for a subdependency")
-
-        XCTAssertFalse(resolvedDependency3 === resolvedDependency4, "Resolved same instances")
-
-        XCTAssertNotEqual(
-            resolvedDependency3.subDependency2.subDependency.property1,
-            resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instances with the same argument"
-        )
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
+        #expect(resolvedDependency1.subDependency === resolvedDependency2.subDependency)
+        #expect(resolvedDependency1.subDependency !== resolvedDependency3.subDependency1)
+        #expect(resolvedDependency3.subDependency1 !== resolvedDependency4.subDependency1)
+        #expect(resolvedDependency3 !== resolvedDependency4)
+        #expect(resolvedDependency3.subDependency2.subDependency.property1 != resolvedDependency4.subDependency2.subDependency.property1)
     }
 
-    func testCombiningSharedAndNonsharedDependenciesWithExplicitFactories() async {
-        await container.register(in: .new) { _ in
+    @Test func combiningSharedAndNonsharedDependenciesWithExplicitFactories() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(in: .new) { _ in
             SimpleDependency()
         }
-        await container.register(in: .shared) {
+        await subject.register(in: .shared) {
             DependencyWithParameter(
                 subDependency: await $0.resolve()
             )
         }
-        await container.register { resolver, argument in
+        await subject.register { resolver, argument in
             DependencyWithParameter3(
                 subDependency1: await resolver.resolve(),
                 subDependency2: argument,
@@ -153,23 +163,18 @@ final class AsyncComplexTests: AsyncDITestCase {
             subDependency: StructureDependency(property1: "second")
         )
 
-        let resolvedDependency1: DependencyWithParameter = await container.resolve()
-        let resolvedDependency2: DependencyWithParameter = await container.resolve()
-        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        // When
+        let resolvedDependency1: DependencyWithParameter = await subject.resolve()
+        let resolvedDependency2: DependencyWithParameter = await subject.resolve()
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
-        XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
-
-        XCTAssertFalse(resolvedDependency1.subDependency === resolvedDependency3.subDependency1, "Resolved the same instance for a subdependency")
-        XCTAssertFalse(resolvedDependency3.subDependency1 === resolvedDependency4.subDependency1, "Resolved the same instance for a subdependency")
-
-        XCTAssertFalse(resolvedDependency3 === resolvedDependency4, "Resolved same instances")
-
-        XCTAssertNotEqual(
-            resolvedDependency3.subDependency2.subDependency.property1,
-            resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instances with the same argument"
-        )
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
+        #expect(resolvedDependency1.subDependency === resolvedDependency2.subDependency)
+        #expect(resolvedDependency1.subDependency !== resolvedDependency3.subDependency1)
+        #expect(resolvedDependency3.subDependency1 !== resolvedDependency4.subDependency1)
+        #expect(resolvedDependency3 !== resolvedDependency4)
+        #expect(resolvedDependency3.subDependency2.subDependency.property1 != resolvedDependency4.subDependency2.subDependency.property1)
     }
 }

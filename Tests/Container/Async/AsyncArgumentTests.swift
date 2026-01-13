@@ -6,204 +6,246 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class AsyncContainerArgumentTests: AsyncDITestCase {
-    func testRegistration() async {
-        await container.register { _, argument -> DependencyWithValueTypeParameter in
+struct AsyncContainerArgumentTests {
+    @Test func registration() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
-
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument: argument)
 
-        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
+        // When
+        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(argument: argument)
+
+        // Then
+        #expect(argument == resolvedDependency.subDependency)
     }
 
-    func testRegistrationWithExplicitType() async {
-        await container.register(type: DependencyWithValueTypeParameter.self) { _, argument in
+    @Test func registrationWithExplicitType() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: DependencyWithValueTypeParameter.self) { _, argument in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
-
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument: argument)
 
-        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
+        // When
+        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(argument: argument)
+
+        // Then
+        #expect(argument == resolvedDependency.subDependency)
     }
 
-    func testUnmatchingArgumentType() async {
-        await container.register { _, argument -> DependencyWithValueTypeParameter in
+    @Test func unmatchingArgumentType() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
-
         let argument = 48
 
+        // When
         do {
-            _ = try await container.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument)
-
-            XCTFail("Expected to throw error")
+            _ = try await subject.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument)
+            Issue.record("Expected to throw error")
         } catch {
+            // Then
             guard let resolutionError = error as? ResolutionError else {
-                XCTFail("Incorrect error type")
+                Issue.record("Incorrect error type")
                 return
             }
 
             switch resolutionError {
             case .dependencyNotRegistered:
-                XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
+                #expect(!resolutionError.localizedDescription.isEmpty)
             default:
-                XCTFail("Incorrect resolution error")
+                Issue.record("Incorrect resolution error")
             }
         }
     }
 
-    func testRegistrationWithAsyncInit() async {
-        await container.register { _, argument -> DependencyWithAsyncInitWithParameter in
+    @Test func registrationWithTwoArguments() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
+            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
+        }
+        let argument1 = StructureDependency(property1: "test1")
+        let argument2 = "test2"
+
+        // When
+        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(argument1: argument1, argument2: argument2)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
+    }
+
+    @Test func registrationWithTwoArgumentsWithExplicitType() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: DependencyWithTwoArguments.self) { _, argument1, argument2 in
+            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
+        }
+        let argument1 = StructureDependency(property1: "test1")
+        let argument2 = "test2"
+
+        // When
+        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(argument1: argument1, argument2: argument2)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
+    }
+
+    @Test func unmatchingTwoArgumentsType() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
+            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
+        }
+        let argument1 = 48
+        let argument2 = "test"
+
+        // When
+        do {
+            _ = try await subject.tryResolve(type: DependencyWithTwoArguments.self, argument1: argument1, argument2: argument2)
+            Issue.record("Expected to throw error")
+        } catch {
+            // Then
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type")
+                return
+            }
+
+            switch resolutionError {
+            case .dependencyNotRegistered:
+                #expect(!resolutionError.localizedDescription.isEmpty)
+            default:
+                Issue.record("Incorrect resolution error")
+            }
+        }
+    }
+
+    @Test func registrationWithThreeArguments() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
+            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
+        }
+        let argument1 = StructureDependency(property1: "test1")
+        let argument2 = "test2"
+        let argument3 = 42
+
+        // When
+        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
+        #expect(argument3 == resolvedDependency.argument3)
+    }
+
+    @Test func registrationWithThreeArgumentsWithExplicitType() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: DependencyWithThreeArguments.self) { _, argument1, argument2, argument3 in
+            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
+        }
+        let argument1 = StructureDependency(property1: "test1")
+        let argument2 = "test2"
+        let argument3 = 42
+
+        // When
+        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
+        #expect(argument3 == resolvedDependency.argument3)
+    }
+
+    @Test func unmatchingThreeArgumentsType() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
+            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
+        }
+        let argument1 = 48
+        let argument2 = "test"
+        let argument3 = 42
+
+        // When
+        do {
+            _ = try await subject.tryResolve(type: DependencyWithThreeArguments.self, argument1: argument1, argument2: argument2, argument3: argument3)
+            Issue.record("Expected to throw error")
+        } catch {
+            // Then
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type")
+                return
+            }
+
+            switch resolutionError {
+            case .dependencyNotRegistered:
+                #expect(!resolutionError.localizedDescription.isEmpty)
+            default:
+                Issue.record("Incorrect resolution error")
+            }
+        }
+    }
+
+    @Test func registrationWithAsyncInit() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument -> DependencyWithAsyncInitWithParameter in
             await DependencyWithAsyncInitWithParameter(subDependency: argument)
         }
-
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithAsyncInitWithParameter = await container.resolve(argument: argument)
 
-        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
+        // When
+        let resolvedDependency: DependencyWithAsyncInitWithParameter = await subject.resolve(argument: argument)
+
+        // Then
+        #expect(argument == resolvedDependency.subDependency)
     }
 
-    func testRegistrationWithTwoArguments() async {
-        await container.register { _, argument1, argument2 -> DependencyWithTwoArguments in
-            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
-        }
-
-        let argument1 = StructureDependency(property1: "test1")
-        let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
-
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
-    }
-
-    func testRegistrationWithTwoArgumentsWithExplicitType() async {
-        await container.register(type: DependencyWithTwoArguments.self) { _, argument1, argument2 in
-            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
-        }
-
-        let argument1 = StructureDependency(property1: "test1")
-        let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
-
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
-    }
-
-    func testUnmatchingTwoArgumentsType() async {
-        await container.register { _, argument1, argument2 -> DependencyWithTwoArguments in
-            DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
-        }
-
-        let argument1 = 48
-        let argument2 = "test"
-
-        do {
-            _ = try await container.tryResolve(type: DependencyWithTwoArguments.self, argument1: argument1, argument2: argument2)
-
-            XCTFail("Expected to throw error")
-        } catch {
-            guard let resolutionError = error as? ResolutionError else {
-                XCTFail("Incorrect error type")
-                return
-            }
-
-            switch resolutionError {
-            case .dependencyNotRegistered:
-                XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
-            default:
-                XCTFail("Incorrect resolution error")
-            }
-        }
-    }
-
-    func testRegistrationWithThreeArguments() async {
-        await container.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
-            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
-        }
-
-        let argument1 = StructureDependency(property1: "test1")
-        let argument2 = "test2"
-        let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
-
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
-        XCTAssertEqual(argument3, resolvedDependency.argument3, "Container returned dependency with different third argument")
-    }
-
-    func testRegistrationWithThreeArgumentsWithExplicitType() async {
-        await container.register(type: DependencyWithThreeArguments.self) { _, argument1, argument2, argument3 in
-            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
-        }
-
-        let argument1 = StructureDependency(property1: "test1")
-        let argument2 = "test2"
-        let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
-
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
-        XCTAssertEqual(argument3, resolvedDependency.argument3, "Container returned dependency with different third argument")
-    }
-
-    func testUnmatchingThreeArgumentsType() async {
-        await container.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
-            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
-        }
-
-        let argument1 = 48
-        let argument2 = "test"
-        let argument3 = 42
-
-        do {
-            _ = try await container.tryResolve(type: DependencyWithThreeArguments.self, argument1: argument1, argument2: argument2, argument3: argument3)
-
-            XCTFail("Expected to throw error")
-        } catch {
-            guard let resolutionError = error as? ResolutionError else {
-                XCTFail("Incorrect error type")
-                return
-            }
-
-            switch resolutionError {
-            case .dependencyNotRegistered:
-                XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
-            default:
-                XCTFail("Incorrect resolution error")
-            }
-        }
-    }
-
-    func testRegistrationWithAsyncInitWithTwoArguments() async {
-        await container.register { _, argument1, argument2 -> DependencyWithAsyncInitWithTwoArguments in
+    @Test func registrationWithAsyncInitWithTwoArguments() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2 -> DependencyWithAsyncInitWithTwoArguments in
             await DependencyWithAsyncInitWithTwoArguments(argument1: argument1, argument2: argument2)
         }
-
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
 
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
+        // When
+        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await subject.resolve(argument1: argument1, argument2: argument2)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
     }
 
-    func testRegistrationWithAsyncInitWithThreeArguments() async {
-        await container.register { _, argument1, argument2, argument3 -> DependencyWithAsyncInitWithThreeArguments in
+    @Test func registrationWithAsyncInitWithThreeArguments() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { _, argument1, argument2, argument3 -> DependencyWithAsyncInitWithThreeArguments in
             await DependencyWithAsyncInitWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
         }
-
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
 
-        XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
-        XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
-        XCTAssertEqual(argument3, resolvedDependency.argument3, "Container returned dependency with different third argument")
+        // When
+        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await subject.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+
+        // Then
+        #expect(argument1 == resolvedDependency.argument1)
+        #expect(argument2 == resolvedDependency.argument2)
+        #expect(argument3 == resolvedDependency.argument3)
     }
 }
