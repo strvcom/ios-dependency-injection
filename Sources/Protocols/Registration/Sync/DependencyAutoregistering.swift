@@ -1,6 +1,6 @@
 //
 //  DependencyAutoregistering.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 05.08.2021.
 //
@@ -20,7 +20,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         in scope: DependencyScope,
         initializer: @escaping () -> Dependency
     )
-    
+
     /// Autoregister a dependency with the provided initializer method that has one parameter which is a dependency that is registered within the same container
     ///
     /// - Parameters:
@@ -32,7 +32,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         in scope: DependencyScope,
         initializer: @escaping (Parameter) -> Dependency
     )
-    
+
     /// Autoregister a dependency with the provided initializer method that has two parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -44,7 +44,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         in scope: DependencyScope,
         initializer: @escaping (Parameter1, Parameter2) -> Dependency
     )
-    
+
     /// Autoregister a dependency with the provided initializer method that has three parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -56,7 +56,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         in scope: DependencyScope,
         initializer: @escaping (Parameter1, Parameter2, Parameter3) -> Dependency
     )
-    
+
     /// Autoregister a dependency with the provided initializer method that has four parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -68,7 +68,7 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         in scope: DependencyScope,
         initializer: @escaping (Parameter1, Parameter2, Parameter3, Parameter4) -> Dependency
     )
-    
+
     /// Autoregister a dependency with the provided initializer method that has five parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -98,10 +98,10 @@ public extension DependencyAutoregistering {
         let factory: Factory<Dependency> = { _ in
             initializer()
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
-    
+
     /// Autoregister a dependency with the provided initializer method that has one parameter which is a dependency that is registered within the same container
     ///
     /// - Parameters:
@@ -118,10 +118,10 @@ public extension DependencyAutoregistering {
                 resolver.resolve(type: Parameter.self)
             )
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
-    
+
     /// Autoregister a dependency with the provided initializer method that has two parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -139,10 +139,10 @@ public extension DependencyAutoregistering {
                 resolver.resolve(type: Parameter2.self)
             )
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
-    
+
     /// Autoregister a dependency with the provided initializer method that has three parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -161,10 +161,10 @@ public extension DependencyAutoregistering {
                 resolver.resolve(type: Parameter3.self)
             )
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
-    
+
     /// Autoregister a dependency with the provided initializer method that has four parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -184,10 +184,10 @@ public extension DependencyAutoregistering {
                 resolver.resolve(type: Parameter4.self)
             )
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
-    
+
     /// Autoregister a dependency with the provided initializer method that has five parameters which are dependencies that are registered within the same container
     ///
     /// - Parameters:
@@ -208,7 +208,7 @@ public extension DependencyAutoregistering {
                 resolver.resolve(type: Parameter5.self)
             )
         }
-        
+
         register(type: type, in: scope, factory: factory)
     }
 }

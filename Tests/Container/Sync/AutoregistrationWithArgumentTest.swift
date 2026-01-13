@@ -1,30 +1,30 @@
 //
 //  AutoregistrationWithArgumentTest.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 05.08.2021.
 //
 
-import XCTest
 import DependencyInjection
+import XCTest
 
 final class AutoregistrationWithArgumentTest: DITestCase {
     func testRegistrationWithoutParameter() {
         container.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
-        
+
         let argument = StructureDependency(property1: "48")
         let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
-        
+
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
-    
+
     func testRegistrationWithOneParameterFirstPermutation() {
         let subDependency = DependencyWithValueTypeParameter()
         container.register(dependency: subDependency)
         container.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter2.init)
 
         let argument = SimpleDependency()
-        
+
         let firstResolved: DependencyWithParameter2 = container.resolve(argument: argument)
         let secondResolved: DependencyWithParameter2 = container.resolve(argument: argument)
 
@@ -33,13 +33,13 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         XCTAssertTrue(firstResolved.subDependency2 === secondResolved.subDependency2, "Different instances of subdependencies")
     }
-    
+
     func testRegistrationWithOneParameterSecondPermutation() {
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter2.init)
 
         let argument = DependencyWithValueTypeParameter()
-        
+
         let firstResolved: DependencyWithParameter2 = container.resolve(argument: argument)
         let secondResolved: DependencyWithParameter2 = container.resolve(argument: argument)
 
@@ -48,7 +48,7 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         XCTAssertTrue(firstResolved.subDependency1 === secondResolved.subDependency1, "Different instances of subdependencies")
     }
-    
+
     func testRegistrationWithTwoParameterFirstPermutation() {
         let subDependency = DependencyWithValueTypeParameter()
         container.register(dependency: subDependency)
@@ -57,7 +57,7 @@ final class AutoregistrationWithArgumentTest: DITestCase {
         container.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter3.init)
 
         let argument = SimpleDependency()
-        
+
         let firstResolved: DependencyWithParameter3 = container.resolve(argument: argument)
         let secondResolved: DependencyWithParameter3 = container.resolve(argument: argument)
 
@@ -67,7 +67,7 @@ final class AutoregistrationWithArgumentTest: DITestCase {
         XCTAssertTrue(firstResolved.subDependency2 === secondResolved.subDependency2, "Different instances of subdependencies")
         XCTAssertTrue(firstResolved.subDependency3 === secondResolved.subDependency3, "Different instances of subdependencies")
     }
-    
+
     func testRegistrationWithTwoParameterSecondPermutation() {
         container.autoregister(initializer: SimpleDependency.init)
         container.autoregister(initializer: DependencyWithParameter.init)
@@ -92,7 +92,7 @@ final class AutoregistrationWithArgumentTest: DITestCase {
         container.autoregister(argument: DependencyWithParameter.self, initializer: DependencyWithParameter3.init)
 
         let argument = DependencyWithParameter(subDependency: SimpleDependency())
-        
+
         let firstResolved: DependencyWithParameter3 = container.resolve(argument: argument)
         let secondResolved: DependencyWithParameter3 = container.resolve(argument: argument)
 
