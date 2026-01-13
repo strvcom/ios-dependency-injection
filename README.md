@@ -5,7 +5,7 @@
 [![Platforms](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)
 [![Swift](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)
 
-The lightweight library for dependency injection in Swift
+The lightweight library for dependency injection in Swift. See full [documentation](Documentation/Documentation.md).
 
 ## Requirements
 
@@ -194,7 +194,7 @@ In the example above the dependencies aren't resolved immediately when an instan
 - [x] Convenient property wrapper
 - [x] Autoregister
 - [x] SPM package
-- [ ] Register an instance with multiple arguments
+- [x] Register an instance with multiple arguments
 - [ ] Container hierarchy
 - [ ] Thread-safety
 - [ ] Detect circular dependencies
