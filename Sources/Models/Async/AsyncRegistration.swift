@@ -14,25 +14,25 @@ struct AsyncRegistration: Sendable {
     let identifier: RegistrationIdentifier
     let scope: DependencyScope
     let asyncRegistrationFactory: AsyncRegistrationFactory
-    
+
     /// Initializer for registrations that don't need any variable argument
     init<T: Sendable>(type: T.Type, scope: DependencyScope, factory: @Sendable @escaping (any AsyncDependencyResolving) async -> T) {
-        self.identifier = RegistrationIdentifier(type: type)
+        identifier = RegistrationIdentifier(type: type)
         self.scope = scope
-        self.asyncRegistrationFactory = { resolver, _ in await factory(resolver) }
+        asyncRegistrationFactory = { resolver, _ in await factory(resolver) }
     }
 
     /// Initializer for registrations that expect a variable argument passed to the factory closure when the dependency is being resolved
     init<T: Sendable, Argument: Sendable>(type: T.Type, scope: DependencyScope, factory: @Sendable @escaping (any AsyncDependencyResolving, Argument) async -> T) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argument: Argument.self)
-        
-        self.identifier = registrationIdentifier
+
+        identifier = registrationIdentifier
         self.scope = scope
-        self.asyncRegistrationFactory = { resolver, arg in
+        asyncRegistrationFactory = { resolver, arg in
             guard let argument = arg as? Argument else {
                 throw ResolutionError.unmatchingArgumentType(message: "Registration of type \(registrationIdentifier.description) doesn't accept an argument of type \(Argument.self)")
             }
-            
+
             return await factory(resolver, argument)
         }
     }

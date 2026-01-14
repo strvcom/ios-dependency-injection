@@ -11,10 +11,10 @@ import Foundation
 public protocol AsyncDependencyRegistering {
     /// Factory closure that instantiates the required dependency
     typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependency
-    
+
     /// Factory closure that instantiates the required dependency with the given variable argument
     typealias FactoryWithArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
-    
+
     /// Register a dependency
     ///
     /// - Parameters:
@@ -22,7 +22,7 @@ public protocol AsyncDependencyRegistering {
     ///   - scope: Scope of the dependency. If `.new` is used, the `factory` closure is called on each `resolve` call. If `.shared` is used, the `factory` closure is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - factory: Closure that is called when the dependency is being resolved
     func register<Dependency: Sendable>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) async
-    
+
     /// Register a dependency with a variable argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same resolver (i.e. container),
@@ -48,7 +48,7 @@ public extension AsyncDependencyRegistering {
     static var defaultScope: DependencyScope {
         DependencyScope.shared
     }
-    
+
     /// Register a dependency in the default ``DependencyScope``, i.e. in the `shared` scope
     ///
     /// - Parameters:
@@ -57,7 +57,7 @@ public extension AsyncDependencyRegistering {
     func register<Dependency: Sendable>(type: Dependency.Type, factory: @escaping Factory<Dependency>) async {
         await register(type: type, in: Self.defaultScope, factory: factory)
     }
-    
+
     /// Register a dependency with an implicit type determined by the factory closure return type
     ///
     /// - Parameters:
@@ -74,7 +74,7 @@ public extension AsyncDependencyRegistering {
     func register<Dependency: Sendable>(factory: @escaping Factory<Dependency>) async {
         await register(type: Dependency.self, in: Self.defaultScope, factory: factory)
     }
-    
+
     /// Register a dependency with a variable argument. The type of the dependency is determined implicitly based on the factory closure return type
     ///
     /// The argument is typically a parameter in an initializer of the dependency that is not registered in the same resolver (i.e. container),

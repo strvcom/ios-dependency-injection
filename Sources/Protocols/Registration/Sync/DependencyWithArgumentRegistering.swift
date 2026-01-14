@@ -1,6 +1,6 @@
 //
 //  DependencyWithArgumentRegistering.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 26.03.2021.
 //
@@ -11,7 +11,7 @@ import Foundation
 public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     /// Factory closure that instantiates the required dependency with the given variable argument
     typealias FactoryWithArgument<Dependency, Argument> = (DependencyWithArgumentResolving, Argument) -> Dependency
-    
+
     /// Register a dependency with a variable argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same resolver (i.e. container),
@@ -22,7 +22,7 @@ public protocol DependencyWithArgumentRegistering: DependencyRegistering {
     /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
     /// Shared instances are typically not dependent on variable input parameters by definition.
     /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
-    /// 
+    ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved

@@ -1,6 +1,6 @@
 //
 //  RegistrationIdentifier.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 25.03.2021.
 //
@@ -11,15 +11,15 @@ import Foundation
 struct RegistrationIdentifier {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifier: ObjectIdentifier?
-    
-    init<Dependency, Argument>(type: Dependency.Type, argument: Argument.Type) {
-        self.typeIdentifier = ObjectIdentifier(type)
-        self.argumentIdentifier = ObjectIdentifier(type)
+
+    init<Dependency, Argument>(type: Dependency.Type, argument _: Argument.Type) {
+        typeIdentifier = ObjectIdentifier(type)
+        argumentIdentifier = ObjectIdentifier(type)
     }
-    
+
     init<Dependency>(type: Dependency.Type) {
-        self.typeIdentifier = ObjectIdentifier(type)
-        self.argumentIdentifier = nil
+        typeIdentifier = ObjectIdentifier(type)
+        argumentIdentifier = nil
     }
 }
 

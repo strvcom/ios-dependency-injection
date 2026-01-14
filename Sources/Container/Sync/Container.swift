@@ -1,6 +1,6 @@
 //
 //  Container.swift
-//  
+//
 //
 //  Created by Jan Schwarz on 24.03.2021.
 //
@@ -10,23 +10,21 @@ import Foundation
 /// Dependency Injection Container where dependencies are registered and from where they are consequently retrieved (i.e. resolved)
 open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregistering, DependencyWithArgumentResolving, @unchecked Sendable {
     /// Shared singleton
-    public static let shared: Container = {
-        Container()
-    }()
-    
+    public static let shared: Container = .init()
+
     private var registrations = [RegistrationIdentifier: Registration]()
     private var sharedInstances = [RegistrationIdentifier: Any]()
-    
+
     /// Create new instance of ``Container``
     public init() {}
-    
+
     /// Remove all registrations and already instantiated shared instances from the container
     open func clean() {
         registrations.removeAll()
-        
+
         releaseSharedInstances()
     }
-    
+
     /// Remove already instantiated shared instances from the container
     open func releaseSharedInstances() {
         sharedInstances.removeAll()
@@ -42,9 +40,9 @@ open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregis
     ///   - factory: Closure that is called when the dependency is being resolved
     open func register<Dependency>(type: Dependency.Type, in scope: DependencyScope, factory: @escaping Factory<Dependency>) {
         let registration = Registration(type: type, scope: scope, factory: factory)
-        
+
         registrations[registration.identifier] = registration
-        
+
         // With a new registration we should clean all shared instances
         // because the new registered factory most likely returns different objects and we have no way to tell
         sharedInstances[registration.identifier] = nil
@@ -68,7 +66,7 @@ open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregis
     ///   - factory: Closure that is called when the dependency is being resolved
     open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) {
         let registration = Registration(type: type, scope: .new, factory: factory)
-        
+
         registrations[registration.identifier] = registration
     }
 
@@ -86,27 +84,23 @@ open class Container: DependencyWithArgumentAutoregistering, DependencyAutoregis
         let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
 
         let registration = try getRegistration(with: identifier)
-        
-        let dependency: Dependency = try getDependency(from: registration, with: argument)
 
-        return dependency
+        return try getDependency(from: registration, with: argument) as Dependency
     }
-    
+
     /// Resolve a dependency that was previously registered with `register` method
     ///
     /// If a dependency of the given type wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
-    /// 
+    ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     open func tryResolve<Dependency>(type: Dependency.Type) throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type)
 
         let registration = try getRegistration(with: identifier)
-        
-        let dependency: Dependency = try getDependency(from: registration)
-        
-        return dependency
+
+        return try getDependency(from: registration) as Dependency
     }
 }
 
@@ -118,10 +112,10 @@ private extension Container {
                 message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
             )
         }
-        
+
         return registration
     }
-    
+
     func getDependency<Dependency>(from registration: Registration, with argument: Any? = nil) throws -> Dependency {
         switch registration.scope {
         case .shared:
@@ -131,12 +125,12 @@ private extension Container {
         case .new:
             break
         }
-        
+
         // We use force cast here because we are sure that the type-casting always succeed
         // The reason why the `factory` closure returns ``Any`` is that we have to erase the generic type in order to store the registration
         // When the registration is created it can be initialized just with a `factory` that returns the matching type
         let dependency = try registration.factory(self, argument) as! Dependency
-        
+
         switch registration.scope {
         case .shared:
             sharedInstances[registration.identifier] = dependency

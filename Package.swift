@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "DependencyInjection",
     platforms: [
-        .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)
+        .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6),
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -24,7 +24,7 @@ let package = Package(
             path: "Sources",
             swiftSettings: [
                 .define("APPLICATION_EXTENSION_API_ONLY"),
-                .enableUpcomingFeature("StrictConcurrency")
+                .enableUpcomingFeature("StrictConcurrency"),
             ]
         ),
         .testTarget(
