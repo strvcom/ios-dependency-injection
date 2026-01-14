@@ -9,16 +9,13 @@ import Foundation
 
 /// A type that is able to register a dependency
 public protocol AsyncDependencyRegistering {
-    /// Factory closure that instantiates the required dependency
-    typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependency
-
-    /// Factory closure that instantiates the required dependency with the given variable argument
+    /// Factory closures that instantiates the required dependency
+    typealias Factory<Dependency: Sendable> = @Sendable (any AsyncDependencyResolving) async -> Dependenc
+    
     typealias FactoryWithOneArgument<Dependency: Sendable, Argument: Sendable> = @Sendable (any AsyncDependencyResolving, Argument) async -> Dependency
-
-    /// Factory closure that instantiates the required dependency with two variable arguments
+    
     typealias FactoryWithTwoArguments<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2) async -> Dependency
     
-    /// Factory closure that instantiates the required dependency with three variable arguments
     typealias FactoryWithThreeArguments<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable> = @Sendable (any AsyncDependencyResolving, Argument1, Argument2, Argument3) async -> Dependency
     
     /// Register a dependency
