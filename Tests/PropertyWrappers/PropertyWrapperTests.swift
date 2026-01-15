@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("PropertyWrappers", .tags(.propertyWrappers))
 struct PropertyWrapperTests {
-    @Test func injectionWithSharedContainer() {
+    @Test("Injection with shared container")
+    func injectionWithSharedContainer() {
         // Given
         struct Module {
             @Injected var resolvedDependency: SimpleDependency
@@ -28,7 +30,8 @@ struct PropertyWrapperTests {
         Container.shared.clean()
     }
 
-    @Test func injectionWithCustomContainer() {
+    @Test("Injection with custom container")
+    func injectionWithCustomContainer() {
         // Given
         let subject = Container()
         struct Module {
@@ -49,7 +52,8 @@ struct PropertyWrapperTests {
         #expect(dependency === module.resolvedDependency)
     }
 
-    @Test func lazyInjectionWithSharedContainer() {
+    @Test("Lazy injection with shared container")
+    func lazyInjectionWithSharedContainer() {
         // Given
         struct Module {
             @LazyInjected var resolvedDependency: SimpleDependency
@@ -68,7 +72,8 @@ struct PropertyWrapperTests {
         Container.shared.clean()
     }
 
-    @Test func lazyInjectionWithCustomContainer() {
+    @Test("Lazy injection with custom container")
+    func lazyInjectionWithCustomContainer() {
         // Given
         let subject = Container()
         struct Module {

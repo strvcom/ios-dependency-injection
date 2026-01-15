@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Sync/Complex", .tags(.sync, .complex))
 struct ComplexTests {
-    @Test func cleanContainer() throws {
+    @Test("Clean container")
+    func cleanContainer() throws {
         // Given
         let subject = Container()
         subject.autoregister(initializer: SimpleDependency.init)
@@ -25,7 +27,8 @@ struct ComplexTests {
         #expect(unresolvedDependency == nil)
     }
 
-    @Test func releaseSharedInstances() {
+    @Test("Release shared instances")
+    func releaseSharedInstances() {
         // Given
         let subject = Container()
         subject.autoregister(in: .shared, initializer: SimpleDependency.init)
@@ -49,7 +52,8 @@ struct ComplexTests {
         #expect(resolvedDependency2 == nil)
     }
 
-    @Test func reregistration() {
+    @Test("Reregistration")
+    func reregistration() {
         // Given
         let subject = Container()
         subject.register(type: DIProtocol.self, in: .shared) { _ in
@@ -73,7 +77,8 @@ struct ComplexTests {
         #expect(resolvedStructureDependency is StructureDependency)
     }
 
-    @Test func sameDependencyTypeRegisteredWithDifferentTypes() {
+    @Test("Same dependency type registered with different types")
+    func sameDependencyTypeRegisteredWithDifferentTypes() {
         // Given
         let subject = Container()
         subject.register(type: DIProtocol.self, in: .shared) { _ in
@@ -94,7 +99,8 @@ struct ComplexTests {
         #expect((resolvedProtocolDependency as? StructureDependency)?.property1 != resolvedTypeDependency.property1)
     }
 
-    @Test func combiningSharedAndNonsharedDependencies() {
+    @Test("Combining shared and non-shared dependencies")
+    func combiningSharedAndNonsharedDependencies() {
         // Given
         let subject = Container()
         subject.autoregister(in: .new, initializer: SimpleDependency.init)
@@ -123,7 +129,8 @@ struct ComplexTests {
         #expect(resolvedDependency3.subDependency2.subDependency.property1 != resolvedDependency4.subDependency2.subDependency.property1)
     }
 
-    @Test func combiningSharedAndNonsharedDependenciesWithExplicitFactories() {
+    @Test("Combining shared and non-shared dependencies with explicit factories")
+    func combiningSharedAndNonsharedDependenciesWithExplicitFactories() {
         // Given
         let subject = Container()
         subject.register(in: .new) { _ in

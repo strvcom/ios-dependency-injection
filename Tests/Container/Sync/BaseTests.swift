@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Sync/Base Registration", .tags(.sync, .base))
 struct BaseTests {
-    @Test func autoclosureDependency() {
+    @Test("Autoclosure dependency")
+    func autoclosureDependency() {
         // Given
         let subject = Container()
         let dependency = SimpleDependency()
@@ -22,7 +24,8 @@ struct BaseTests {
         #expect(dependency === resolvedDependency)
     }
 
-    @Test func autoclosureDependencyWithExplicitType() {
+    @Test("Autoclosure dependency with explicit type")
+    func autoclosureDependencyWithExplicitType() {
         // Given
         let subject = Container()
         let dependency = SimpleDependency()
@@ -35,7 +38,8 @@ struct BaseTests {
         #expect(dependency === resolvedDependency)
     }
 
-    @Test func repeatedlyResolvedAutoclosureDependency() {
+    @Test("Repeatedly resolved autoclosure dependency")
+    func repeatedlyResolvedAutoclosureDependency() {
         // Given
         let subject = Container()
         subject.register(dependency: SimpleDependency())
@@ -48,7 +52,8 @@ struct BaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func dependencyRegisteredInDefaultScope() {
+    @Test("Dependency registered in default scope")
+    func dependencyRegisteredInDefaultScope() {
         // Given
         let subject = Container()
         subject.register { _ -> SimpleDependency in
@@ -63,7 +68,8 @@ struct BaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func dependencyRegisteredInDefaultScopeWithExplicitType() {
+    @Test("Dependency registered in default scope with explicit type")
+    func dependencyRegisteredInDefaultScopeWithExplicitType() {
         // Given
         let subject = Container()
         subject.register(type: SimpleDependency.self) { _ -> SimpleDependency in
@@ -78,7 +84,8 @@ struct BaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func sharedDependency() {
+    @Test("Shared dependency")
+    func sharedDependency() {
         // Given
         let subject = Container()
         subject.register(in: .shared) { _ -> SimpleDependency in
@@ -93,7 +100,8 @@ struct BaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func nonSharedDependency() {
+    @Test("Non-shared dependency")
+    func nonSharedDependency() {
         // Given
         let subject = Container()
         subject.register(in: .new) { _ -> SimpleDependency in
@@ -108,7 +116,8 @@ struct BaseTests {
         #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    @Test func nonSharedDependencyWithExplicitType() {
+    @Test("Non-shared dependency with explicit type")
+    func nonSharedDependencyWithExplicitType() {
         // Given
         let subject = Container()
         subject.register(type: SimpleDependency.self, in: .new) { _ in
@@ -123,7 +132,8 @@ struct BaseTests {
         #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    @Test func unregisteredDependency() throws {
+    @Test("Unregistered dependency")
+    func unregisteredDependency() throws {
         // Given
         let subject = Container()
 

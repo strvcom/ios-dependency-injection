@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Sync/Autoregistration", .tags(.sync, .autoregistration))
 struct AutoregistrationTests {
-    @Test func sharedAutoRegistrationWithoutParameter() {
+    @Test("Shared auto-registration without parameter")
+    func sharedAutoRegistrationWithoutParameter() {
         // Given
         let subject = Container()
         subject.autoregister(initializer: SimpleDependency.init)
@@ -22,7 +24,8 @@ struct AutoregistrationTests {
         #expect(firstResolved === secondResolved)
     }
 
-    @Test func sharedAutoRegistrationOneParameter() {
+    @Test("Shared auto-registration with one parameter")
+    func sharedAutoRegistrationOneParameter() {
         // Given
         let subject = Container()
         subject.autoregister(initializer: SimpleDependency.init)
@@ -36,7 +39,8 @@ struct AutoregistrationTests {
         #expect(firstResolved === secondResolved)
     }
 
-    @Test func sharedAutoRegistrationTwoParameters() {
+    @Test("Shared auto-registration with two parameters")
+    func sharedAutoRegistrationTwoParameters() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
@@ -52,7 +56,8 @@ struct AutoregistrationTests {
         #expect(firstResolved === secondResolved)
     }
 
-    @Test func sharedAutoRegistrationThreeParameters() {
+    @Test("Shared auto-registration with three parameters")
+    func sharedAutoRegistrationThreeParameters() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
@@ -69,7 +74,8 @@ struct AutoregistrationTests {
         #expect(firstResolved === secondResolved)
     }
 
-    @Test func sharedAutoRegistrationFourParameters() {
+    @Test("Shared auto-registration with four parameters")
+    func sharedAutoRegistrationFourParameters() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
@@ -87,7 +93,8 @@ struct AutoregistrationTests {
         #expect(firstResolved === secondResolved)
     }
 
-    @Test func sharedAutoRegistrationFiveParameters() {
+    @Test("Shared auto-registration with five parameters")
+    func sharedAutoRegistrationFiveParameters() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
