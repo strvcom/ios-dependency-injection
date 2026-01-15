@@ -190,13 +190,20 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
 // MARK: Private methods
 private extension AsyncContainer {
     func getRegistration(with identifier: RegistrationIdentifier) throws -> AsyncRegistration {
-        guard let registration = registrations[identifier] else {
-            throw ResolutionError.dependencyNotRegistered(
-                message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
+        if let registration = registrations[identifier] {
+            return registration
+        }
+
+        if let matchingIdentifier = registrations.keys.first(where: { $0.typeIdentifier == identifier.typeIdentifier }) {
+            throw ResolutionError.unmatchingArgumentType(
+                message: "Registration of type \(matchingIdentifier.description) doesn't accept arguments of type \(identifier.description)"
             )
         }
 
-        return registration
+        throw ResolutionError.dependencyNotRegistered(
+            message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
+        )
+
     }
 
     func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = nil) async throws -> Dependency {

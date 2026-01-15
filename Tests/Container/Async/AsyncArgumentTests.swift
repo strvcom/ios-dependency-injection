@@ -31,7 +31,33 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
 
-    func testUnmatchingArgumentType() async {
+    func testUnmatchingArgumentType_ZeroArguments() async {
+        await container.register { _ -> SimpleDependency in
+            SimpleDependency()
+        }
+
+        let argument = 48
+
+        do {
+            _ = try await container.tryResolve(type: SimpleDependency.self, argument: argument)
+
+            XCTFail("Expected to throw error")
+        } catch {
+            guard let resolutionError = error as? ResolutionError else {
+                XCTFail("Incorrect error type")
+                return
+            }
+
+            switch resolutionError {
+            case .unmatchingArgumentType:
+                XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
+            default:
+                XCTFail("Incorrect resolution error: \(resolutionError)")
+            }
+        }
+    }
+
+    func testUnmatchingArgumentType_OneArgument() async {
         await container.register { _, argument -> DependencyWithValueTypeParameter in
             DependencyWithValueTypeParameter(subDependency: argument)
         }
@@ -49,10 +75,10 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
             default:
-                XCTFail("Incorrect resolution error")
+                XCTFail("Incorrect resolution error: \(resolutionError)")
             }
         }
     }
@@ -94,7 +120,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
     }
 
-    func testUnmatchingTwoArgumentsType() async {
+    func testUnmatchingArgumentType_TwoArguments() async {
         await container.register { _, argument1, argument2 -> DependencyWithTwoArguments in
             DependencyWithTwoArguments(argument1: argument1, argument2: argument2)
         }
@@ -113,10 +139,10 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
             default:
-                XCTFail("Incorrect resolution error")
+                XCTFail("Incorrect resolution error: \(resolutionError)")
             }
         }
     }
@@ -151,7 +177,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         XCTAssertEqual(argument3, resolvedDependency.argument3, "Container returned dependency with different third argument")
     }
 
-    func testUnmatchingThreeArgumentsType() async {
+    func testUnmatchingArgumentType_ThreeArguments() async {
         await container.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
             DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
         }
@@ -171,10 +197,10 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
             default:
-                XCTFail("Incorrect resolution error")
+                XCTFail("Incorrect resolution error: \(resolutionError)")
             }
         }
     }
