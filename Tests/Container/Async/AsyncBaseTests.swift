@@ -115,7 +115,8 @@ struct AsyncBaseTests {
         }
     }
 
-    @Test func concurrentResolveSharedDependency() async {
+    @Test("Concurrent resolve of shared dependency")
+    func concurrentResolveSharedDependency() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(in: .shared) { _ -> SimpleDependency in
@@ -145,5 +146,62 @@ struct AsyncBaseTests {
         }
 
         #expect(resolvedDependencies.allSatisfy { $0 === firstDependency })
+    }
+
+    @Test("Concurrent register and resolve different types")
+    func concurrentRegisterAndResolveDifferentTypes() async {
+        // Given
+        let subject = AsyncContainer()
+
+        // When
+        let resolvedDependencies = await withTaskGroup(of: Any.self) { group in
+            group.addTask {
+                await subject.register(in: .shared) { _ -> SimpleDependency in
+                    SimpleDependency()
+                }
+
+                let dependency: SimpleDependency = await subject.resolve()
+                return dependency
+            }
+
+            group.addTask {
+                await subject.register { _, argument -> DependencyWithValueTypeParameter in
+                    DependencyWithValueTypeParameter(subDependency: argument)
+                }
+
+                let argument = StructureDependency(property1: "concurrent")
+                let dependency: DependencyWithValueTypeParameter = await subject.resolve(argument: argument)
+                return dependency
+            }
+
+            group.addTask {
+                await subject.register { _, argument -> DependencyWithAsyncInitWithParameter in
+                    await DependencyWithAsyncInitWithParameter(subDependency: argument)
+                }
+
+                let argument = StructureDependency(property1: "async")
+                let dependency: DependencyWithAsyncInitWithParameter = await subject.resolve(argument: argument)
+                return dependency
+            }
+
+            var dependencies: [Any] = []
+            for await dependency in group {
+                dependencies.append(dependency)
+            }
+
+            return dependencies
+        }
+
+        // Then
+        #expect(resolvedDependencies.count == 3)
+
+        let hasSimpleDependency = resolvedDependencies.contains { $0 is SimpleDependency }
+        #expect(hasSimpleDependency)
+
+        let hasValueTypeParameter = resolvedDependencies.contains { $0 is DependencyWithValueTypeParameter }
+        #expect(hasValueTypeParameter)
+
+        let hasAsyncInitParameter = resolvedDependencies.contains { $0 is DependencyWithAsyncInitWithParameter }
+        #expect(hasAsyncInitParameter)
     }
 }
