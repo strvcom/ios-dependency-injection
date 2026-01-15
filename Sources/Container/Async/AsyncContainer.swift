@@ -14,6 +14,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
 
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
     private var sharedInstances = [RegistrationIdentifier: Any]()
+    private var sharedTasks = [RegistrationIdentifier: Task<Any, Error>]()
 
     /// Create new instance of ``AsyncContainer``
     public init() {}
@@ -28,6 +29,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// Remove already instantiated shared instances from the container
     public func releaseSharedInstances() {
         sharedInstances.removeAll()
+        sharedTasks.removeAll()
     }
 
     // MARK: Register dependency
@@ -50,6 +52,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         // With a new registration we should clean all shared instances
         // because the new registered factory most likely returns different objects and we have no way to tell
         sharedInstances[registration.identifier] = nil
+        sharedTasks[registration.identifier] = nil
     }
 
     // MARK: Register dependency with argument
@@ -212,6 +215,15 @@ private extension AsyncContainer {
             if let dependency = sharedInstances[registration.identifier] as? Dependency {
                 return dependency
             }
+
+            if let task = sharedTasks[registration.identifier] {
+                do {
+                    return try await task.value as! Dependency
+                } catch {
+                    sharedTasks[registration.identifier] = nil
+                    throw error
+                }
+            }
         case .new:
             break
         }
@@ -219,15 +231,32 @@ private extension AsyncContainer {
         // We use force cast here because we are sure that the type-casting always succeed
         // The reason why the `factory` closure returns ``Any`` is that we have to erase the generic type in order to store the registration
         // When the registration is created it can be initialized just with a `factory` that returns the matching type
-        let dependency = try await registration.asyncRegistrationFactory(self, argument) as! Dependency
-
-        switch registration.scope {
-        case .shared:
-            sharedInstances[registration.identifier] = dependency
-        case .new:
-            break
+        let task = Task<Any, Error> {
+            try await registration.asyncRegistrationFactory(self, argument)
         }
 
-        return dependency
+        if case .shared = registration.scope {
+            sharedTasks[registration.identifier] = task
+        }
+
+        do {
+            let dependency = try await task.value as! Dependency
+
+            switch registration.scope {
+            case .shared:
+                sharedInstances[registration.identifier] = dependency
+                sharedTasks[registration.identifier] = nil
+            case .new:
+                break
+            }
+
+            return dependency
+        } catch {
+            if case .shared = registration.scope {
+                sharedTasks[registration.identifier] = nil
+            }
+            throw error
+        }
+
     }
 }
