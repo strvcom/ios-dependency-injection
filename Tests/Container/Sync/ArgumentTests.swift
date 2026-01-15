@@ -39,7 +39,35 @@ struct ContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func unmatchingArgumentType() throws {
+    @Test func unmatchingArgumentType_ZeroArguments() throws {
+        // Given
+        let subject = Container()
+        subject.register { _ -> SimpleDependency in
+            SimpleDependency()
+        }
+        let argument = 48
+
+        // When
+        do {
+            _ = try subject.tryResolve(type: SimpleDependency.self, argument: argument)
+            Issue.record("Expected to throw error")
+        } catch {
+            // Then
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type")
+                return
+            }
+
+            switch resolutionError {
+            case .unmatchingArgumentType:
+                #expect(!resolutionError.localizedDescription.isEmpty)
+            default:
+                Issue.record("Incorrect resolution error")
+            }
+        }
+    }
+
+    @Test func unmatchingArgumentType_OneArgument() throws {
         // Given
         let subject = Container()
         subject.register { _, argument -> DependencyWithValueTypeParameter in
@@ -59,7 +87,7 @@ struct ContainerArgumentTests {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
             default:
                 Issue.record("Incorrect resolution error")
@@ -101,7 +129,7 @@ struct ContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func unmatchingTwoArgumentsType() throws {
+    @Test func unmatchingArgumentType_TwoArguments() throws {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
@@ -122,7 +150,7 @@ struct ContainerArgumentTests {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
             default:
                 Issue.record("Incorrect resolution error")
@@ -168,7 +196,7 @@ struct ContainerArgumentTests {
         #expect(argument3 == resolvedDependency.argument3)
     }
 
-    @Test func unmatchingThreeArgumentsType() throws {
+    @Test func unmatchingArgumentType_ThreeArguments() throws {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
@@ -190,7 +218,7 @@ struct ContainerArgumentTests {
             }
 
             switch resolutionError {
-            case .dependencyNotRegistered:
+            case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
             default:
                 Issue.record("Incorrect resolution error")
