@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Sync/Arguments", .tags(.sync, .arguments))
 struct ContainerArgumentTests {
-    @Test func registration() {
+    @Test("Registration with single argument")
+    func registration() {
         // Given
         let subject = Container()
         subject.register { _, argument -> DependencyWithValueTypeParameter in
@@ -24,7 +26,8 @@ struct ContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func registrationWithExplicitType() {
+    @Test("Registration with explicit type")
+    func registrationWithExplicitType() {
         // Given
         let subject = Container()
         subject.register(type: DependencyWithValueTypeParameter.self) { _, argument in
@@ -39,7 +42,8 @@ struct ContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func unmatchingArgumentType_ZeroArguments() throws {
+    @Test("Unmatching argument type - zero arguments")
+    func unmatchingArgumentType_ZeroArguments() throws {
         // Given
         let subject = Container()
         subject.register { _ -> SimpleDependency in
@@ -67,7 +71,8 @@ struct ContainerArgumentTests {
         }
     }
 
-    @Test func unmatchingArgumentType_OneArgument() throws {
+    @Test("Unmatching argument type - one argument")
+    func unmatchingArgumentType_OneArgument() throws {
         // Given
         let subject = Container()
         subject.register { _, argument -> DependencyWithValueTypeParameter in
@@ -95,7 +100,8 @@ struct ContainerArgumentTests {
         }
     }
 
-    @Test func registrationWithTwoArguments() {
+    @Test("Registration with two arguments")
+    func registrationWithTwoArguments() {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
@@ -112,7 +118,8 @@ struct ContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func registrationWithTwoArgumentsWithExplicitType() {
+    @Test("Registration with two arguments with explicit type")
+    func registrationWithTwoArgumentsWithExplicitType() {
         // Given
         let subject = Container()
         subject.register(type: DependencyWithTwoArguments.self) { _, argument1, argument2 in
@@ -129,7 +136,8 @@ struct ContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func unmatchingArgumentType_TwoArguments() throws {
+    @Test("Unmatching argument type - two arguments")
+    func unmatchingArgumentType_TwoArguments() throws {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
@@ -158,7 +166,8 @@ struct ContainerArgumentTests {
         }
     }
 
-    @Test func registrationWithThreeArguments() {
+    @Test("Registration with three arguments")
+    func registrationWithThreeArguments() {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
@@ -177,7 +186,8 @@ struct ContainerArgumentTests {
         #expect(argument3 == resolvedDependency.argument3)
     }
 
-    @Test func registrationWithThreeArgumentsWithExplicitType() {
+    @Test("Registration with three arguments with explicit type")
+    func registrationWithThreeArgumentsWithExplicitType() {
         // Given
         let subject = Container()
         subject.register(type: DependencyWithThreeArguments.self) { _, argument1, argument2, argument3 in
@@ -196,7 +206,8 @@ struct ContainerArgumentTests {
         #expect(argument3 == resolvedDependency.argument3)
     }
 
-    @Test func unmatchingArgumentType_ThreeArguments() throws {
+    @Test("Unmatching argument type - three arguments")
+    func unmatchingArgumentType_ThreeArguments() throws {
         // Given
         let subject = Container()
         subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in

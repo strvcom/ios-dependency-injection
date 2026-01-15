@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Sync/Autoregistration with Arguments", .tags(.sync, .autoregistration, .arguments))
 struct AutoregistrationWithArgumentTest {
-    @Test func registrationWithoutParameter() {
+    @Test("Registration without parameter")
+    func registrationWithoutParameter() {
         // Given
         let subject = Container()
         subject.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
@@ -22,7 +24,8 @@ struct AutoregistrationWithArgumentTest {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func registrationWithOneParameterFirstPermutation() {
+    @Test("Registration with one parameter - first permutation")
+    func registrationWithOneParameterFirstPermutation() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
@@ -40,7 +43,8 @@ struct AutoregistrationWithArgumentTest {
         #expect(firstResolved.subDependency2 === secondResolved.subDependency2)
     }
 
-    @Test func registrationWithOneParameterSecondPermutation() {
+    @Test("Registration with one parameter - second permutation")
+    func registrationWithOneParameterSecondPermutation() {
         // Given
         let subject = Container()
         subject.autoregister(initializer: SimpleDependency.init)
@@ -57,7 +61,8 @@ struct AutoregistrationWithArgumentTest {
         #expect(firstResolved.subDependency1 === secondResolved.subDependency1)
     }
 
-    @Test func registrationWithTwoParameterFirstPermutation() {
+    @Test("Registration with two parameters - first permutation")
+    func registrationWithTwoParameterFirstPermutation() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
@@ -78,7 +83,8 @@ struct AutoregistrationWithArgumentTest {
         #expect(firstResolved.subDependency3 === secondResolved.subDependency3)
     }
 
-    @Test func registrationWithTwoParameterSecondPermutation() {
+    @Test("Registration with two parameters - second permutation")
+    func registrationWithTwoParameterSecondPermutation() {
         // Given
         let subject = Container()
         subject.autoregister(initializer: SimpleDependency.init)
@@ -97,7 +103,8 @@ struct AutoregistrationWithArgumentTest {
         #expect(firstResolved.subDependency3 === secondResolved.subDependency3)
     }
 
-    @Test func registrationWithTwoParameterThirdPermutation() {
+    @Test("Registration with two parameters - third permutation")
+    func registrationWithTwoParameterThirdPermutation() {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()

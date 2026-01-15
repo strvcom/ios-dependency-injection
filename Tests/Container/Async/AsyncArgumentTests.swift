@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Async/Arguments", .tags(.async, .arguments))
 struct AsyncContainerArgumentTests {
-    @Test func registration() async {
+    @Test("Registration with single argument")
+    func registration() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument -> DependencyWithValueTypeParameter in
@@ -24,7 +26,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func registrationWithExplicitType() async {
+    @Test("Registration with explicit type")
+    func registrationWithExplicitType() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(type: DependencyWithValueTypeParameter.self) { _, argument in
@@ -39,7 +42,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func unmatchingArgumentType_ZeroArguments() async throws {
+    @Test("Unmatching argument type - zero arguments")
+    func unmatchingArgumentType_ZeroArguments() async throws {
         // Given
         let subject = AsyncContainer()
         await subject.register { _ -> SimpleDependency in
@@ -67,7 +71,8 @@ struct AsyncContainerArgumentTests {
         }
     }
 
-    @Test func unmatchingArgumentType_OneArgument() async throws {
+    @Test("Unmatching argument type - one argument")
+    func unmatchingArgumentType_OneArgument() async throws {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument -> DependencyWithValueTypeParameter in
@@ -95,7 +100,8 @@ struct AsyncContainerArgumentTests {
         }
     }
 
-    @Test func registrationWithTwoArguments() async {
+    @Test("Registration with two arguments")
+    func registrationWithTwoArguments() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
@@ -112,7 +118,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func registrationWithTwoArgumentsWithExplicitType() async {
+    @Test("Registration with two arguments with explicit type")
+    func registrationWithTwoArgumentsWithExplicitType() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(type: DependencyWithTwoArguments.self) { _, argument1, argument2 in
@@ -129,7 +136,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func unmatchingArgumentType_TwoArguments() async throws {
+    @Test("Unmatching argument type - two arguments")
+    func unmatchingArgumentType_TwoArguments() async throws {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2 -> DependencyWithTwoArguments in
@@ -158,7 +166,8 @@ struct AsyncContainerArgumentTests {
         }
     }
 
-    @Test func registrationWithThreeArguments() async {
+    @Test("Registration with three arguments")
+    func registrationWithThreeArguments() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
@@ -177,7 +186,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument3 == resolvedDependency.argument3)
     }
 
-    @Test func registrationWithThreeArgumentsWithExplicitType() async {
+    @Test("Registration with three arguments with explicit type")
+    func registrationWithThreeArgumentsWithExplicitType() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(type: DependencyWithThreeArguments.self) { _, argument1, argument2, argument3 in
@@ -196,7 +206,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument3 == resolvedDependency.argument3)
     }
 
-    @Test func unmatchingArgumentType_ThreeArguments() async throws {
+    @Test("Unmatching argument type - three arguments")
+    func unmatchingArgumentType_ThreeArguments() async throws {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
@@ -226,7 +237,8 @@ struct AsyncContainerArgumentTests {
         }
     }
 
-    @Test func registrationWithAsyncInit() async {
+    @Test("Registration with async initialization")
+    func registrationWithAsyncInit() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument -> DependencyWithAsyncInitWithParameter in
@@ -241,7 +253,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument == resolvedDependency.subDependency)
     }
 
-    @Test func registrationWithAsyncInitWithTwoArguments() async {
+    @Test("Registration with async initialization and two arguments")
+    func registrationWithAsyncInitWithTwoArguments() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2 -> DependencyWithAsyncInitWithTwoArguments in
@@ -258,7 +271,8 @@ struct AsyncContainerArgumentTests {
         #expect(argument2 == resolvedDependency.argument2)
     }
 
-    @Test func registrationWithAsyncInitWithThreeArguments() async {
+    @Test("Registration with async initialization and three arguments")
+    func registrationWithAsyncInitWithThreeArguments() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _, argument1, argument2, argument3 -> DependencyWithAsyncInitWithThreeArguments in

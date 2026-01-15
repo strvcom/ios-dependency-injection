@@ -8,8 +8,10 @@
 import DependencyInjection
 import Testing
 
+@Suite("Container/Async/Base Registration", .tags(.async, .base))
 struct AsyncBaseTests {
-    @Test func dependencyRegisteredInDefaultScope() async {
+    @Test("Dependency registered in default scope")
+    func dependencyRegisteredInDefaultScope() async {
         // Given
         let subject = AsyncContainer()
         await subject.register { _ -> SimpleDependency in
@@ -24,7 +26,8 @@ struct AsyncBaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func dependencyRegisteredInDefaultScopeWithExplicitType() async {
+    @Test("Dependency registered in default scope with explicit type")
+    func dependencyRegisteredInDefaultScopeWithExplicitType() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(type: SimpleDependency.self) { _ -> SimpleDependency in
@@ -39,7 +42,8 @@ struct AsyncBaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func sharedDependency() async {
+    @Test("Shared dependency")
+    func sharedDependency() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(in: .shared) { _ -> SimpleDependency in
@@ -54,7 +58,8 @@ struct AsyncBaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    @Test func nonSharedDependency() async {
+    @Test("Non-shared dependency")
+    func nonSharedDependency() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(in: .new) { _ -> SimpleDependency in
@@ -69,7 +74,8 @@ struct AsyncBaseTests {
         #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    @Test func nonSharedDependencyWithExplicitType() async {
+    @Test("Non-shared dependency with explicit type")
+    func nonSharedDependencyWithExplicitType() async {
         // Given
         let subject = AsyncContainer()
         await subject.register(type: SimpleDependency.self, in: .new) { _ in
@@ -84,7 +90,8 @@ struct AsyncBaseTests {
         #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    @Test func unregisteredDependency() async throws {
+    @Test("Unregistered dependency")
+    func unregisteredDependency() async throws {
         // Given
         let subject = AsyncContainer()
 
