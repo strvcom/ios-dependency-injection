@@ -8,7 +8,7 @@
 import Foundation
 
 /// Object that uniquely identifies a registered dependency
-struct RegistrationIdentifier {
+struct RegistrationIdentifier: Sendable {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: [ObjectIdentifier]
 
