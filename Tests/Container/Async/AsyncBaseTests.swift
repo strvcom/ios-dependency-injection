@@ -107,4 +107,36 @@ struct AsyncBaseTests {
             }
         }
     }
+
+    @Test func concurrentResolveSharedDependency() async {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(in: .shared) { _ -> SimpleDependency in
+            SimpleDependency()
+        }
+
+        // When
+        let resolvedDependencies = await withTaskGroup(of: SimpleDependency.self) { group in
+            for _ in 0..<50 {
+                group.addTask {
+                    await subject.resolve()
+                }
+            }
+
+            var dependencies: [SimpleDependency] = []
+            for await dependency in group {
+                dependencies.append(dependency)
+            }
+
+            return dependencies
+        }
+
+        // Then
+        guard let firstDependency = resolvedDependencies.first else {
+            Issue.record("Expected to resolve at least one dependency")
+            return
+        }
+
+        #expect(resolvedDependencies.allSatisfy { $0 === firstDependency })
+    }
 }
