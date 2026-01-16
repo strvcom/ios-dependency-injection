@@ -6,87 +6,106 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class ComplexTests: DITestCase {
-    func testCleanContainer() {
-        container.autoregister(initializer: SimpleDependency.init)
+@Suite("Container/Sync/Complex", .tags(.sync, .complex))
+struct ComplexTests {
+    @Test("Clean container")
+    func cleanContainer() throws {
+        // Given
+        let subject = Container()
+        subject.autoregister(initializer: SimpleDependency.init)
 
-        let resolvedDependency = try? container.tryResolve(type: SimpleDependency.self)
+        // When
+        let resolvedDependency = try? subject.tryResolve(type: SimpleDependency.self)
+        #expect(resolvedDependency != nil)
 
-        XCTAssertNotNil(resolvedDependency, "Couldn't resolve dependency")
+        subject.clean()
 
-        container.clean()
-
-        let unresolvedDependency = try? container.tryResolve(type: SimpleDependency.self)
-
-        XCTAssertNil(unresolvedDependency, "Dependency wasn't cleaned")
+        // Then
+        let unresolvedDependency = try? subject.tryResolve(type: SimpleDependency.self)
+        #expect(unresolvedDependency == nil)
     }
 
-    func testReleaseSharedInstances() {
-        container.autoregister(in: .shared, initializer: SimpleDependency.init)
+    @Test("Release shared instances")
+    func releaseSharedInstances() {
+        // Given
+        let subject = Container()
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
 
-        var resolvedDependency1: SimpleDependency? = container.resolve(type: SimpleDependency.self)
-        weak var resolvedDependency2 = container.resolve(type: SimpleDependency.self)
+        // When
+        var resolvedDependency1: SimpleDependency? = subject.resolve(type: SimpleDependency.self)
+        weak var resolvedDependency2 = subject.resolve(type: SimpleDependency.self)
 
-        XCTAssertNotNil(resolvedDependency1, "Shared instance wasn't resolved")
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Different instancies of a shared dependency")
+        #expect(resolvedDependency1 != nil)
+        #expect(resolvedDependency1 === resolvedDependency2)
 
-        container.releaseSharedInstances()
+        subject.releaseSharedInstances()
 
-        let resolvedDependency3 = container.resolve(type: SimpleDependency.self)
+        let resolvedDependency3 = subject.resolve(type: SimpleDependency.self)
 
-        XCTAssertFalse(resolvedDependency1 === resolvedDependency3, "Shared instance wasn't released")
+        // Then
+        #expect(resolvedDependency1 !== resolvedDependency3)
 
         resolvedDependency1 = nil
 
-        XCTAssertNil(resolvedDependency2, "Shared instance wasn't released")
+        #expect(resolvedDependency2 == nil)
     }
 
-    func testReregistration() {
-        container.register(type: DIProtocol.self, in: .shared) { _ in
+    @Test("Reregistration")
+    func reregistration() {
+        // Given
+        let subject = Container()
+        subject.register(type: DIProtocol.self, in: .shared) { _ in
             SimpleDependency()
         }
 
-        let resolvedSimpleDependency = container.resolve(type: DIProtocol.self)
+        // When
+        let resolvedSimpleDependency = subject.resolve(type: DIProtocol.self)
 
-        XCTAssertTrue(resolvedSimpleDependency is SimpleDependency, "Resolved dependency of wrong type")
+        // Then
+        #expect(resolvedSimpleDependency is SimpleDependency)
 
-        container.register(type: DIProtocol.self, in: .shared) { _ in
+        // When
+        subject.register(type: DIProtocol.self, in: .shared) { _ in
             StructureDependency.default
         }
 
-        let resolvedStructureDependency = container.resolve(type: DIProtocol.self)
+        let resolvedStructureDependency = subject.resolve(type: DIProtocol.self)
 
-        XCTAssertTrue(resolvedStructureDependency is StructureDependency, "Resolved dependency of wrong type")
+        // Then
+        #expect(resolvedStructureDependency is StructureDependency)
     }
 
-    func testSameDependencyTypeRegisteredWithDifferentTypes() {
-        container.register(type: DIProtocol.self, in: .shared) { _ in
+    @Test("Same dependency type registered with different types")
+    func sameDependencyTypeRegisteredWithDifferentTypes() {
+        // Given
+        let subject = Container()
+        subject.register(type: DIProtocol.self, in: .shared) { _ in
             StructureDependency(property1: "first")
         }
 
-        container.register(type: StructureDependency.self, in: .shared) { _ in
+        subject.register(type: StructureDependency.self, in: .shared) { _ in
             StructureDependency(property1: "second")
         }
 
-        let resolvedProtocolDependency: DIProtocol = container.resolve()
-        let resolvedTypeDependency: StructureDependency = container.resolve()
+        // When
+        let resolvedProtocolDependency: DIProtocol = subject.resolve()
+        let resolvedTypeDependency: StructureDependency = subject.resolve()
 
-        XCTAssertTrue(resolvedProtocolDependency is StructureDependency, "Resolved dependency of wrong type")
-        XCTAssertEqual(resolvedTypeDependency.property1, "second", "Resolved dependency from a wrong factory")
-
-        XCTAssertNotEqual(
-            (resolvedProtocolDependency as? StructureDependency)?.property1,
-            resolvedTypeDependency.property1,
-            "Resolved same instances"
-        )
+        // Then
+        #expect(resolvedProtocolDependency is StructureDependency)
+        #expect(resolvedTypeDependency.property1 == "second")
+        #expect((resolvedProtocolDependency as? StructureDependency)?.property1 != resolvedTypeDependency.property1)
     }
 
-    func testCombiningSharedAndNonsharedDependencies() {
-        container.autoregister(in: .new, initializer: SimpleDependency.init)
-        container.autoregister(in: .shared, initializer: DependencyWithParameter.init)
-        container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter3.init)
+    @Test("Combining shared and non-shared dependencies")
+    func combiningSharedAndNonsharedDependencies() {
+        // Given
+        let subject = Container()
+        subject.autoregister(in: .new, initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter3.init)
 
         let argumentDependency1 = DependencyWithValueTypeParameter(
             subDependency: StructureDependency(property1: "first")
@@ -95,36 +114,34 @@ final class ComplexTests: DITestCase {
             subDependency: StructureDependency(property1: "second")
         )
 
-        let resolvedDependency1: DependencyWithParameter = container.resolve()
-        let resolvedDependency2: DependencyWithParameter = container.resolve()
-        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        // When
+        let resolvedDependency1: DependencyWithParameter = subject.resolve()
+        let resolvedDependency2: DependencyWithParameter = subject.resolve()
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
-        XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
-
-        XCTAssertFalse(resolvedDependency1.subDependency === resolvedDependency3.subDependency1, "Resolved the same instance for a subdependency")
-        XCTAssertFalse(resolvedDependency3.subDependency1 === resolvedDependency4.subDependency1, "Resolved the same instance for a subdependency")
-
-        XCTAssertFalse(resolvedDependency3 === resolvedDependency4, "Resolved same instances")
-
-        XCTAssertNotEqual(
-            resolvedDependency3.subDependency2.subDependency.property1,
-            resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instances with the same argument"
-        )
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
+        #expect(resolvedDependency1.subDependency === resolvedDependency2.subDependency)
+        #expect(resolvedDependency1.subDependency !== resolvedDependency3.subDependency1)
+        #expect(resolvedDependency3.subDependency1 !== resolvedDependency4.subDependency1)
+        #expect(resolvedDependency3 !== resolvedDependency4)
+        #expect(resolvedDependency3.subDependency2.subDependency.property1 != resolvedDependency4.subDependency2.subDependency.property1)
     }
 
-    func testCombiningSharedAndNonsharedDependenciesWithExplicitFactories() {
-        container.register(in: .new) { _ in
+    @Test("Combining shared and non-shared dependencies with explicit factories")
+    func combiningSharedAndNonsharedDependenciesWithExplicitFactories() {
+        // Given
+        let subject = Container()
+        subject.register(in: .new) { _ in
             SimpleDependency()
         }
-        container.register(in: .shared) { resolver in
+        subject.register(in: .shared) { resolver in
             DependencyWithParameter(
                 subDependency: resolver.resolve()
             )
         }
-        container.register { resolver, argument in
+        subject.register { resolver, argument in
             DependencyWithParameter3(
                 subDependency1: resolver.resolve(),
                 subDependency2: argument,
@@ -139,23 +156,18 @@ final class ComplexTests: DITestCase {
             subDependency: StructureDependency(property1: "second")
         )
 
-        let resolvedDependency1: DependencyWithParameter = container.resolve()
-        let resolvedDependency2: DependencyWithParameter = container.resolve()
-        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        // When
+        let resolvedDependency1: DependencyWithParameter = subject.resolve()
+        let resolvedDependency2: DependencyWithParameter = subject.resolve()
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
-        XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
-
-        XCTAssertFalse(resolvedDependency1.subDependency === resolvedDependency3.subDependency1, "Resolved the same instance for a subdependency")
-        XCTAssertFalse(resolvedDependency3.subDependency1 === resolvedDependency4.subDependency1, "Resolved the same instance for a subdependency")
-
-        XCTAssertFalse(resolvedDependency3 === resolvedDependency4, "Resolved same instances")
-
-        XCTAssertNotEqual(
-            resolvedDependency3.subDependency2.subDependency.property1,
-            resolvedDependency4.subDependency2.subDependency.property1,
-            "Resolved instances with the same argument"
-        )
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
+        #expect(resolvedDependency1.subDependency === resolvedDependency2.subDependency)
+        #expect(resolvedDependency1.subDependency !== resolvedDependency3.subDependency1)
+        #expect(resolvedDependency3.subDependency1 !== resolvedDependency4.subDependency1)
+        #expect(resolvedDependency3 !== resolvedDependency4)
+        #expect(resolvedDependency3.subDependency2.subDependency.property1 != resolvedDependency4.subDependency2.subDependency.property1)
     }
 }
