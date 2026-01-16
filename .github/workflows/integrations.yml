@@ -1,4 +1,4 @@
-### Integrations workflow ###
+  ### Integrations workflow ###
 #
 # Runs Danger checks, Swiftlint and tests.
 # 
@@ -18,7 +18,7 @@ on:
 jobs:
   integrations:
     # runs-on: macos-latest # use this for repos outside of the STRV Github org
-    runs-on: [self-hosted, macOS, ios-integrations]
+    runs-on: [self-hosted, macOS, mobile-ci]
     timeout-minutes: 10
     steps:
 
