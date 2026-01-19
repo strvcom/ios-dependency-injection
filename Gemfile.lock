@@ -257,7 +257,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.6.3)
   danger (~> 8.2.0)
-  fastlane (~> 2.217.0)
+  fastlane (>= 2.217.0, < 2.219.0)
 
 BUNDLED WITH
    2.6.3
