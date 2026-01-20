@@ -83,7 +83,8 @@ public protocol DependencyAutoregistering: DependencyRegistering {
 
     // MARK: Autoregister with variable argument
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has one parameter where the variable argument is passed
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has one parameter where the variable argument is passed.
+    /// This registration method doesn't have any scope parameter for a reason - the container should always return a new instance for dependencies with arguments.
     ///
     /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
     /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
@@ -101,18 +102,13 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         initializer: @escaping (Argument) -> Dependency
     )
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
     /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -124,18 +120,14 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         initializer: @escaping (Argument, Parameter) -> Dependency
     )
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered
+    /// within the same container, the second is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
     /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -147,18 +139,13 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         initializer: @escaping (Parameter, Argument) -> Dependency
     )
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -170,18 +157,14 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         initializer: @escaping (Argument, Parameter1, Parameter2) -> Dependency
     )
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that
+    /// are registered within the same container, the second is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -193,18 +176,14 @@ public protocol DependencyAutoregistering: DependencyRegistering {
         initializer: @escaping (Parameter1, Argument, Parameter2) -> Dependency
     )
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies
+    /// that are registered within the same container, the third is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -349,13 +328,8 @@ public extension DependencyAutoregistering {
 
     // MARK: Default implementation for autoregister with variable argument
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has just one parameter where the variable argument is passed
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has just one parameter where the variable argument is passed.
+    /// This registration method doesn't have any scope parameter for a reason - the container should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
@@ -373,18 +347,14 @@ public extension DependencyAutoregistering {
         register(type: type, factory: factory)
     }
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second is a dependency that is registered within the same container
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is the variable argument, the second
+    /// is a dependency that is registered within the same container. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
     /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
@@ -405,18 +375,13 @@ public extension DependencyAutoregistering {
         register(type: type, factory: factory)
     }
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has two parameters; the first is a dependency that is registered within the same container, the second is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument` and `Parameter` are both parameters of the given initializer.
     /// However, `Parameter` is a dependency registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
@@ -437,18 +402,13 @@ public extension DependencyAutoregistering {
         register(type: type, factory: factory)
     }
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first is the variable argument, the second and the third are dependencies that are registered within the same container. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
@@ -470,18 +430,13 @@ public extension DependencyAutoregistering {
         register(type: type, factory: factory)
     }
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the third are dependencies that are registered within the same container, the second is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
@@ -503,18 +458,13 @@ public extension DependencyAutoregistering {
         register(type: type, factory: factory)
     }
 
-    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument
+    /// Autoregister a dependency with a variable argument and with the provided initializer method that has three parameters; the first and the second are dependencies that are registered within the same container, the third is the variable argument. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// The `Argument`, `Parameter1` and `Parameter2` are parameters of the given initializer.
     /// However, `Parameter1` and `Parameter2` are dependencies registered in the same resolver (i.e. container),
     /// whereas `Argument` is not registered in the same container and it is typically variable,
     /// therefore, it needs to be handled separately
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
