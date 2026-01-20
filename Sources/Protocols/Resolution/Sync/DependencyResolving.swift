@@ -32,8 +32,7 @@ public protocol DependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func tryResolve<T, Argument1, Argument2>(type: T.Type, argument1: Argument1, argument2: Argument2) throws -> T
 
     /// Resolve a dependency with three variable arguments that was previously registered within the container
@@ -42,9 +41,7 @@ public protocol DependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
-    ///   - argument3: Third argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func tryResolve<T, Argument1, Argument2, Argument3>(type: T.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) throws -> T
 }
 
@@ -93,8 +90,7 @@ public extension DependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func resolve<T, Argument1, Argument2>(type: T.Type, argument1: Argument1, argument2: Argument2) -> T {
         try! tryResolve(type: type, argument1: argument1, argument2: argument2)
     }
@@ -104,8 +100,7 @@ public extension DependencyResolving {
     /// If the container doesn't contain any registration for a dependency with the given type or if arguments of different types than expected are passed, a runtime error occurs
     ///
     /// - Parameters:
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func resolve<T, Argument1, Argument2>(argument1: Argument1, argument2: Argument2) -> T {
         resolve(type: T.self, argument1: argument1, argument2: argument2)
     }
@@ -116,9 +111,7 @@ public extension DependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
-    ///   - argument3: Third argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func resolve<T, Argument1, Argument2, Argument3>(type: T.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) -> T {
         try! tryResolve(type: type, argument1: argument1, argument2: argument2, argument3: argument3)
     }
@@ -128,9 +121,7 @@ public extension DependencyResolving {
     /// If the container doesn't contain any registration for a dependency with the given type or if arguments of different types than expected are passed, a runtime error occurs
     ///
     /// - Parameters:
-    ///   - argument1: First argument that will be passed as an input parameter to the factory method
-    ///   - argument2: Second argument that will be passed as an input parameter to the factory method
-    ///   - argument3: Third argument that will be passed as an input parameter to the factory method
+    ///   - arguments: Arguments that will be passed as an input parameters to the factory method
     func resolve<T, Argument1, Argument2, Argument3>(argument1: Argument1, argument2: Argument2, argument3: Argument3) -> T {
         resolve(type: T.self, argument1: argument1, argument2: argument2, argument3: argument3)
     }

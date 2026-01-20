@@ -32,13 +32,8 @@ public protocol DependencyRegistering {
     /// Register a dependency with a variable argument
     ///
     /// The argument is typically a parameter in an initializer of the dependency that is not registered in the same resolver (i.e. container),
-    /// therefore, it needs to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, it needs to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -48,13 +43,8 @@ public protocol DependencyRegistering {
     /// Register a dependency with two variable arguments
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -64,13 +54,8 @@ public protocol DependencyRegistering {
     /// Register a dependency with three variable arguments
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -116,13 +101,8 @@ public extension DependencyRegistering {
     /// Register a dependency with a variable argument. The type of the dependency is determined implicitly based on the factory closure return type
     ///
     /// The argument is typically a parameter in an initializer of the dependency that is not registered in the same resolver (i.e. container),
-    /// therefore, it needs to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, it needs to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
@@ -133,13 +113,8 @@ public extension DependencyRegistering {
     /// Register a dependency with two variable arguments. The type of the dependency is determined implicitly based on the factory closure return type
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
@@ -150,13 +125,8 @@ public extension DependencyRegistering {
     /// Register a dependency with three variable arguments. The type of the dependency is determined implicitly based on the factory closure return type
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved
