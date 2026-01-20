@@ -57,13 +57,8 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// Register a dependency with an argument
     ///
     /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,
-    /// therefore, it needs to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, it needs to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -79,14 +74,9 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// Register a dependency with two arguments
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
-    ///
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
+    /// 
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
@@ -101,13 +91,8 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// Register a dependency with three arguments
     ///
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
-    /// therefore, they need to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the arguments conform to ``Equatable`` to compare the arguments to tell whether a shared instance with given arguments was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -158,8 +143,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
     public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
 
@@ -175,9 +159,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument3: Third argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
     public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
 
