@@ -139,8 +139,7 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
     open func tryResolve<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
 
@@ -156,9 +155,7 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument3: Third argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
     open func tryResolve<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
 

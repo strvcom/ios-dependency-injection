@@ -143,8 +143,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
     public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
 
@@ -160,9 +159,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument1: First argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument2: Second argument that will passed as an input parameter to the factory method that was defined with `register` method
-    ///   - argument3: Third argument that will passed as an input parameter to the factory method that was defined with `register` method
+    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
     public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
 
