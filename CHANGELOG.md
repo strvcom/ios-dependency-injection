@@ -17,6 +17,7 @@ __Sections__
 
 - Support for multiple arguments. Code clean up.
 - Tests are converted to the new Swift Testing framework
+- Fix of async resolve of shared dependencies
 
 ## [1.0.4]
 
