@@ -107,3 +107,47 @@ final class DependencyWithAsyncInitWithParameter: Sendable {
         self.subDependency = subDependency
     }
 }
+
+final class DependencyWithTwoArguments: Sendable {
+    let argument1: StructureDependency
+    let argument2: String
+
+    init(argument1: StructureDependency, argument2: String) {
+        self.argument1 = argument1
+        self.argument2 = argument2
+    }
+}
+
+final class DependencyWithThreeArguments: Sendable {
+    let argument1: StructureDependency
+    let argument2: String
+    let argument3: Int
+
+    init(argument1: StructureDependency, argument2: String, argument3: Int) {
+        self.argument1 = argument1
+        self.argument2 = argument2
+        self.argument3 = argument3
+    }
+}
+
+final class DependencyWithAsyncInitWithTwoArguments: Sendable {
+    let argument1: StructureDependency
+    let argument2: String
+
+    init(argument1: StructureDependency, argument2: String) async {
+        self.argument1 = argument1
+        self.argument2 = argument2
+    }
+}
+
+final class DependencyWithAsyncInitWithThreeArguments: Sendable {
+    let argument1: StructureDependency
+    let argument2: String
+    let argument3: Int
+
+    init(argument1: StructureDependency, argument2: String, argument3: Int) async {
+        self.argument1 = argument1
+        self.argument2 = argument2
+        self.argument3 = argument3
+    }
+}

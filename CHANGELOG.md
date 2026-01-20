@@ -11,6 +11,18 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+## [1.0.5]
+
+### Fixed
+
+- Support for multiple arguments. Code clean up.
+
+## [1.0.4]
+
+### Fixed
+
+- Async dependency injection fixes
+
 ## [1.0.3]
 
 ### Fixed
