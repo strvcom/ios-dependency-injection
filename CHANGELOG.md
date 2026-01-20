@@ -16,6 +16,7 @@ __Sections__
 ### Fixed
 
 - Support for multiple arguments. Code clean up.
+- Tests are converted to the new Swift Testing framework
 
 ## [1.0.4]
 

@@ -6,79 +6,110 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class AutoregistrationTests: DITestCase {
-    func testSharedAutoRegistrationWithoutParameter() {
-        container.autoregister(initializer: SimpleDependency.init)
+@Suite("Container/Sync/Autoregistration", .tags(.sync, .autoregistration))
+struct AutoregistrationTests {
+    @Test("Shared auto-registration without parameter")
+    func sharedAutoRegistrationWithoutParameter() {
+        // Given
+        let subject = Container()
+        subject.autoregister(initializer: SimpleDependency.init)
 
-        let firstResolved: SimpleDependency = container.resolve()
-        let secondResolved: SimpleDependency = container.resolve()
+        // When
+        let firstResolved: SimpleDependency = subject.resolve()
+        let secondResolved: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 
-    func testSharedAutoRegistrationOneParameter() {
-        container.autoregister(initializer: SimpleDependency.init)
-        container.autoregister(initializer: DependencyWithParameter.init)
+    @Test("Shared auto-registration with one parameter")
+    func sharedAutoRegistrationOneParameter() {
+        // Given
+        let subject = Container()
+        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(initializer: DependencyWithParameter.init)
 
-        let firstResolved: DependencyWithParameter = container.resolve()
-        let secondResolved: DependencyWithParameter = container.resolve()
+        // When
+        let firstResolved: DependencyWithParameter = subject.resolve()
+        let secondResolved: DependencyWithParameter = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 
-    func testSharedAutoRegistrationTwoParameters() {
+    @Test("Shared auto-registration with two parameters")
+    func sharedAutoRegistrationTwoParameters() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.autoregister(initializer: SimpleDependency.init)
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: DependencyWithParameter2.init)
+        subject.autoregister(initializer: SimpleDependency.init)
+        subject.register(dependency: subDependency)
+        subject.autoregister(initializer: DependencyWithParameter2.init)
 
-        let firstResolved: DependencyWithParameter2 = container.resolve()
-        let secondResolved: DependencyWithParameter2 = container.resolve()
+        // When
+        let firstResolved: DependencyWithParameter2 = subject.resolve()
+        let secondResolved: DependencyWithParameter2 = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 
-    func testSharedAutoRegistrationThreeParameters() {
+    @Test("Shared auto-registration with three parameters")
+    func sharedAutoRegistrationThreeParameters() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.autoregister(initializer: SimpleDependency.init)
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: DependencyWithParameter.init)
-        container.autoregister(initializer: DependencyWithParameter3.init)
+        subject.autoregister(initializer: SimpleDependency.init)
+        subject.register(dependency: subDependency)
+        subject.autoregister(initializer: DependencyWithParameter.init)
+        subject.autoregister(initializer: DependencyWithParameter3.init)
 
-        let firstResolved: DependencyWithParameter3 = container.resolve()
-        let secondResolved: DependencyWithParameter3 = container.resolve()
+        // When
+        let firstResolved: DependencyWithParameter3 = subject.resolve()
+        let secondResolved: DependencyWithParameter3 = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 
-    func testSharedAutoRegistrationFourParameters() {
+    @Test("Shared auto-registration with four parameters")
+    func sharedAutoRegistrationFourParameters() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.autoregister(initializer: SimpleDependency.init)
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: DependencyWithParameter.init)
-        container.autoregister(initializer: DependencyWithParameter2.init)
-        container.autoregister(initializer: DependencyWithParameter4.init)
+        subject.autoregister(initializer: SimpleDependency.init)
+        subject.register(dependency: subDependency)
+        subject.autoregister(initializer: DependencyWithParameter.init)
+        subject.autoregister(initializer: DependencyWithParameter2.init)
+        subject.autoregister(initializer: DependencyWithParameter4.init)
 
-        let firstResolved: DependencyWithParameter4 = container.resolve()
-        let secondResolved: DependencyWithParameter4 = container.resolve()
+        // When
+        let firstResolved: DependencyWithParameter4 = subject.resolve()
+        let secondResolved: DependencyWithParameter4 = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 
-    func testSharedAutoRegistrationFiveParameters() {
+    @Test("Shared auto-registration with five parameters")
+    func sharedAutoRegistrationFiveParameters() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.autoregister(initializer: SimpleDependency.init)
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: DependencyWithParameter.init)
-        container.autoregister(initializer: DependencyWithParameter2.init)
-        container.autoregister(initializer: DependencyWithParameter3.init)
-        container.autoregister(initializer: DependencyWithParameter5.init)
+        subject.autoregister(initializer: SimpleDependency.init)
+        subject.register(dependency: subDependency)
+        subject.autoregister(initializer: DependencyWithParameter.init)
+        subject.autoregister(initializer: DependencyWithParameter2.init)
+        subject.autoregister(initializer: DependencyWithParameter3.init)
+        subject.autoregister(initializer: DependencyWithParameter5.init)
 
-        let firstResolved: DependencyWithParameter5 = container.resolve()
-        let secondResolved: DependencyWithParameter5 = container.resolve()
+        // When
+        let firstResolved: DependencyWithParameter5 = subject.resolve()
+        let secondResolved: DependencyWithParameter5 = subject.resolve()
 
-        XCTAssertTrue(firstResolved === secondResolved, "Container returned different instances")
+        // Then
+        #expect(firstResolved === secondResolved)
     }
 }
