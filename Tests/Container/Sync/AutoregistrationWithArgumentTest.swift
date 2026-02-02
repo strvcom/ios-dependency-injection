@@ -13,7 +13,7 @@ final class AutoregistrationWithArgumentTest: DITestCase {
         container.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
@@ -25,8 +25,8 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         let argument = SimpleDependency()
 
-        let firstResolved: DependencyWithParameter2 = container.resolve(argument: argument)
-        let secondResolved: DependencyWithParameter2 = container.resolve(argument: argument)
+        let firstResolved: DependencyWithParameter2 = container.resolve(argument)
+        let secondResolved: DependencyWithParameter2 = container.resolve(argument)
 
         XCTAssertTrue(argument === firstResolved.subDependency1, "Container returned dependency with different argument")
         XCTAssertTrue(argument === secondResolved.subDependency1, "Container returned dependency with different argument")
@@ -40,8 +40,8 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         let argument = DependencyWithValueTypeParameter()
 
-        let firstResolved: DependencyWithParameter2 = container.resolve(argument: argument)
-        let secondResolved: DependencyWithParameter2 = container.resolve(argument: argument)
+        let firstResolved: DependencyWithParameter2 = container.resolve(argument)
+        let secondResolved: DependencyWithParameter2 = container.resolve(argument)
 
         XCTAssertTrue(argument === firstResolved.subDependency2, "Container returned dependency with different argument")
         XCTAssertTrue(argument === secondResolved.subDependency2, "Container returned dependency with different argument")
@@ -58,8 +58,8 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         let argument = SimpleDependency()
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(argument: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(argument: argument)
+        let firstResolved: DependencyWithParameter3 = container.resolve(argument)
+        let secondResolved: DependencyWithParameter3 = container.resolve(argument)
 
         XCTAssertTrue(argument === firstResolved.subDependency1, "Container returned dependency with different argument")
         XCTAssertTrue(argument === secondResolved.subDependency1, "Container returned dependency with different argument")
@@ -75,8 +75,8 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         let argument = DependencyWithValueTypeParameter()
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(argument: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(argument: argument)
+        let firstResolved: DependencyWithParameter3 = container.resolve(argument)
+        let secondResolved: DependencyWithParameter3 = container.resolve(argument)
 
         XCTAssertTrue(argument === firstResolved.subDependency2, "Container returned dependency with different argument")
         XCTAssertTrue(argument === secondResolved.subDependency2, "Container returned dependency with different argument")
@@ -93,8 +93,8 @@ final class AutoregistrationWithArgumentTest: DITestCase {
 
         let argument = DependencyWithParameter(subDependency: SimpleDependency())
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(argument: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(argument: argument)
+        let firstResolved: DependencyWithParameter3 = container.resolve(argument)
+        let secondResolved: DependencyWithParameter3 = container.resolve(argument)
 
         XCTAssertTrue(argument === firstResolved.subDependency3, "Container returned dependency with different argument")
         XCTAssertTrue(argument === secondResolved.subDependency3, "Container returned dependency with different argument")

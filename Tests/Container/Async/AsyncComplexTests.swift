@@ -111,8 +111,8 @@ final class AsyncComplexTests: AsyncDITestCase {
 
         let resolvedDependency1: DependencyWithParameter = await container.resolve()
         let resolvedDependency2: DependencyWithParameter = await container.resolve()
-        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
         XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
@@ -155,8 +155,8 @@ final class AsyncComplexTests: AsyncDITestCase {
 
         let resolvedDependency1: DependencyWithParameter = await container.resolve()
         let resolvedDependency2: DependencyWithParameter = await container.resolve()
-        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = await container.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = await container.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
         XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")

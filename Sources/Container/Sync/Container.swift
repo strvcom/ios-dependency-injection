@@ -103,22 +103,6 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
 
     /// Resolve a dependency that was previously registered with `register` method
     ///
-    /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument>(type: Dependency.Type, argument: Argument) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try getDependency(from: registration, with: argument) as Dependency
-    }
-
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
     /// If a dependency of the given type wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
@@ -132,36 +116,24 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
         return try getDependency(from: registration) as Dependency
     }
 
-    /// Resolve a dependency that was previously registered with `register` method
+    /// Resolve a dependency with variable arguments that was previously registered with `register` method
     ///
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If a dependency of the given type with the given arguments wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    open func tryResolve<Dependency, each Argument>(type: Dependency.Type, _ arguments: repeat each Argument) throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
         let registration = try getRegistration(with: identifier)
 
-        return try getDependency(from: registration, with: (argument1, argument2)) as Dependency
-    }
+        // Pack arguments into a tuple for storage - this matches how Registration expects them
+        let argumentsTuple = (repeat each arguments)
 
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
-    /// If a dependency of the given type with the given arguments wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try getDependency(from: registration, with: (argument1, argument2, argument3)) as Dependency
+        return try getDependency(from: registration, with: argumentsTuple) as Dependency
     }
 }
 

@@ -107,22 +107,6 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
 
     /// Resolve a dependency that was previously registered with `register` method
     ///
-    /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    public func tryResolve<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, argument: Argument) async throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try await getDependency(from: registration, with: argument) as Dependency
-    }
-
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
     /// If a dependency of the given type wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
@@ -136,36 +120,24 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         return try await getDependency(from: registration) as Dependency
     }
 
-    /// Resolve a dependency that was previously registered with `register` method
+    /// Resolve a dependency with variable arguments that was previously registered with `register` method
     ///
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If a dependency of the given type with the given arguments wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
-    public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) async throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, _ arguments: repeat each Argument) async throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
         let registration = try getRegistration(with: identifier)
 
-        return try await getDependency(from: registration, with: (argument1, argument2)) as Dependency
-    }
+        // Pack arguments into a tuple for storage - this matches how AsyncRegistration expects them
+        let argumentsTuple = (repeat each arguments)
 
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
-    /// If a dependency of the given type with the given arguments wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Aarguments that will passed as an input parameter to the factory method that was defined with `register` method
-    public func tryResolve<Dependency: Sendable, Argument1: Sendable, Argument2: Sendable, Argument3: Sendable>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) async throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try await getDependency(from: registration, with: (argument1, argument2, argument3)) as Dependency
+        return try await getDependency(from: registration, with: argumentsTuple) as Dependency
     }
 }
 

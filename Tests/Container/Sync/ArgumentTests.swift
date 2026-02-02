@@ -15,7 +15,7 @@ final class ContainerArgumentTests: DITestCase {
         }
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
@@ -26,7 +26,7 @@ final class ContainerArgumentTests: DITestCase {
         }
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
@@ -39,7 +39,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument = 48
 
         XCTAssertThrowsError(
-            try container.tryResolve(type: SimpleDependency.self, argument: argument),
+            try container.tryResolve(type: SimpleDependency.self, argument),
             "Resolver didn't throw an error"
         ) { error in
             guard let resolutionError = error as? ResolutionError else {
@@ -64,7 +64,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument = 48
 
         XCTAssertThrowsError(
-            try container.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument),
+            try container.tryResolve(type: DependencyWithValueTypeParameter.self, argument),
             "Resolver didn't throw an error"
         ) { error in
             guard let resolutionError = error as? ResolutionError else {
@@ -88,7 +88,7 @@ final class ContainerArgumentTests: DITestCase {
 
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = container.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = container.resolve(argument1, argument2)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -101,7 +101,7 @@ final class ContainerArgumentTests: DITestCase {
 
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = container.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = container.resolve(argument1, argument2)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -116,7 +116,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument2 = "test"
 
         XCTAssertThrowsError(
-            try container.tryResolve(type: DependencyWithTwoArguments.self, argument1: argument1, argument2: argument2),
+            try container.tryResolve(type: DependencyWithTwoArguments.self, argument1, argument2),
             "Resolver didn't throw an error"
         ) { error in
             guard let resolutionError = error as? ResolutionError else {
@@ -141,7 +141,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = container.resolve(argument1, argument2, argument3)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -156,7 +156,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = container.resolve(argument1, argument2, argument3)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -173,7 +173,7 @@ final class ContainerArgumentTests: DITestCase {
         let argument3 = 42
 
         XCTAssertThrowsError(
-            try container.tryResolve(type: DependencyWithThreeArguments.self, argument1: argument1, argument2: argument2, argument3: argument3),
+            try container.tryResolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3),
             "Resolver didn't throw an error"
         ) { error in
             guard let resolutionError = error as? ResolutionError else {

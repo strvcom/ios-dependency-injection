@@ -97,8 +97,8 @@ final class ComplexTests: DITestCase {
 
         let resolvedDependency1: DependencyWithParameter = container.resolve()
         let resolvedDependency2: DependencyWithParameter = container.resolve()
-        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
         XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
@@ -141,8 +141,8 @@ final class ComplexTests: DITestCase {
 
         let resolvedDependency1: DependencyWithParameter = container.resolve()
         let resolvedDependency2: DependencyWithParameter = container.resolve()
-        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = container.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = container.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Resolved different instances")
         XCTAssertTrue(resolvedDependency1.subDependency === resolvedDependency2.subDependency, "Resolved different instances")
