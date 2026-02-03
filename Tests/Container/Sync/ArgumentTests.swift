@@ -32,7 +32,7 @@ final class ContainerArgumentTests: DITestCase {
     }
 
     func testUnmatchingArgumentType_ZeroArguments() {
-        container.register { _ -> SimpleDependency in
+        container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 

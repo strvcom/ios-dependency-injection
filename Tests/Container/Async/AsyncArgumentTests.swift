@@ -32,7 +32,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
     }
 
     func testUnmatchingArgumentType_ZeroArguments() async {
-        await container.register { _ -> SimpleDependency in
+        await container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 

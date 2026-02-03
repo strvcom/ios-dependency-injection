@@ -10,7 +10,7 @@ import XCTest
 
 final class AsyncComplexTests: AsyncDITestCase {
     func testCleanContainer() async {
-        await container.register { _ in
+        await container.register(in: .shared) { _ in
             SimpleDependency()
         }
 
