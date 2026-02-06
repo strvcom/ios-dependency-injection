@@ -10,7 +10,7 @@ import XCTest
 
 final class AsyncBaseTests: AsyncDITestCase {
     func testDependencyRegisteredInDefaultScope() async {
-        await container.register { _ -> SimpleDependency in
+        await container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
@@ -21,7 +21,7 @@ final class AsyncBaseTests: AsyncDITestCase {
     }
 
     func testDependencyRegisteredInDefaultScopeWithExplicitType() async {
-        await container.register(type: SimpleDependency.self) { _ -> SimpleDependency in
+        await container.register(type: SimpleDependency.self, in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 

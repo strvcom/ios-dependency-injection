@@ -13,9 +13,10 @@ __Sections__
 
 ## [1.0.5]
 
-### Fixed
+### Added
 
 - Support for multiple arguments. Code clean up.
+- Using parameter packs for multiple arguments
 
 ## [1.0.4]
 

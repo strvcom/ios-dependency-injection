@@ -7,26 +7,36 @@
 
 import Foundation
 
+/// Maximum number of arguments supported for dependency resolution
+private enum Constant {
+    static let maximumArgumentCount = 3
+}
+
 /// Object that uniquely identifies a registered dependency
 struct RegistrationIdentifier: Sendable {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: [ObjectIdentifier]
 
-    init<Dependency, Argument>(type: Dependency.Type, argument _: Argument.Type) {
+    /// Initializer using parameter packs for any number of argument types
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency
+    ///   - argumentTypes: Variadic argument types using parameter packs
+    init<Dependency, each Argument>(type: Dependency.Type, argumentTypes: repeat (each Argument).Type) {
         typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument.self)]
+
+        var identifiers: [ObjectIdentifier] = []
+        repeat identifiers.append(ObjectIdentifier((each Argument).self))
+
+        precondition(
+            identifiers.count <= Constant.maximumArgumentCount,
+            "Maximum number of arguments is \(Constant.maximumArgumentCount). Got \(identifiers.count)."
+        )
+
+        argumentIdentifiers = identifiers
     }
 
-    init<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1 _: Argument1.Type, argument2 _: Argument2.Type) {
-        typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument1.self), ObjectIdentifier(Argument2.self)]
-    }
-
-    init<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1 _: Argument1.Type, argument2 _: Argument2.Type, argument3 _: Argument3.Type) {
-        typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument1.self), ObjectIdentifier(Argument2.self), ObjectIdentifier(Argument3.self)]
-    }
-
+    /// Convenience initializer for dependencies without arguments
     init<Dependency>(type: Dependency.Type) {
         typeIdentifier = ObjectIdentifier(type)
         argumentIdentifiers = []

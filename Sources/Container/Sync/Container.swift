@@ -48,27 +48,11 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
         sharedInstances[registration.identifier] = nil
     }
 
-    // MARK: Register dependency with argument, Autoregister dependency with argument
+    // MARK: Register dependency with arguments
 
-    /// Register a dependency with an argument
+    /// Register a dependency with variable arguments
     ///
-    /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,
-    /// therefore, it needs to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
-    /// should always return a new instance for dependencies with arguments.
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency to register
-    ///   - factory: Closure that is called when the dependency is being resolved
-    open func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithOneArgument<Dependency, Argument>) {
-        let registration = Registration(type: type, scope: .new, factory: factory)
-
-        registrations[registration.identifier] = registration
-    }
-
-    // MARK: Register dependency with two arguments
-
-    /// Register a dependency with two arguments
-    ///
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
     /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
     /// should always return a new instance for dependencies with arguments.
@@ -76,46 +60,13 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    open func register<Dependency, Argument1, Argument2>(type: Dependency.Type, factory: @escaping FactoryWithTwoArguments<Dependency, Argument1, Argument2>) {
-        let registration = Registration(type: type, scope: .new, factory: factory)
-
-        registrations[registration.identifier] = registration
-    }
-
-    // MARK: Register dependency with three arguments
-
-    /// Register a dependency with three arguments
-    ///
-    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
-    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
-    /// should always return a new instance for dependencies with arguments.
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency to register
-    ///   - factory: Closure that is called when the dependency is being resolved
-    open func register<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, factory: @escaping FactoryWithThreeArguments<Dependency, Argument1, Argument2, Argument3>) {
+    open func register<Dependency, each Argument>(type: Dependency.Type, factory: @escaping FactoryWithArguments<Dependency, repeat each Argument>) {
         let registration = Registration(type: type, scope: .new, factory: factory)
 
         registrations[registration.identifier] = registration
     }
 
     // MARK: Resolve dependency
-
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
-    /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument>(type: Dependency.Type, argument: Argument) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try getDependency(from: registration, with: argument) as Dependency
-    }
 
     /// Resolve a dependency that was previously registered with `register` method
     ///
@@ -132,36 +83,24 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
         return try getDependency(from: registration) as Dependency
     }
 
-    /// Resolve a dependency that was previously registered with `register` method
+    /// Resolve a dependency with variable arguments that was previously registered with `register` method
     ///
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If a dependency of the given type with the given arguments wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1: Argument1, argument2: Argument2) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    open func tryResolve<Dependency, each Argument>(type: Dependency.Type, _ arguments: repeat each Argument) throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
         let registration = try getRegistration(with: identifier)
 
-        return try getDependency(from: registration, with: (argument1, argument2)) as Dependency
-    }
+        // Pack arguments into a tuple for storage - this matches how Registration expects them
+        let argumentsTuple = (repeat each arguments)
 
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
-    /// If a dependency of the given type with the given arguments wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will passed as an input parameter to the factory method that was defined with `register` method
-    open func tryResolve<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1: Argument1, argument2: Argument2, argument3: Argument3) throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument1: Argument1.self, argument2: Argument2.self, argument3: Argument3.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try getDependency(from: registration, with: (argument1, argument2, argument3)) as Dependency
+        return try getDependency(from: registration, with: argumentsTuple) as Dependency
     }
 }
 

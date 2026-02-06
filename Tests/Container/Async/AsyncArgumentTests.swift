@@ -15,7 +15,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         }
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
@@ -26,20 +26,20 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         }
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = await container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
 
     func testUnmatchingArgumentType_ZeroArguments() async {
-        await container.register { _ -> SimpleDependency in
+        await container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
         let argument = 48
 
         do {
-            _ = try await container.tryResolve(type: SimpleDependency.self, argument: argument)
+            _ = try await container.tryResolve(type: SimpleDependency.self, argument)
 
             XCTFail("Expected to throw error")
         } catch {
@@ -65,7 +65,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument = 48
 
         do {
-            _ = try await container.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument)
+            _ = try await container.tryResolve(type: DependencyWithValueTypeParameter.self, argument)
 
             XCTFail("Expected to throw error")
         } catch {
@@ -89,7 +89,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         }
 
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithAsyncInitWithParameter = await container.resolve(argument: argument)
+        let resolvedDependency: DependencyWithAsyncInitWithParameter = await container.resolve(argument)
 
         XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
     }
@@ -101,7 +101,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
 
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1, argument2)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -114,7 +114,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
 
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = await container.resolve(argument1, argument2)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -129,7 +129,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument2 = "test"
 
         do {
-            _ = try await container.tryResolve(type: DependencyWithTwoArguments.self, argument1: argument1, argument2: argument2)
+            _ = try await container.tryResolve(type: DependencyWithTwoArguments.self, argument1, argument2)
 
             XCTFail("Expected to throw error")
         } catch {
@@ -155,7 +155,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1, argument2, argument3)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -170,7 +170,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = await container.resolve(argument1, argument2, argument3)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -187,7 +187,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument3 = 42
 
         do {
-            _ = try await container.tryResolve(type: DependencyWithThreeArguments.self, argument1: argument1, argument2: argument2, argument3: argument3)
+            _ = try await container.tryResolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
 
             XCTFail("Expected to throw error")
         } catch {
@@ -212,7 +212,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
 
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
-        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await container.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await container.resolve(argument1, argument2)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")
@@ -226,7 +226,7 @@ final class AsyncContainerArgumentTests: AsyncDITestCase {
         let argument1 = StructureDependency(property1: "test1")
         let argument2 = "test2"
         let argument3 = 42
-        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await container.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await container.resolve(argument1, argument2, argument3)
 
         XCTAssertEqual(argument1, resolvedDependency.argument1, "Container returned dependency with different first argument")
         XCTAssertEqual(argument2, resolvedDependency.argument2, "Container returned dependency with different second argument")

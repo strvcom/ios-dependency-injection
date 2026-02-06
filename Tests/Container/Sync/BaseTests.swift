@@ -37,7 +37,7 @@ final class BaseTests: DITestCase {
     }
 
     func testDependencyRegisteredInDefaultScope() {
-        container.register { _ -> SimpleDependency in
+        container.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
@@ -48,7 +48,7 @@ final class BaseTests: DITestCase {
     }
 
     func testDependencyRegisteredInDefaultScopeWithExplicitType() {
-        container.register(type: SimpleDependency.self) { _ -> SimpleDependency in
+        container.register(type: SimpleDependency.self, in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
