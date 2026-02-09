@@ -236,4 +236,44 @@ struct ContainerArgumentTests {
             }
         }
     }
+
+    @Test("More than three arguments - register succeeds (error only on resolve)")
+    func moreThanThreeArgumentsRegisterSucceeds() {
+        // Given
+        let subject = Container()
+
+        // When / Then - register with 4 arguments does not throw (limit enforced only at resolve)
+        subject.register { _, argument1, argument2, argument3, argument4 -> DependencyWithFourArguments in
+            DependencyWithFourArguments(argument1: argument1, argument2: argument2, argument3: argument3, argument4: argument4)
+        }
+    }
+
+    @Test("More than three arguments - tryResolve throws")
+    func moreThanThreeArgumentsTryResolveThrows() throws {
+        // Given - register with 3 args is valid
+        let subject = Container()
+        subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
+            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
+        }
+        let argument1 = StructureDependency(property1: "a")
+        let argument2 = "b"
+        let argument3 = 42
+
+        // When / Then - tryResolve with 4 arguments throws tooManyArguments
+        do {
+            _ = try subject.tryResolve(type: DependencyWithFourArguments.self, argument1, argument2, argument3, true)
+            Issue.record("Expected tryResolve to throw")
+        } catch {
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type: \(error)")
+                return
+            }
+            switch resolutionError {
+            case .tooManyArguments:
+                #expect(!resolutionError.localizedDescription.isEmpty)
+            default:
+                Issue.record("Incorrect resolution error: \(resolutionError)")
+            }
+        }
+    }
 }

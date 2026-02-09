@@ -130,6 +130,21 @@ final class DependencyWithThreeArguments: Sendable {
     }
 }
 
+/// Used only in tests to verify that more than 3 arguments throws ``ResolutionError/tooManyArguments(message:)``
+final class DependencyWithFourArguments: Sendable {
+    let argument1: StructureDependency
+    let argument2: String
+    let argument3: Int
+    let argument4: Bool
+
+    init(argument1: StructureDependency, argument2: String, argument3: Int, argument4: Bool) {
+        self.argument1 = argument1
+        self.argument2 = argument2
+        self.argument3 = argument3
+        self.argument4 = argument4
+    }
+}
+
 final class DependencyWithAsyncInitWithTwoArguments: Sendable {
     let argument1: StructureDependency
     let argument2: String

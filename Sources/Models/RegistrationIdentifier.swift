@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Maximum number of arguments supported for dependency resolution
-private enum Constant {
+/// Maximum number of arguments supported for dependency resolution (enforced at resolve time)
+enum RegistrationIdentifierConstant {
     static let maximumArgumentCount = 3
 }
 
@@ -17,7 +17,11 @@ struct RegistrationIdentifier: Sendable {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: [ObjectIdentifier]
 
-    /// Initializer using parameter packs for any number of argument types
+    /// Number of argument types (used to enforce maximum at resolve time)
+    var argumentCount: Int { argumentIdentifiers.count }
+
+    /// Initializer using parameter packs for any number of argument types.
+    /// Registration with more than 3 arguments is allowed; resolution with more than 3 arguments will throw.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency
@@ -27,11 +31,6 @@ struct RegistrationIdentifier: Sendable {
 
         var identifiers: [ObjectIdentifier] = []
         repeat identifiers.append(ObjectIdentifier((each Argument).self))
-
-        precondition(
-            identifiers.count <= Constant.maximumArgumentCount,
-            "Maximum number of arguments is \(Constant.maximumArgumentCount). Got \(identifiers.count)."
-        )
 
         argumentIdentifiers = identifiers
     }

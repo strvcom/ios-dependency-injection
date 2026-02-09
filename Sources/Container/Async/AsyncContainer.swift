@@ -99,6 +99,12 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, _ arguments: repeat each Argument) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
+        if identifier.argumentCount > RegistrationIdentifierConstant.maximumArgumentCount {
+            throw ResolutionError.tooManyArguments(
+                message: "Maximum number of arguments is \(RegistrationIdentifierConstant.maximumArgumentCount). Got \(identifier.argumentCount)."
+            )
+        }
+
         let registration = try getRegistration(with: identifier)
 
         // Pack arguments into a tuple for storage - this matches how AsyncRegistration expects them
