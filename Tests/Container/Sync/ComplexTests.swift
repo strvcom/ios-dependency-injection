@@ -14,7 +14,7 @@ struct ComplexTests {
     func cleanContainer() throws {
         // Given
         let subject = Container()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
 
         // When
         let resolvedDependency = try? subject.tryResolve(type: SimpleDependency.self)
@@ -117,8 +117,8 @@ struct ComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = subject.resolve()
         let resolvedDependency2: DependencyWithParameter = subject.resolve()
-        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)
@@ -159,8 +159,8 @@ struct ComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = subject.resolve()
         let resolvedDependency2: DependencyWithParameter = subject.resolve()
-        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)

@@ -20,7 +20,7 @@ struct ContainerArgumentTests {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(type: DependencyWithValueTypeParameter.self, argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -36,7 +36,7 @@ struct ContainerArgumentTests {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(argument: argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(type: DependencyWithValueTypeParameter.self, argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -53,7 +53,7 @@ struct ContainerArgumentTests {
 
         // When
         do {
-            _ = try subject.tryResolve(type: SimpleDependency.self, argument: argument)
+            _ = try subject.tryResolve(type: SimpleDependency.self, argument)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -82,7 +82,7 @@ struct ContainerArgumentTests {
 
         // When
         do {
-            _ = try subject.tryResolve(type: DependencyWithValueTypeParameter.self, argument: argument)
+            _ = try subject.tryResolve(type: DependencyWithValueTypeParameter.self, argument)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -111,7 +111,7 @@ struct ContainerArgumentTests {
         let argument2 = "test2"
 
         // When
-        let resolvedDependency: DependencyWithTwoArguments = subject.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = subject.resolve(type: DependencyWithTwoArguments.self, argument1, argument2)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -129,7 +129,7 @@ struct ContainerArgumentTests {
         let argument2 = "test2"
 
         // When
-        let resolvedDependency: DependencyWithTwoArguments = subject.resolve(argument1: argument1, argument2: argument2)
+        let resolvedDependency: DependencyWithTwoArguments = subject.resolve(type: DependencyWithTwoArguments.self, argument1, argument2)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -148,7 +148,7 @@ struct ContainerArgumentTests {
 
         // When
         do {
-            _ = try subject.tryResolve(type: DependencyWithTwoArguments.self, argument1: argument1, argument2: argument2)
+            _ = try subject.tryResolve(type: DependencyWithTwoArguments.self, argument1, argument2)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -178,7 +178,7 @@ struct ContainerArgumentTests {
         let argument3 = 42
 
         // When
-        let resolvedDependency: DependencyWithThreeArguments = subject.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = subject.resolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -198,7 +198,7 @@ struct ContainerArgumentTests {
         let argument3 = 42
 
         // When
-        let resolvedDependency: DependencyWithThreeArguments = subject.resolve(argument1: argument1, argument2: argument2, argument3: argument3)
+        let resolvedDependency: DependencyWithThreeArguments = subject.resolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -219,7 +219,7 @@ struct ContainerArgumentTests {
 
         // When
         do {
-            _ = try subject.tryResolve(type: DependencyWithThreeArguments.self, argument1: argument1, argument2: argument2, argument3: argument3)
+            _ = try subject.tryResolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -233,6 +233,46 @@ struct ContainerArgumentTests {
                 #expect(!resolutionError.localizedDescription.isEmpty)
             default:
                 Issue.record("Incorrect resolution error")
+            }
+        }
+    }
+
+    @Test("More than three arguments - register succeeds (error only on resolve)")
+    func moreThanThreeArgumentsRegisterSucceeds() {
+        // Given
+        let subject = Container()
+
+        // When / Then - register with 4 arguments does not throw (limit enforced only at resolve)
+        subject.register { _, argument1, argument2, argument3, argument4 -> DependencyWithFourArguments in
+            DependencyWithFourArguments(argument1: argument1, argument2: argument2, argument3: argument3, argument4: argument4)
+        }
+    }
+
+    @Test("More than three arguments - tryResolve throws")
+    func moreThanThreeArgumentsTryResolveThrows() throws {
+        // Given - register with 3 args is valid
+        let subject = Container()
+        subject.register { _, argument1, argument2, argument3 -> DependencyWithThreeArguments in
+            DependencyWithThreeArguments(argument1: argument1, argument2: argument2, argument3: argument3)
+        }
+        let argument1 = StructureDependency(property1: "a")
+        let argument2 = "b"
+        let argument3 = 42
+
+        // When / Then - tryResolve with 4 arguments throws tooManyArguments
+        do {
+            _ = try subject.tryResolve(type: DependencyWithFourArguments.self, argument1, argument2, argument3, true)
+            Issue.record("Expected tryResolve to throw")
+        } catch {
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type: \(error)")
+                return
+            }
+            switch resolutionError {
+            case .tooManyArguments:
+                #expect(!resolutionError.localizedDescription.isEmpty)
+            default:
+                Issue.record("Incorrect resolution error: \(resolutionError)")
             }
         }
     }

@@ -7,26 +7,35 @@
 
 import Foundation
 
+/// Maximum number of arguments supported for dependency resolution (enforced at resolve time)
+enum RegistrationIdentifierConstant {
+    static let maximumArgumentCount = 3
+}
+
 /// Object that uniquely identifies a registered dependency
 struct RegistrationIdentifier: Sendable {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: [ObjectIdentifier]
 
-    init<Dependency, Argument>(type: Dependency.Type, argument _: Argument.Type) {
+    /// Number of argument types (used to enforce maximum at resolve time)
+    var argumentCount: Int { argumentIdentifiers.count }
+
+    /// Initializer using parameter packs for any number of argument types.
+    /// Registration with more than 3 arguments is allowed; resolution with more than 3 arguments will throw.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency
+    ///   - argumentTypes: Variadic argument types using parameter packs
+    init<Dependency, each Argument>(type: Dependency.Type, argumentTypes: repeat (each Argument).Type) {
         typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument.self)]
+
+        var identifiers: [ObjectIdentifier] = []
+        repeat identifiers.append(ObjectIdentifier((each Argument).self))
+
+        argumentIdentifiers = identifiers
     }
 
-    init<Dependency, Argument1, Argument2>(type: Dependency.Type, argument1 _: Argument1.Type, argument2 _: Argument2.Type) {
-        typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument1.self), ObjectIdentifier(Argument2.self)]
-    }
-
-    init<Dependency, Argument1, Argument2, Argument3>(type: Dependency.Type, argument1 _: Argument1.Type, argument2 _: Argument2.Type, argument3 _: Argument3.Type) {
-        typeIdentifier = ObjectIdentifier(type)
-        argumentIdentifiers = [ObjectIdentifier(Argument1.self), ObjectIdentifier(Argument2.self), ObjectIdentifier(Argument3.self)]
-    }
-
+    /// Convenience initializer for dependencies without arguments
     init<Dependency>(type: Dependency.Type) {
         typeIdentifier = ObjectIdentifier(type)
         argumentIdentifiers = []
