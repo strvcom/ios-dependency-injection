@@ -117,8 +117,8 @@ struct ComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = subject.resolve()
         let resolvedDependency2: DependencyWithParameter = subject.resolve()
-        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
-        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)
@@ -159,8 +159,8 @@ struct ComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = subject.resolve()
         let resolvedDependency2: DependencyWithParameter = subject.resolve()
-        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
-        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
+        let resolvedDependency3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency1)
+        let resolvedDependency4 = subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)

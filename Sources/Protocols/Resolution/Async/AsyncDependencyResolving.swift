@@ -26,7 +26,7 @@ public protocol AsyncDependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, _ arguments: repeat each Argument) async throws -> Dependency
+    func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency
 }
 
 public extension AsyncDependencyResolving {
@@ -56,8 +56,8 @@ public extension AsyncDependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func resolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, _ arguments: repeat each Argument) async -> Dependency {
-        try! await tryResolve(type: type, repeat each arguments)
+    func resolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async -> Dependency {
+        try! await tryResolve(type: type, arguments: repeat each arguments)
     }
 
     /// Resolve a dependency with variable arguments that was previously registered within the container.
@@ -69,7 +69,7 @@ public extension AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func resolve<Dependency: Sendable, each Argument: Sendable>(_ arguments: repeat each Argument) async -> Dependency {
-        await resolve(type: Dependency.self, repeat each arguments)
+    func resolve<Dependency: Sendable, each Argument: Sendable>(arguments: repeat each Argument) async -> Dependency {
+        await resolve(type: Dependency.self, arguments: repeat each arguments)
     }
 }

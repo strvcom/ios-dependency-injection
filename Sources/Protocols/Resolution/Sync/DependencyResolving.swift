@@ -26,7 +26,7 @@ public protocol DependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func tryResolve<Dependency, each Argument>(type: Dependency.Type, _ arguments: repeat each Argument) throws -> Dependency
+    func tryResolve<Dependency, each Argument>(type: Dependency.Type, arguments: repeat each Argument) throws -> Dependency
 }
 
 public extension DependencyResolving {
@@ -56,8 +56,8 @@ public extension DependencyResolving {
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func resolve<Dependency, each Argument>(type: Dependency.Type, _ arguments: repeat each Argument) -> Dependency {
-        try! tryResolve(type: type, repeat each arguments)
+    func resolve<Dependency, each Argument>(type: Dependency.Type, arguments: repeat each Argument) -> Dependency {
+        try! tryResolve(type: type, arguments: repeat each arguments)
     }
 
     /// Resolve a dependency with variable arguments that was previously registered within the container.
@@ -69,7 +69,7 @@ public extension DependencyResolving {
     ///
     /// - Parameters:
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    func resolve<Dependency, each Argument>(_ arguments: repeat each Argument) -> Dependency {
-        resolve(type: Dependency.self, repeat each arguments)
+    func resolve<Dependency, each Argument>(arguments: repeat each Argument) -> Dependency {
+        resolve(type: Dependency.self, arguments: repeat each arguments)
     }
 }

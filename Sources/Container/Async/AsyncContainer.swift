@@ -99,7 +99,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
-    public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, _ arguments: repeat each Argument) async throws -> Dependency {
+    public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
         if identifier.argumentCount > RegistrationIdentifierConstant.maximumArgumentCount {

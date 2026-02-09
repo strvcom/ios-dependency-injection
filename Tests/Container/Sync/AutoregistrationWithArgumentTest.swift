@@ -18,7 +18,7 @@ struct AutoregistrationWithArgumentTest {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(type: DependencyWithValueTypeParameter.self, argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(type: DependencyWithValueTypeParameter.self, arguments: argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -34,8 +34,8 @@ struct AutoregistrationWithArgumentTest {
         let argument = SimpleDependency()
 
         // When
-        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, argument)
-        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, argument)
+        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
+        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
 
         // Then
         #expect(argument === firstResolved.subDependency1)
@@ -52,8 +52,8 @@ struct AutoregistrationWithArgumentTest {
         let argument = DependencyWithValueTypeParameter()
 
         // When
-        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, argument)
-        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, argument)
+        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
+        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
 
         // Then
         #expect(argument === firstResolved.subDependency2)
@@ -73,8 +73,8 @@ struct AutoregistrationWithArgumentTest {
         let argument = SimpleDependency()
 
         // When
-        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
-        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
         // Then
         #expect(argument === firstResolved.subDependency1)
@@ -93,8 +93,8 @@ struct AutoregistrationWithArgumentTest {
         let argument = DependencyWithValueTypeParameter()
 
         // When
-        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
-        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
         // Then
         #expect(argument === firstResolved.subDependency2)
@@ -114,8 +114,8 @@ struct AutoregistrationWithArgumentTest {
         let argument = DependencyWithParameter(subDependency: SimpleDependency())
 
         // When
-        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
-        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, argument)
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
         // Then
         #expect(argument === firstResolved.subDependency3)

@@ -20,7 +20,7 @@ struct AsyncContainerArgumentTests {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(type: DependencyWithValueTypeParameter.self, argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(type: DependencyWithValueTypeParameter.self, arguments: argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -36,7 +36,7 @@ struct AsyncContainerArgumentTests {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(type: DependencyWithValueTypeParameter.self, argument)
+        let resolvedDependency: DependencyWithValueTypeParameter = await subject.resolve(type: DependencyWithValueTypeParameter.self, arguments: argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -53,7 +53,7 @@ struct AsyncContainerArgumentTests {
 
         // When
         do {
-            _ = try await subject.tryResolve(type: SimpleDependency.self, argument)
+            _ = try await subject.tryResolve(type: SimpleDependency.self, arguments: argument)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -82,7 +82,7 @@ struct AsyncContainerArgumentTests {
 
         // When
         do {
-            _ = try await subject.tryResolve(type: DependencyWithValueTypeParameter.self, argument)
+            _ = try await subject.tryResolve(type: DependencyWithValueTypeParameter.self, arguments: argument)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -111,7 +111,7 @@ struct AsyncContainerArgumentTests {
         let argument2 = "test2"
 
         // When
-        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(type: DependencyWithTwoArguments.self, argument1, argument2)
+        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(type: DependencyWithTwoArguments.self, arguments: argument1, argument2)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -129,7 +129,7 @@ struct AsyncContainerArgumentTests {
         let argument2 = "test2"
 
         // When
-        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(type: DependencyWithTwoArguments.self, argument1, argument2)
+        let resolvedDependency: DependencyWithTwoArguments = await subject.resolve(type: DependencyWithTwoArguments.self, arguments: argument1, argument2)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -148,7 +148,7 @@ struct AsyncContainerArgumentTests {
 
         // When
         do {
-            _ = try await subject.tryResolve(type: DependencyWithTwoArguments.self, argument1, argument2)
+            _ = try await subject.tryResolve(type: DependencyWithTwoArguments.self, arguments: argument1, argument2)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -178,7 +178,7 @@ struct AsyncContainerArgumentTests {
         let argument3 = 42
 
         // When
-        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
+        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(type: DependencyWithThreeArguments.self, arguments: argument1, argument2, argument3)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -198,7 +198,7 @@ struct AsyncContainerArgumentTests {
         let argument3 = 42
 
         // When
-        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
+        let resolvedDependency: DependencyWithThreeArguments = await subject.resolve(type: DependencyWithThreeArguments.self, arguments: argument1, argument2, argument3)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -219,7 +219,7 @@ struct AsyncContainerArgumentTests {
 
         // When
         do {
-            _ = try await subject.tryResolve(type: DependencyWithThreeArguments.self, argument1, argument2, argument3)
+            _ = try await subject.tryResolve(type: DependencyWithThreeArguments.self, arguments: argument1, argument2, argument3)
             Issue.record("Expected to throw error")
         } catch {
             // Then
@@ -247,7 +247,7 @@ struct AsyncContainerArgumentTests {
         let argument = StructureDependency(property1: "48")
 
         // When
-        let resolvedDependency: DependencyWithAsyncInitWithParameter = await subject.resolve(type: DependencyWithAsyncInitWithParameter.self, argument)
+        let resolvedDependency: DependencyWithAsyncInitWithParameter = await subject.resolve(type: DependencyWithAsyncInitWithParameter.self, arguments: argument)
 
         // Then
         #expect(argument == resolvedDependency.subDependency)
@@ -264,7 +264,7 @@ struct AsyncContainerArgumentTests {
         let argument2 = "test2"
 
         // When
-        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await subject.resolve(type: DependencyWithAsyncInitWithTwoArguments.self, argument1, argument2)
+        let resolvedDependency: DependencyWithAsyncInitWithTwoArguments = await subject.resolve(type: DependencyWithAsyncInitWithTwoArguments.self, arguments: argument1, argument2)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -283,7 +283,7 @@ struct AsyncContainerArgumentTests {
         let argument3 = 42
 
         // When
-        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await subject.resolve(type: DependencyWithAsyncInitWithThreeArguments.self, argument1, argument2, argument3)
+        let resolvedDependency: DependencyWithAsyncInitWithThreeArguments = await subject.resolve(type: DependencyWithAsyncInitWithThreeArguments.self, arguments: argument1, argument2, argument3)
 
         // Then
         #expect(argument1 == resolvedDependency.argument1)
@@ -313,7 +313,7 @@ struct AsyncContainerArgumentTests {
 
         // When / Then - tryResolve with 4 arguments throws tooManyArguments
         do {
-            _ = try await subject.tryResolve(type: DependencyWithFourArguments.self, argument1, argument2, argument3, argument4)
+            _ = try await subject.tryResolve(type: DependencyWithFourArguments.self, arguments: argument1, argument2, argument3, argument4)
             Issue.record("Expected tryResolve to throw")
         } catch {
             guard let resolutionError = error as? ResolutionError else {
