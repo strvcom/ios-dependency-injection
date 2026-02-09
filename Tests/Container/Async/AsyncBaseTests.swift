@@ -170,7 +170,7 @@ struct AsyncBaseTests {
                 }
 
                 let argument = StructureDependency(property1: "concurrent")
-                let dependency: DependencyWithValueTypeParameter = await subject.resolve(argument: argument)
+                let dependency: DependencyWithValueTypeParameter = await subject.resolve(argument)
                 return dependency
             }
 
@@ -180,7 +180,7 @@ struct AsyncBaseTests {
                 }
 
                 let argument = StructureDependency(property1: "async")
-                let dependency: DependencyWithAsyncInitWithParameter = await subject.resolve(argument: argument)
+                let dependency: DependencyWithAsyncInitWithParameter = await subject.resolve(argument)
                 return dependency
             }
 
