@@ -38,6 +38,19 @@ public protocol DependencyRegistering {
 
 // MARK: Overloaded factory methods
 public extension DependencyRegistering {
+    /// Register a dependency with type and a single-parameter factory (resolver only).
+    ///
+    /// This overload ensures that `register(type: X.self) { _ in ... }` creates a zero-argument registration,
+    /// so that `resolve()` without arguments succeeds. Without it, the compiler may bind to the parameter-pack
+    /// overload and infer a one-argument registration, causing `unmatchingArgumentType` when resolving with no arguments.
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency to register
+    ///   - factory: Closure that is called when the dependency is being resolved (receives the resolver only)
+    func register<Dependency>(type: Dependency.Type, factory: @escaping Factory<Dependency>) {
+        register(type: type, in: .new, factory: factory)
+    }
+
     /// Register a dependency with an implicit type determined by the factory closure return type
     ///
     /// - Parameters:
