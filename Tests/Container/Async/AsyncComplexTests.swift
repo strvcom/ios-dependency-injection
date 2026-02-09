@@ -14,7 +14,7 @@ struct AsyncComplexTests {
     func cleanContainer() async throws {
         // Given
         let subject = AsyncContainer()
-        await subject.register { _ in
+        await subject.register(in: .shared) { _ in
             SimpleDependency()
         }
 
@@ -131,8 +131,8 @@ struct AsyncComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = await subject.resolve()
         let resolvedDependency2: DependencyWithParameter = await subject.resolve()
-        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)
@@ -173,8 +173,8 @@ struct AsyncComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = await subject.resolve()
         let resolvedDependency2: DependencyWithParameter = await subject.resolve()
-        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency1)
-        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argument: argumentDependency2)
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)

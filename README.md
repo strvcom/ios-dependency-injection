@@ -100,7 +100,7 @@ container.register { container in
 In the factory closure, we typically just call the dependency initializer and we resolve its input parameters from the container. You can get rid of this duplicated boiler-plate by using `autoregister` method where you specify just the initializer that should be used to initialize the dependency, instead of writing the same factories over and over again. The above example then looks like this:
 ```swift
 let container = Container()
-container.autoregister(initializer: Dependency.init)
+container.autoregister(in: .shared, initializer: Dependency.init)
 ```
 Similarly, we can use autoregistration with an argument and replace this:
 ```swift
@@ -166,7 +166,7 @@ class Singletons {
   static let container = Container()
   
   static func configure() {
-    container.autoregister(initializer: Dependency.init)
+    container.autoregister(in: .shared, initializer: Dependency.init)
   }
 }
 
@@ -183,7 +183,7 @@ class Object {
 When using the `@Injected` property wrapper, the dependency is resolved right in the moment when the property is instantiated. If you prefer to resolve the dependency only when it is accessed for the first time, you should rather use `@LazyInjected`:
 ```swift
 let container = Container()
-container.autoregister(initializer: Dependency.init)
+container.autoregister(in: .shared, initializer: Dependency.init)
 
 class Object {
   @LazyInjected(from: container) var dependency: Dependency

@@ -14,7 +14,7 @@ struct AutoregistrationTests {
     func sharedAutoRegistrationWithoutParameter() {
         // Given
         let subject = Container()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
 
         // When
         let firstResolved: SimpleDependency = subject.resolve()
@@ -28,8 +28,8 @@ struct AutoregistrationTests {
     func sharedAutoRegistrationOneParameter() {
         // Given
         let subject = Container()
-        subject.autoregister(initializer: SimpleDependency.init)
-        subject.autoregister(initializer: DependencyWithParameter.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
 
         // When
         let firstResolved: DependencyWithParameter = subject.resolve()
@@ -44,9 +44,9 @@ struct AutoregistrationTests {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
         subject.register(dependency: subDependency)
-        subject.autoregister(initializer: DependencyWithParameter2.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter2.init)
 
         // When
         let firstResolved: DependencyWithParameter2 = subject.resolve()
@@ -61,10 +61,10 @@ struct AutoregistrationTests {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
         subject.register(dependency: subDependency)
-        subject.autoregister(initializer: DependencyWithParameter.init)
-        subject.autoregister(initializer: DependencyWithParameter3.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter3.init)
 
         // When
         let firstResolved: DependencyWithParameter3 = subject.resolve()
@@ -79,11 +79,11 @@ struct AutoregistrationTests {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
         subject.register(dependency: subDependency)
-        subject.autoregister(initializer: DependencyWithParameter.init)
-        subject.autoregister(initializer: DependencyWithParameter2.init)
-        subject.autoregister(initializer: DependencyWithParameter4.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter2.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter4.init)
 
         // When
         let firstResolved: DependencyWithParameter4 = subject.resolve()
@@ -98,12 +98,12 @@ struct AutoregistrationTests {
         // Given
         let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        subject.autoregister(initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
         subject.register(dependency: subDependency)
-        subject.autoregister(initializer: DependencyWithParameter.init)
-        subject.autoregister(initializer: DependencyWithParameter2.init)
-        subject.autoregister(initializer: DependencyWithParameter3.init)
-        subject.autoregister(initializer: DependencyWithParameter5.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter2.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter3.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter5.init)
 
         // When
         let firstResolved: DependencyWithParameter5 = subject.resolve()
