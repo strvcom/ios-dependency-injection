@@ -131,8 +131,8 @@ struct AsyncComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = await subject.resolve()
         let resolvedDependency2: DependencyWithParameter = await subject.resolve()
-        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
-        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)
@@ -173,8 +173,8 @@ struct AsyncComplexTests {
         // When
         let resolvedDependency1: DependencyWithParameter = await subject.resolve()
         let resolvedDependency2: DependencyWithParameter = await subject.resolve()
-        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency1)
-        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, argumentDependency2)
+        let resolvedDependency3 = await subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency1)
+        let resolvedDependency4 = await subject.resolve(type: DependencyWithParameter3.self, arguments: argumentDependency2)
 
         // Then
         #expect(resolvedDependency1 === resolvedDependency2)
