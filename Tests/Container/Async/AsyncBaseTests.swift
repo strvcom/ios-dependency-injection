@@ -204,4 +204,19 @@ struct AsyncBaseTests {
         let hasAsyncInitParameter = resolvedDependencies.contains { $0 is DependencyWithAsyncInitWithParameter }
         #expect(hasAsyncInitParameter)
     }
+
+    @Test("Register explicit type with resolver-only factory")
+    func registerExplicitTypeWithResolverOnlyFactory() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register(type: SimpleDependency.self) { _ in
+            SimpleDependency()
+        }
+
+        // When
+        let resolvedDependency = try await subject.tryResolve(type: SimpleDependency.self)
+
+        // Then
+        #expect(resolvedDependency is SimpleDependency)
+    }
 }

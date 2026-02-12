@@ -136,7 +136,7 @@ private extension AsyncContainer {
 
     }
 
-    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = nil) async throws -> Dependency {
+    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = ()) async throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {

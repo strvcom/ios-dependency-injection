@@ -156,4 +156,19 @@ struct BaseTests {
             }
         }
     }
+
+    @Test("Register explicit type with resolver-only factory")
+    func registerExplicitTypeWithResolverOnlyFactory() throws {
+        // Given
+        let subject = Container()
+        subject.register(type: SimpleDependency.self) { _ in
+            SimpleDependency()
+        }
+
+        // When
+        let resolvedDependency: SimpleDependency = try subject.tryResolve(type: SimpleDependency.self)
+
+        // Then
+        #expect(resolvedDependency is SimpleDependency)
+    }
 }
