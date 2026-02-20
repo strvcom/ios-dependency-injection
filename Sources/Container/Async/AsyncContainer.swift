@@ -13,7 +13,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public static let shared: AsyncContainer = .init()
 
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
-    private var sharedInstances = [RegistrationIdentifier: Any]()
+    private var sharedInstances = [RegistrationIdentifier: any Sendable]()
 
     /// Create new instance of ``AsyncContainer``
     public init() {}
@@ -127,7 +127,7 @@ private extension AsyncContainer {
 
     }
 
-    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = nil) async throws -> Dependency {
+    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {

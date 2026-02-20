@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias AsyncRegistrationFactory = @Sendable (any AsyncDependencyResolving, Any?) async throws -> any Sendable
+typealias AsyncRegistrationFactory = @Sendable (any AsyncDependencyResolving, (any Sendable)?) async throws -> any Sendable
 
 /// Object that represents a registered dependency and stores a closure, i.e. a factory that returns the desired dependency
 struct AsyncRegistration: Sendable {
