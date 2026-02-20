@@ -13,8 +13,8 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public static let shared: AsyncContainer = .init()
 
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
-    private var sharedInstances = [RegistrationIdentifier: Any]()
-    private var sharedTasks = [RegistrationIdentifier: Task<Any, Error>]()
+    private var sharedInstances = [RegistrationIdentifier: any Sendable]()
+    private var sharedTasks = [RegistrationIdentifier: Task<any Sendable, Error>]()
 
     /// Create new instance of ``AsyncContainer``
     public init() {}
@@ -98,7 +98,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (Important: only 1-3 arguments supported. Entering more arguments will cause error in runtime.)
     public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
@@ -136,7 +136,7 @@ private extension AsyncContainer {
 
     }
 
-    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = ()) async throws -> Dependency {
+    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = ()) async throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {
@@ -158,7 +158,7 @@ private extension AsyncContainer {
         // We use force cast here because we are sure that the type-casting always succeed
         // The reason why the `factory` closure returns ``Any`` is that we have to erase the generic type in order to store the registration
         // When the registration is created it can be initialized just with a `factory` that returns the matching type
-        let task = Task<Any, Error> {
+        let task = Task<any Sendable, Error> {
             try await registration.asyncRegistrationFactory(self, argument)
         }
 

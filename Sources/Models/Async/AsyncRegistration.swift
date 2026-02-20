@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias AsyncRegistrationFactory = @Sendable (any AsyncDependencyResolving, Any?) async throws -> any Sendable
+typealias AsyncRegistrationFactory = @Sendable (any AsyncDependencyResolving, (any Sendable)?) async throws -> any Sendable
 
 /// Object that represents a registered dependency and stores a closure, i.e. a factory that returns the desired dependency
 struct AsyncRegistration: Sendable {
@@ -24,7 +24,7 @@ struct AsyncRegistration: Sendable {
 
     /// Initializer for registrations that expect variable arguments passed to the factory closure when the dependency is being resolved
     ///
-    /// Uses Swift parameter packs to support 1-3 arguments with a single initializer.
+    /// Uses Swift parameter packs to support 1-3 arguments with a single initializer. Entering more arguments will cause error in runtime.
     init<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, scope: DependencyScope, factory: @Sendable @escaping (any AsyncDependencyResolving, repeat each Argument) async -> Dependency) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
