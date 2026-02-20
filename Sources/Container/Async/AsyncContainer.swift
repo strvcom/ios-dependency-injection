@@ -13,7 +13,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public static let shared: AsyncContainer = .init()
 
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
-    private var sharedInstances = [RegistrationIdentifier: Any]()
+    private var sharedInstances = [RegistrationIdentifier: any Sendable]()
 
     /// Create new instance of ``AsyncContainer``
     public init() {}
@@ -95,7 +95,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (Important: only 1-3 arguments supported. Entering more arguments will cause error in runtime.)
     public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
@@ -133,7 +133,7 @@ private extension AsyncContainer {
 
     }
 
-    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: Any? = nil) async throws -> Dependency {
+    func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {
