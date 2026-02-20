@@ -21,7 +21,7 @@ struct RegistrationIdentifier: Sendable {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency
-    ///   - argumentTypes: Variadic argument types using parameter packs
+    ///   - argumentTypes: Variadic argument types using parameter packs. Only 1-3 arguments are supported. Entering more arguments will cause error in runtime.
     init<Dependency, each Argument>(type: Dependency.Type, argumentTypes: repeat (each Argument).Type) {
         typeIdentifier = ObjectIdentifier(type)
 
@@ -49,11 +49,10 @@ extension RegistrationIdentifier: Hashable {}
 // MARK: Debug information
 extension RegistrationIdentifier: CustomStringConvertible {
     var description: String {
-        let argumentsDescription: String
-        if argumentIdentifiers.isEmpty {
-            argumentsDescription = "nil"
+        let argumentsDescription: String = if argumentIdentifiers.isEmpty {
+            "nil"
         } else {
-            argumentsDescription = argumentIdentifiers.map { $0.debugDescription }.joined(separator: ", ")
+            argumentIdentifiers.map { $0.debugDescription }.joined(separator: ", ")
         }
         return """
         Type: \(typeIdentifier.debugDescription)

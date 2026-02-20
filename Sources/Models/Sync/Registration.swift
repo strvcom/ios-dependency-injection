@@ -22,7 +22,7 @@ struct Registration {
 
     /// Initializer for registrations that expect variable arguments passed to the factory closure when the dependency is being resolved
     ///
-    /// Uses Swift parameter packs to support 1-3 arguments with a single initializer.
+    /// Uses Swift parameter packs to support 1-3 arguments with a single initializer. Entering more arguments will cause error in runtime.
     init<Dependency, each Argument>(type: Dependency.Type, scope: DependencyScope, factory: @escaping (DependencyResolving, repeat each Argument) -> Dependency) {
         let registrationIdentifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 

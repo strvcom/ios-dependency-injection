@@ -91,7 +91,7 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (Important: only 1-3 arguments supported. Entering more arguments will cause error in runtime.)
     open func tryResolve<Dependency, each Argument>(type: Dependency.Type, arguments: repeat each Argument) throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
