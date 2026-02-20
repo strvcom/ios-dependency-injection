@@ -1,4 +1,4 @@
-  ### Integrations workflow ###
+### Integrations workflow ###
 #
 # Runs Danger checks, Swiftlint and tests.
 # 
