@@ -52,38 +52,6 @@ struct BaseTests {
         #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-//    @Test("Dependency registered in default scope")
-//    func dependencyRegisteredInDefaultScope() {
-//        // Given (explicit .shared scope — no default scope in API)
-//        let subject = Container()
-//        subject.register(in: .shared) { _ -> SimpleDependency in
-//            SimpleDependency()
-//        }
-//
-//        // When
-//        let resolvedDependency1: SimpleDependency = subject.resolve()
-//        let resolvedDependency2: SimpleDependency = subject.resolve()
-//
-//        // Then
-//        #expect(resolvedDependency1 === resolvedDependency2)
-//    }
-//
-//    @Test("Dependency registered in default scope with explicit type")
-//    func dependencyRegisteredInDefaultScopeWithExplicitType() {
-//        // Given (explicit .shared scope — no default scope in API)
-//        let subject = Container()
-//        subject.register(type: SimpleDependency.self, in: .shared) { _ -> SimpleDependency in
-//            SimpleDependency()
-//        }
-//
-//        // When
-//        let resolvedDependency1: SimpleDependency = subject.resolve()
-//        let resolvedDependency2: SimpleDependency = subject.resolve()
-//
-//        // Then
-//        #expect(resolvedDependency1 === resolvedDependency2)
-//    }
-
     @Test("Shared dependency")
     func sharedDependency() {
         // Given
