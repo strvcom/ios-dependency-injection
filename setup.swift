@@ -238,7 +238,6 @@ private extension CommandRunner {
         try await installMiseDependencies(shouldVerifyMise: false)
         try await installBundle(shouldVerifyMise: false)
         try await installTuistDependencies(isUsingTuist: tuistDefinitionFileExists)
-        try installVersionIconIfNeeded()
     }
 
     func installBundle(shouldVerifyMise: Bool) async throws {
