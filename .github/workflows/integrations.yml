@@ -35,6 +35,7 @@ jobs:
       # install dependencies from Gemfile & CocoaPods
       - name: Dependencies
         run: |
+          gem install bundler:2.6.3
           bundle install
 
       # run Danger
