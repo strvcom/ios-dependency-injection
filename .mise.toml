@@ -1,2 +1,8 @@
 [tools]
-"gem:danger" = "8.2.3"
+ruby = "3.4.6"
+swiftlint = "0.57.0"
+swiftformat = "0.54.5"
+
+[settings]
+legacy_version_file = false
+experimental = true
