@@ -130,7 +130,6 @@ private extension AsyncContainer {
         throw ResolutionError.dependencyNotRegistered(
             message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
         )
-
     }
 
     func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {

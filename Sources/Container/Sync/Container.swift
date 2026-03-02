@@ -126,7 +126,6 @@ private extension Container {
         throw ResolutionError.dependencyNotRegistered(
             message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
         )
-
     }
 
     func getDependency<Dependency>(from registration: Registration, with argument: Any? = nil) throws -> Dependency {

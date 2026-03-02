@@ -84,3 +84,6 @@ fastlane/test_output
 
 # Ruby gems
 vendor/
+
+# Claude
+.claude/settings.local.json
