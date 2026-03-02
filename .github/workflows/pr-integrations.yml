@@ -101,6 +101,4 @@ jobs:
 
       # Run Unit Tests
       - name: Run Unit Tests
-        run: bundle exec fastlane tests without_dependencies:true
-        env:
-          TEST_PLAN: UnitTestPlan
+        run: swift test --enable-code-coverage
