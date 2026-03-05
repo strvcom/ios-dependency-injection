@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      # Install Ruby via Mise
+      # Install Ruby and Danger via Mise
       - name: Install Mise
         uses: jdx/mise-action@v2
         with:
@@ -38,13 +38,9 @@ jobs:
           cache: false
           experimental: true
 
-      # install dependencies from Gemfile
-      - name: Dependencies
-        run: bundle install
-
       # run Danger
       - name: Run Danger
-        run: bundle exec danger --fail-on-errors=true
+        run: danger --fail-on-errors=true
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
