@@ -1,10 +1,8 @@
 ### Integrations workflow ###
 #
-# Runs Danger checks, Swiftlint and tests.
-# 
-# github.token - is automatically assigned to your workflow by Github
+# Runs Danger checks and tests.
 #
-# Note: To enable Fastlane tests, make sure that `CommonFastfile` is imported in Fastfile from the shared ios-fastlane repository.
+# github.token - is automatically assigned to your workflow by Github
 #
 
 name: Integrations
@@ -22,20 +20,27 @@ jobs:
     timeout-minutes: 10
     steps:
 
-      # cancel in-progress integrations - not yet supported by Github Actions out of the box
+      # cancel in-progress integrations - not yet supported by Github Actions out of the box
       - name: Cancel previous runs
         uses: styfle/cancel-workflow-action@0.4.1
         with:
           access_token: ${{ github.token }}
 
-      # checkout the project repository
+      # checkout the project repository
       - name: Checkout
         uses: actions/checkout@v1
 
-      # install dependencies from Gemfile & CocoaPods
+      # Install Ruby via Mise
+      - name: Install Mise
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+          cache: false
+          experimental: true
+
+      # install dependencies from Gemfile
       - name: Dependencies
-        run: |
-          bundle install
+        run: bundle install
 
       # run Danger
       - name: Run Danger
@@ -45,6 +50,4 @@ jobs:
 
       # run tests
       - name: Run tests
-        run: bundle exec fastlane tests
-        env:
-          DEVICES: "iPhone 13,iPad Air,Apple TV,My Mac,Apple Watch Series 6"
+        run: swift test --enable-code-coverage
