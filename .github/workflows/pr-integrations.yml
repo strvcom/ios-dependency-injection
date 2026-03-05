@@ -53,18 +53,13 @@ jobs:
           cache: false # change to true when running on macos-latest instead of self-hosted
           experimental: true
 
-      # Cache Dependencies
-      - name: Cache Dependencies
-        uses: ./.github/actions/cache-dependencies
-
-      # uncomment if you are using SwiftLint via SPM plugin
-      # Set SwiftLint version for Danger
-      # - name: Set SwiftLint version
-      #  run: echo "SWIFTLINT_VERSION=$(cat ./.swiftlint-version)" >> $GITHUB_ENV
+      # Install Danger
+      - name: Install Danger
+        run: gem install danger --no-document
 
       # Run Danger
       - name: Run Danger
-        run: bundle exec danger --fail-on-errors=true
+        run: danger --fail-on-errors=true
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
