@@ -41,27 +41,24 @@ jobs:
     if: github.event.pull_request.draft == false
     timeout-minutes: 20
     steps:
-      # Checkout the Project Repository
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # Istall Mise (Dev env setup tool)
-      - name: Install Mise
-        uses: jdx/mise-action@v2
+      # cancel in-progress integrations - not yet supported by Github Actions out of the box
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.4.1
         with:
-          install: true
-          cache: false # change to true when running on macos-latest instead of self-hosted
-          experimental: true
+          access_token: ${{ github.token }}
 
-      # Install Danger
-      - name: Install Danger
+      # checkout the project repository
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      # install dependencies from Gemfile & CocoaPods
+      - name: Dependencies
         run: |
-          gem install danger --no-document --user-install
-          echo "$(ruby -r rubygems -e 'puts Gem.user_dir')/bin" >> $GITHUB_PATH
+          bundle install
 
-      # Run Danger
+      # run Danger
       - name: Run Danger
-        run: danger --fail-on-errors=true
+        run: bundle exec danger --fail-on-errors=true
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
