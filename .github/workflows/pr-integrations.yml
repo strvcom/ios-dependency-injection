@@ -57,10 +57,6 @@ jobs:
       - name: Cache Dependencies
         uses: ./.github/actions/cache-dependencies
 
-      # Install dependencies (run install script)
-      - name: Install Dependencies
-        run: ./setup.swift install
-
       # uncomment if you are using SwiftLint via SPM plugin
       # Set SwiftLint version for Danger
       # - name: Set SwiftLint version
