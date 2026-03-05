@@ -55,7 +55,9 @@ jobs:
 
       # Install Danger
       - name: Install Danger
-        run: gem install danger --no-document
+        run: |
+          gem install danger --no-document --user-install
+          echo "$(ruby -r rubygems -e 'puts Gem.user_dir')/bin" >> $GITHUB_PATH
 
       # Run Danger
       - name: Run Danger
