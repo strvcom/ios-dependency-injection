@@ -83,22 +83,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Istall Mise (Dev env setup tool)
-      - name: Install Mise
-        uses: jdx/mise-action@v2
-        with:
-          install: true
-          cache: false # change to true when running on macos-latest instead of self-hosted
-          experimental: true
-
-      # Cache dependencies
-      - name: Cache Dependencies
-        uses: ./.github/actions/cache-dependencies
-
-      # Install dependencies (run install script)
-      - name: Install Dependencies
-        run: ./setup.swift install
-
       # Run Unit Tests
       - name: Run Unit Tests
         run: swift test --enable-code-coverage
