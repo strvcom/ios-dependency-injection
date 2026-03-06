@@ -6,106 +6,121 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class BaseTests: DITestCase {
-    func testAutoclosureDependency() {
+@Suite("Container/Sync/Base Registration", .tags(.sync, .base))
+struct BaseTests {
+    @Test("Autoclosure dependency")
+    func autoclosureDependency() {
+        // Given
+        let subject = Container()
         let dependency = SimpleDependency()
-        container.register(dependency: dependency)
+        subject.register(dependency: dependency)
 
-        let resolvedDependency: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(dependency === resolvedDependency, "Container returned different instance")
+        // Then
+        #expect(dependency === resolvedDependency)
     }
 
-    func testAutoclosureDependencyWithExplicitType() {
+    @Test("Autoclosure dependency with explicit type")
+    func autoclosureDependencyWithExplicitType() {
+        // Given
+        let subject = Container()
         let dependency = SimpleDependency()
-        container.register(type: SimpleDependency.self, dependency: dependency)
+        subject.register(type: SimpleDependency.self, dependency: dependency)
 
-        let resolvedDependency: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(dependency === resolvedDependency, "Container returned different instance")
+        // Then
+        #expect(dependency === resolvedDependency)
     }
 
-    func testRepeatedlyResolvedAutoclosureDependency() {
-        container.register(dependency: SimpleDependency())
+    @Test("Repeatedly resolved autoclosure dependency")
+    func repeatedlyResolvedAutoclosureDependency() {
+        // Given
+        let subject = Container()
+        subject.register(dependency: SimpleDependency())
 
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency1: SimpleDependency = subject.resolve()
+        let resolvedDependency2: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    func testDependencyRegisteredInDefaultScope() {
-        container.register(in: .shared) { _ -> SimpleDependency in
+    @Test("Shared dependency")
+    func sharedDependency() {
+        // Given
+        let subject = Container()
+        subject.register(in: .shared) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency1: SimpleDependency = subject.resolve()
+        let resolvedDependency2: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
+        // Then
+        #expect(resolvedDependency1 === resolvedDependency2)
     }
 
-    func testDependencyRegisteredInDefaultScopeWithExplicitType() {
-        container.register(type: SimpleDependency.self, in: .shared) { _ -> SimpleDependency in
+    @Test("Non-shared dependency")
+    func nonSharedDependency() {
+        // Given
+        let subject = Container()
+        subject.register(in: .new) { _ -> SimpleDependency in
             SimpleDependency()
         }
 
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency1: SimpleDependency = subject.resolve()
+        let resolvedDependency2: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
+        // Then
+        #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    func testSharedDependency() {
-        container.register(in: .shared) { _ -> SimpleDependency in
+    @Test("Non-shared dependency with explicit type")
+    func nonSharedDependencyWithExplicitType() {
+        // Given
+        let subject = Container()
+        subject.register(type: SimpleDependency.self, in: .new) { _ in
             SimpleDependency()
         }
 
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
+        // When
+        let resolvedDependency1: SimpleDependency = subject.resolve()
+        let resolvedDependency2: SimpleDependency = subject.resolve()
 
-        XCTAssertTrue(resolvedDependency1 === resolvedDependency2, "Container returned different instance")
+        // Then
+        #expect(resolvedDependency1 !== resolvedDependency2)
     }
 
-    func testNonSharedDependency() {
-        container.register(in: .new) { _ -> SimpleDependency in
-            SimpleDependency()
-        }
+    @Test("Unregistered dependency")
+    func unregisteredDependency() throws {
+        // Given
+        let subject = Container()
 
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
-
-        XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
-    }
-
-    func testNonSharedDependencyWithExplicitType() {
-        container.register(type: SimpleDependency.self, in: .new) { _ in
-            SimpleDependency()
-        }
-
-        let resolvedDependency1: SimpleDependency = container.resolve()
-        let resolvedDependency2: SimpleDependency = container.resolve()
-
-        XCTAssertTrue(resolvedDependency1 !== resolvedDependency2, "Container returned the same instance")
-    }
-
-    func testUnregisteredDependency() {
-        XCTAssertThrowsError(
-            try container.tryResolve(type: SimpleDependency.self),
-            "Resolver didn't throw an error"
-        ) { error in
+        // When
+        do {
+            _ = try subject.tryResolve(type: SimpleDependency.self)
+            Issue.record("Expected to throw error")
+        } catch {
+            // Then
             guard let resolutionError = error as? ResolutionError else {
-                XCTFail("Incorrect error type")
+                Issue.record("Incorrect error type")
                 return
             }
 
             switch resolutionError {
             case .dependencyNotRegistered:
-                XCTAssertNotEqual(resolutionError.localizedDescription, "", "Error description is empty")
+                #expect(!resolutionError.localizedDescription.isEmpty)
             default:
-                XCTFail("Incorrect resolution error")
+                Issue.record("Incorrect resolution error")
             }
         }
     }

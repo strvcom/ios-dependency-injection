@@ -95,6 +95,12 @@ open class Container: DependencyAutoregistering, DependencyResolving, Dependency
     open func tryResolve<Dependency, each Argument>(type: Dependency.Type, arguments: repeat each Argument) throws -> Dependency {
         let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
 
+        if identifier.argumentCount > RegistrationIdentifierConstant.maximumArgumentCount {
+            throw ResolutionError.tooManyArguments(
+                message: "Maximum number of arguments is \(RegistrationIdentifierConstant.maximumArgumentCount). Got \(identifier.argumentCount)."
+            )
+        }
+
         let registration = try getRegistration(with: identifier)
 
         // Pack arguments into a tuple for storage - this matches how Registration expects them

@@ -6,100 +6,121 @@
 //
 
 import DependencyInjection
-import XCTest
+import Testing
 
-final class AutoregistrationWithArgumentTest: DITestCase {
-    func testRegistrationWithoutParameter() {
-        container.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
-
+@Suite("Container/Sync/Autoregistration with Arguments", .tags(.sync, .autoregistration, .arguments))
+struct AutoregistrationWithArgumentTest {
+    @Test("Registration without parameter")
+    func registrationWithoutParameter() {
+        // Given
+        let subject = Container()
+        subject.autoregister(argument: StructureDependency.self, initializer: DependencyWithValueTypeParameter.init)
         let argument = StructureDependency(property1: "48")
-        let resolvedDependency: DependencyWithValueTypeParameter = container.resolve(arguments: argument)
 
-        XCTAssertEqual(argument, resolvedDependency.subDependency, "Container returned dependency with different argument")
+        // When
+        let resolvedDependency: DependencyWithValueTypeParameter = subject.resolve(type: DependencyWithValueTypeParameter.self, arguments: argument)
+
+        // Then
+        #expect(argument == resolvedDependency.subDependency)
     }
 
-    func testRegistrationWithOneParameterFirstPermutation() {
+    @Test("Registration with one parameter - first permutation")
+    func registrationWithOneParameterFirstPermutation() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.register(dependency: subDependency)
-        container.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter2.init)
-
+        subject.register(dependency: subDependency)
+        subject.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter2.init)
         let argument = SimpleDependency()
 
-        let firstResolved: DependencyWithParameter2 = container.resolve(arguments: argument)
-        let secondResolved: DependencyWithParameter2 = container.resolve(arguments: argument)
+        // When
+        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
+        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
 
-        XCTAssertTrue(argument === firstResolved.subDependency1, "Container returned dependency with different argument")
-        XCTAssertTrue(argument === secondResolved.subDependency1, "Container returned dependency with different argument")
-
-        XCTAssertTrue(firstResolved.subDependency2 === secondResolved.subDependency2, "Different instances of subdependencies")
+        // Then
+        #expect(argument === firstResolved.subDependency1)
+        #expect(argument === secondResolved.subDependency1)
+        #expect(firstResolved.subDependency2 === secondResolved.subDependency2)
     }
 
-    func testRegistrationWithOneParameterSecondPermutation() {
-        container.autoregister(initializer: SimpleDependency.init)
-        container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter2.init)
-
+    @Test("Registration with one parameter - second permutation")
+    func registrationWithOneParameterSecondPermutation() {
+        // Given
+        let subject = Container()
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
+        subject.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter2.init)
         let argument = DependencyWithValueTypeParameter()
 
-        let firstResolved: DependencyWithParameter2 = container.resolve(arguments: argument)
-        let secondResolved: DependencyWithParameter2 = container.resolve(arguments: argument)
+        // When
+        let firstResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
+        let secondResolved: DependencyWithParameter2 = subject.resolve(type: DependencyWithParameter2.self, arguments: argument)
 
-        XCTAssertTrue(argument === firstResolved.subDependency2, "Container returned dependency with different argument")
-        XCTAssertTrue(argument === secondResolved.subDependency2, "Container returned dependency with different argument")
-
-        XCTAssertTrue(firstResolved.subDependency1 === secondResolved.subDependency1, "Different instances of subdependencies")
+        // Then
+        #expect(argument === firstResolved.subDependency2)
+        #expect(argument === secondResolved.subDependency2)
+        #expect(firstResolved.subDependency1 === secondResolved.subDependency1)
     }
 
-    func testRegistrationWithTwoParameterFirstPermutation() {
+    @Test("Registration with two parameters - first permutation")
+    func registrationWithTwoParameterFirstPermutation() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: SimpleDependency.init)
-        container.autoregister(initializer: DependencyWithParameter.init)
-        container.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter3.init)
-
+        subject.register(dependency: subDependency)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(argument: SimpleDependency.self, initializer: DependencyWithParameter3.init)
         let argument = SimpleDependency()
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
+        // When
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
-        XCTAssertTrue(argument === firstResolved.subDependency1, "Container returned dependency with different argument")
-        XCTAssertTrue(argument === secondResolved.subDependency1, "Container returned dependency with different argument")
-
-        XCTAssertTrue(firstResolved.subDependency2 === secondResolved.subDependency2, "Different instances of subdependencies")
-        XCTAssertTrue(firstResolved.subDependency3 === secondResolved.subDependency3, "Different instances of subdependencies")
+        // Then
+        #expect(argument === firstResolved.subDependency1)
+        #expect(argument === secondResolved.subDependency1)
+        #expect(firstResolved.subDependency2 === secondResolved.subDependency2)
+        #expect(firstResolved.subDependency3 === secondResolved.subDependency3)
     }
 
-    func testRegistrationWithTwoParameterSecondPermutation() {
-        container.autoregister(initializer: SimpleDependency.init)
-        container.autoregister(initializer: DependencyWithParameter.init)
-        container.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter3.init)
-
+    @Test("Registration with two parameters - second permutation")
+    func registrationWithTwoParameterSecondPermutation() {
+        // Given
+        let subject = Container()
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
+        subject.autoregister(in: .shared, initializer: DependencyWithParameter.init)
+        subject.autoregister(argument: DependencyWithValueTypeParameter.self, initializer: DependencyWithParameter3.init)
         let argument = DependencyWithValueTypeParameter()
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
+        // When
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
-        XCTAssertTrue(argument === firstResolved.subDependency2, "Container returned dependency with different argument")
-        XCTAssertTrue(argument === secondResolved.subDependency2, "Container returned dependency with different argument")
-
-        XCTAssertTrue(firstResolved.subDependency1 === secondResolved.subDependency1, "Different instances of subdependencies")
-        XCTAssertTrue(firstResolved.subDependency3 === secondResolved.subDependency3, "Different instances of subdependencies")
+        // Then
+        #expect(argument === firstResolved.subDependency2)
+        #expect(argument === secondResolved.subDependency2)
+        #expect(firstResolved.subDependency1 === secondResolved.subDependency1)
+        #expect(firstResolved.subDependency3 === secondResolved.subDependency3)
     }
 
-    func testRegistrationWithTwoParameterThirdPermutation() {
+    @Test("Registration with two parameters - third permutation")
+    func registrationWithTwoParameterThirdPermutation() {
+        // Given
+        let subject = Container()
         let subDependency = DependencyWithValueTypeParameter()
-        container.register(dependency: subDependency)
-        container.autoregister(initializer: SimpleDependency.init)
-        container.autoregister(argument: DependencyWithParameter.self, initializer: DependencyWithParameter3.init)
-
+        subject.register(dependency: subDependency)
+        subject.autoregister(in: .shared, initializer: SimpleDependency.init)
+        subject.autoregister(argument: DependencyWithParameter.self, initializer: DependencyWithParameter3.init)
         let argument = DependencyWithParameter(subDependency: SimpleDependency())
 
-        let firstResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
-        let secondResolved: DependencyWithParameter3 = container.resolve(arguments: argument)
+        // When
+        let firstResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
+        let secondResolved: DependencyWithParameter3 = subject.resolve(type: DependencyWithParameter3.self, arguments: argument)
 
-        XCTAssertTrue(argument === firstResolved.subDependency3, "Container returned dependency with different argument")
-        XCTAssertTrue(argument === secondResolved.subDependency3, "Container returned dependency with different argument")
-
-        XCTAssertTrue(firstResolved.subDependency2 === secondResolved.subDependency2, "Different instances of subdependencies")
-        XCTAssertTrue(firstResolved.subDependency1 === secondResolved.subDependency1, "Different instances of subdependencies")
+        // Then
+        #expect(argument === firstResolved.subDependency3)
+        #expect(argument === secondResolved.subDependency3)
+        #expect(firstResolved.subDependency2 === secondResolved.subDependency2)
+        #expect(firstResolved.subDependency1 === secondResolved.subDependency1)
     }
 }

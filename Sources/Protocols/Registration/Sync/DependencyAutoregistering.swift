@@ -148,11 +148,11 @@ public extension DependencyAutoregistering {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register. Default value is implicitly inferred from the initializer return type
-    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton. The default value is `.shared`
+    ///   - scope: Scope of the dependency. If `.new` is used, the initializer is called on each `resolve` call. If `.shared` is used, the initializer is called only the first time, the instance is cached and it is returned for all subsequent `resolve` calls, i.e. it is a singleton
     ///   - initializer: Initializer method of the `Dependency` that should be used to instantiate the dependency when it is being resolved from the container
     func autoregister<Dependency, each Parameter>(
         type: Dependency.Type = Dependency.self,
-        in scope: DependencyScope = Self.defaultScope,
+        in scope: DependencyScope,
         initializer: @escaping (repeat each Parameter) -> Dependency
     ) {
         let factory: Factory<Dependency> = { resolver in
