@@ -13,7 +13,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     public static let shared: AsyncContainer = .init()
 
     private var registrations = [RegistrationIdentifier: AsyncRegistration]()
-    private var sharedInstances = [RegistrationIdentifier: Any]()
+    private var sharedInstances = [RegistrationIdentifier: any Sendable]()
 
     /// Create new instance of ``AsyncContainer``
     public init() {}
@@ -52,45 +52,25 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
         sharedInstances[registration.identifier] = nil
     }
 
-    // MARK: Register dependency with argument
+    // MARK: Register dependency with arguments
 
-    /// Register a dependency with an argument
+    /// Register a dependency with variable arguments
     ///
-    /// The argument is typically a parameter in an initiliazer of the dependency that is not registered in the same container,
-    /// therefore, it needs to be passed in `resolve` call
-    ///
-    /// DISCUSSION: This registration method doesn't have any scope parameter for a reason.
-    /// The container should always return a new instance for dependencies with arguments as the behaviour for resolving shared instances with arguments is undefined.
-    /// Should the argument conform to ``Equatable`` to compare the arguments to tell whether a shared instance with a given argument was already resolved?
-    /// Shared instances are typically not dependent on variable input parameters by definition.
-    /// If you need to support this usecase, please, keep references to the variable singletons outside of the container.
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
+    /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
+    /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
+    /// should always return a new instance for dependencies with arguments.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
     ///   - factory: Closure that is called when the dependency is being resolved
-    public func register<Dependency, Argument>(type: Dependency.Type, factory: @escaping FactoryWithArgument<Dependency, Argument>) async {
+    public func register<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, factory: @escaping FactoryWithArguments<Dependency, repeat each Argument>) async {
         let registration = AsyncRegistration(type: type, scope: .new, factory: factory)
 
         registrations[registration.identifier] = registration
     }
 
     // MARK: Resolve dependency
-
-    /// Resolve a dependency that was previously registered with `register` method
-    ///
-    /// If a dependency of the given type with the given argument wasn't registered before this method call
-    /// the method throws ``ResolutionError.dependencyNotRegistered``
-    ///
-    /// - Parameters:
-    ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will passed as an input parameter to the factory method that was defined with `register` method
-    public func tryResolve<Dependency: Sendable, Argument: Sendable>(type: Dependency.Type, argument: Argument) async throws -> Dependency {
-        let identifier = RegistrationIdentifier(type: type, argument: Argument.self)
-
-        let registration = try getRegistration(with: identifier)
-
-        return try await getDependency(from: registration, with: argument) as Dependency
-    }
 
     /// Resolve a dependency that was previously registered with `register` method
     ///
@@ -106,18 +86,44 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
 
         return try await getDependency(from: registration) as Dependency
     }
+
+    /// Resolve a dependency with variable arguments that was previously registered with `register` method
+    ///
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
+    /// If a dependency of the given type with the given arguments wasn't registered before this method call
+    /// the method throws ``ResolutionError.dependencyNotRegistered``
+    ///
+    /// - Parameters:
+    ///   - type: Type of the dependency that should be resolved
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (Important: only 1-3 arguments supported. Entering more arguments will cause error in runtime.)
+    public func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency {
+        let identifier = RegistrationIdentifier(type: type, argumentTypes: repeat (each Argument).self)
+
+        let registration = try getRegistration(with: identifier)
+
+        // Pack arguments into a tuple for storage - this matches how AsyncRegistration expects them
+        let argumentsTuple = (repeat each arguments)
+
+        return try await getDependency(from: registration, with: argumentsTuple) as Dependency
+    }
 }
 
 // MARK: Private methods
 private extension AsyncContainer {
     func getRegistration(with identifier: RegistrationIdentifier) throws -> AsyncRegistration {
-        guard let registration = registrations[identifier] else {
-            throw ResolutionError.dependencyNotRegistered(
-                message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
+        if let registration = registrations[identifier] {
+            return registration
+        }
+
+        if let matchingIdentifier = registrations.keys.first(where: { $0.typeIdentifier == identifier.typeIdentifier }) {
+            throw ResolutionError.unmatchingArgumentType(
+                message: "Registration of type \(matchingIdentifier.description) doesn't accept arguments of type \(identifier.description)"
             )
         }
 
-        return registration
+        throw ResolutionError.dependencyNotRegistered(
+            message: "Dependency of type \(identifier.description) wasn't registered in container \(self)"
+        )
     }
 
     func getDependency<Dependency: Sendable>(from registration: AsyncRegistration, with argument: (any Sendable)? = nil) async throws -> Dependency {

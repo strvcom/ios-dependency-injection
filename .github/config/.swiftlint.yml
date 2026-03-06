@@ -1,0 +1,8 @@
+child_config: ../../.swiftlint.yml
+
+disabled_rules:
+# E.g:
+#  - todo
+
+excluded:
+# In case you want to exclude folders for the swiftlint running in the CI

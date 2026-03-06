@@ -5,7 +5,7 @@
 [![Platforms](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)
 [![Swift](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)
 
-The lightweight library for dependency injection in Swift
+The lightweight library for dependency injection in Swift. For detailed API documentation, see the generated DocC documentation in Xcode (Product → Build Documentation) or browse the source code.
 
 ## Requirements
 
@@ -29,13 +29,17 @@ If you are new to the concept of Dependency Injection, you can check [Wikipedia]
 
 ## Usage
 
-A container is a key component of Dependency Injection. A container manages dependencies of your codebase. First, you register your dependencies within the container identified by either their types, or protocols or classes they conform to or inherit from respectively. Then, you use the container to get (i.e. resolve) instances of the registered dependencies. The class [Container](Sources/Container/Container.swift) represents the Dependency Injection container.
+A container is a key component of Dependency Injection. A container manages dependencies of your codebase. First, you register your dependencies within the container identified by either their types, or protocols or classes they conform to or inherit from respectively. Then, you use the container to get (i.e. resolve) instances of the registered dependencies.
+
+The library provides two container types:
+- **`Container`** - Synchronous container for traditional dependency injection
+- **`AsyncContainer`** - Asynchronous, actor-based container for Swift concurrency (thread-safe)
 
 Other terminology that might be useful:
 
 - **[Factory](Sources/Protocols/Registration/DependencyRegistering.swift)** - A function or closure instantiating a dependency
 - **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests, i.e. it is a singleton
-- **[Registration with an argument](Sources/Protocols/Registration/DependencyWithArgumentRegistering.swift)** - All dependencies must be initialized and their initializers often have parameters. Typically, the objects that are passed as the input parameters are resolved from the same container. But you might want to have a registered dependency which requires a parameter in its initializer that can't be registered in the container. In such case, you register the dependency with a variable argument and you specify a value of the argument when the dependency is being resolved; the value is passed as an input parameter to the dependency factory.
+- **Registration with arguments** - All dependencies must be initialized and their initializers often have parameters. Typically, the objects that are passed as the input parameters are resolved from the same container. But you might want to have a registered dependency which requires a parameter in its initializer that can't be registered in the container. In such case, you register the dependency with variable arguments (1, 2, or 3 arguments supported) and you specify values of the arguments when the dependency is being resolved; the values are passed as input parameters to the dependency factory.
 
 ### Registration
 
@@ -131,7 +135,7 @@ let dependency = container.resolve(type: Dependency.self)
 let dependency2: Dependency = container.resolve()
 ```
 
-Or a dependency registered with an argument like this:
+Or a dependency registered with arguments like this:
 ```swift
 let container = Container()
 container.register { container, number in
@@ -143,6 +147,15 @@ container.register { container, number in
 
 let dependency = container.resolve(type: Dependency.self, argument: 42)
 let dependency2: Dependency = container.resolve(argument: 42)
+```
+
+The library also supports 2 and 3 arguments:
+```swift
+container.register { container, userId, apiKey in
+  AuthenticatedService(userId: userId, apiKey: apiKey)
+}
+
+let service: AuthenticatedService = container.resolve(argument1: "user123", argument2: "key456")
 ```
 
 ### Property wrappers
@@ -183,7 +196,29 @@ class Object {
   }
 }
 ```
-In the example above the dependencies aren't resolved immediately when an instance of `Object` is initialized but only when the `doStuff` method is called for the first time. 
+In the example above the dependencies aren't resolved immediately when an instance of `Object` is initialized but only when the `doStuff` method is called for the first time.
+
+### AsyncContainer
+
+For Swift concurrency, use `AsyncContainer` which is an actor-based container providing thread-safe dependency injection:
+
+```swift
+let container = AsyncContainer.shared
+
+// Register dependencies (async)
+await container.register { resolver in
+  await MyService(
+    apiClient: await resolver.resolve(type: APIClient.self)
+  )
+}
+
+// Resolve dependencies (async)
+let service: MyService = await container.resolve()
+```
+
+All `AsyncContainer` operations are `async` and thread-safe. Use it when working with Swift concurrency or when thread safety is required.
+
+**Note:** Property wrappers (`@Injected` and `@LazyInjected`) work only with `Container`, not `AsyncContainer`.
 
 ## Roadmap
 
@@ -194,7 +229,7 @@ In the example above the dependencies aren't resolved immediately when an instan
 - [x] Convenient property wrapper
 - [x] Autoregister
 - [x] SPM package
-- [ ] Register an instance with multiple arguments
+- [x] Register an instance with multiple arguments
+- [x] AsyncContainer for Swift concurrency (thread-safe)
 - [ ] Container hierarchy
-- [ ] Thread-safety
 - [ ] Detect circular dependencies

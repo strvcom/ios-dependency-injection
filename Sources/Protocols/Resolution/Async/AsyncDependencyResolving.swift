@@ -15,16 +15,18 @@ public protocol AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    func tryResolve<T: Sendable>(type: T.Type) async throws -> T
+    func tryResolve<Dependency: Sendable>(type: Dependency.Type) async throws -> Dependency
 
-    /// Resolve a dependency with a variable argument that was previously registered within the container
+    /// Resolve a dependency with variable arguments that was previously registered within the container
     ///
-    /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, ``ResolutionError`` is thrown
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
+    /// If the container doesn't contain any registration for a dependency with the given type
+    /// or if arguments of different types than expected are passed, ``ResolutionError`` is thrown
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func tryResolve<T: Sendable, Argument: Sendable>(type: T.Type, argument: Argument) async throws -> T
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    func tryResolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async throws -> Dependency
 }
 
 public extension AsyncDependencyResolving {
@@ -34,36 +36,40 @@ public extension AsyncDependencyResolving {
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    func resolve<T: Sendable>(type: T.Type) async -> T {
+    func resolve<Dependency: Sendable>(type: Dependency.Type) async -> Dependency {
         try! await tryResolve(type: type)
     }
 
     /// Resolve a dependency that was previously registered within the container. A type of the required dependency is inferred from the return type
     ///
     /// If the container doesn't contain any registration for a dependency with the given type, a runtime error occurs
-    ///
-    func resolve<T: Sendable>() async -> T {
-        await resolve(type: T.self)
+    func resolve<Dependency: Sendable>() async -> Dependency {
+        await resolve(type: Dependency.self)
     }
 
-    /// Resolve a dependency with a variable argument that was previously registered within the container
+    /// Resolve a dependency with variable arguments that was previously registered within the container
     ///
-    /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
+    /// If the container doesn't contain any registration for a dependency with the given type
+    /// or if arguments of different types than expected are passed, a runtime error occurs
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
-    ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func resolve<T: Sendable, Argument: Sendable>(type: T.Type, argument: Argument) async -> T {
-        try! await tryResolve(type: type, argument: argument)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    func resolve<Dependency: Sendable, each Argument: Sendable>(type: Dependency.Type, arguments: repeat each Argument) async -> Dependency {
+        try! await tryResolve(type: type, arguments: repeat each arguments)
     }
 
-    /// Resolve a dependency with a variable argument that was previously registered within the container. The type of the required dependency is inferred from the return type
+    /// Resolve a dependency with variable arguments that was previously registered within the container.
+    /// The type of the required dependency is inferred from the return type.
     ///
-    /// If the container doesn't contain any registration for a dependency with the given type or if an argument of a different type than expected is passed, a runtime error occurs
+    /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
+    /// If the container doesn't contain any registration for a dependency with the given type
+    /// or if arguments of different types than expected are passed, a runtime error occurs
     ///
     /// - Parameters:
-    ///   - argument: Argument that will be passed as an input parameter to the factory method
-    func resolve<T: Sendable, Argument: Sendable>(argument: Argument) async -> T {
-        await resolve(type: T.self, argument: argument)
+    ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)
+    func resolve<Dependency: Sendable, each Argument: Sendable>(arguments: repeat each Argument) async -> Dependency {
+        await resolve(type: Dependency.self, arguments: repeat each arguments)
     }
 }
