@@ -128,7 +128,7 @@ private extension Container {
         )
     }
 
-    func getDependency<Dependency>(from registration: Registration, with argument: Any? = nil) throws -> Dependency {
+    func getDependency<Dependency>(from registration: Registration, with argument: Any? = ()) throws -> Dependency {
         switch registration.scope {
         case .shared:
             if let dependency = sharedInstances[registration.identifier] as? Dependency {
