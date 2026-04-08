@@ -65,6 +65,8 @@ struct AsyncContainerArgumentTests {
             switch resolutionError {
             case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
+                #expect(resolutionError.localizedDescription.contains("SimpleDependency"))
+                #expect(!resolutionError.localizedDescription.contains("ObjectIdentifier"))
             default:
                 Issue.record("Incorrect resolution error")
             }
@@ -94,6 +96,10 @@ struct AsyncContainerArgumentTests {
             switch resolutionError {
             case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
+                #expect(resolutionError.localizedDescription.contains("DependencyWithValueTypeParameter"))
+                #expect(resolutionError.localizedDescription.contains("StructureDependency"))
+                #expect(resolutionError.localizedDescription.contains("Swift.Int"))
+                #expect(!resolutionError.localizedDescription.contains("ObjectIdentifier"))
             default:
                 Issue.record("Incorrect resolution error")
             }
@@ -160,6 +166,7 @@ struct AsyncContainerArgumentTests {
             switch resolutionError {
             case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
+                #expect(!resolutionError.localizedDescription.contains("ObjectIdentifier"))
             default:
                 Issue.record("Incorrect resolution error")
             }
@@ -231,6 +238,37 @@ struct AsyncContainerArgumentTests {
             switch resolutionError {
             case .unmatchingArgumentType:
                 #expect(!resolutionError.localizedDescription.isEmpty)
+                #expect(!resolutionError.localizedDescription.contains("ObjectIdentifier"))
+            default:
+                Issue.record("Incorrect resolution error")
+            }
+        }
+    }
+
+    @Test("Argument matching uses compile-time type")
+    func argumentMatchingUsesCompileTimeType() async throws {
+        // Given
+        let subject = AsyncContainer()
+        await subject.register { (_: any AsyncDependencyResolving, dependency: any DIProtocol) -> DependencyWithProtocolParameter in
+            DependencyWithProtocolParameter(subDependency: dependency)
+        }
+        let concrete = StructureDependency(property1: "48")
+
+        // When
+        do {
+            _ = try await subject.tryResolve(type: DependencyWithProtocolParameter.self, arguments: concrete)
+            Issue.record("Expected to throw error")
+        } catch {
+            // Then
+            guard let resolutionError = error as? ResolutionError else {
+                Issue.record("Incorrect error type")
+                return
+            }
+
+            switch resolutionError {
+            case .unmatchingArgumentType:
+                #expect(resolutionError.localizedDescription.contains("DIProtocol"))
+                #expect(resolutionError.localizedDescription.contains("StructureDependency"))
             default:
                 Issue.record("Incorrect resolution error")
             }

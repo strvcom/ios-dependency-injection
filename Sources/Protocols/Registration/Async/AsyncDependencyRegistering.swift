@@ -29,6 +29,7 @@ public protocol AsyncDependencyRegistering {
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
     /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
     /// should always return a new instance for dependencies with arguments.
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are different registrations.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -53,6 +54,7 @@ public extension AsyncDependencyRegistering {
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same resolver (i.e. container),
     /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
     /// should always return a new instance for dependencies with arguments.
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are different registrations.
     ///
     /// - Parameters:
     ///   - factory: Closure that is called when the dependency is being resolved

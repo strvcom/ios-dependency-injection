@@ -25,6 +25,14 @@ final class DependencyWithValueTypeParameter: Sendable {
     }
 }
 
+final class DependencyWithProtocolParameter: Sendable {
+    let subDependency: any DIProtocol
+
+    init(subDependency: any DIProtocol) {
+        self.subDependency = subDependency
+    }
+}
+
 final class DependencyWithParameter: Sendable {
     let subDependency: SimpleDependency
 

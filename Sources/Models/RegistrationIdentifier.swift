@@ -16,6 +16,8 @@ enum RegistrationIdentifierConstant {
 struct RegistrationIdentifier: Sendable {
     let typeIdentifier: ObjectIdentifier
     let argumentIdentifiers: [ObjectIdentifier]
+    let typeDescription: String
+    let argumentTypeDescriptions: [String]
 
     /// Number of argument types (used to enforce maximum at resolve time)
     var argumentCount: Int { argumentIdentifiers.count }
@@ -28,17 +30,23 @@ struct RegistrationIdentifier: Sendable {
     ///   - argumentTypes: Variadic argument types using parameter packs. Only 1-3 arguments are supported. Entering more arguments will cause error in runtime.
     init<Dependency, each Argument>(type: Dependency.Type, argumentTypes _: repeat (each Argument).Type) {
         typeIdentifier = ObjectIdentifier(type)
+        typeDescription = String(reflecting: type)
 
         var identifiers: [ObjectIdentifier] = []
+        var descriptions: [String] = []
         repeat identifiers.append(ObjectIdentifier((each Argument).self))
+        repeat descriptions.append(String(reflecting: (each Argument).self))
 
         argumentIdentifiers = identifiers
+        argumentTypeDescriptions = descriptions
     }
 
     /// Convenience initializer for dependencies without arguments
     init<Dependency>(type: Dependency.Type) {
         typeIdentifier = ObjectIdentifier(type)
+        typeDescription = String(reflecting: type)
         argumentIdentifiers = []
+        argumentTypeDescriptions = []
     }
 }
 
@@ -48,14 +56,18 @@ extension RegistrationIdentifier: Hashable {}
 // MARK: Debug information
 extension RegistrationIdentifier: CustomStringConvertible {
     var description: String {
-        let argumentsDescription: String = if argumentIdentifiers.isEmpty {
-            "nil"
+        if argumentTypeDescriptions.isEmpty {
+            typeDescription
         } else {
-            argumentIdentifiers.map(\.debugDescription).joined(separator: ", ")
+            "\(typeDescription)(\(argumentTypeDescriptions.joined(separator: ", ")))"
         }
-        return """
-        Type: \(typeIdentifier.debugDescription)
-        Arguments: \(argumentsDescription)
-        """
     }
+}
+
+func runtimeTypeDescription(of value: Any?) -> String {
+    guard let value else {
+        return "nil"
+    }
+
+    return String(reflecting: Swift.type(of: value))
 }
