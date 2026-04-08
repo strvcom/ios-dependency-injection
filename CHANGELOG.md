@@ -11,6 +11,17 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+## [2.0.0]
+
+### Added
+
+- Support for Swift parameter packs
+- Tests converted to new Swift Testing framework
+
+### Fixed
+
+- Resolving of shared instances
+
 ## [1.0.5]
 
 ### Added

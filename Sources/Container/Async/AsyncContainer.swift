@@ -63,6 +63,8 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// The arguments are typically parameters in an initializer of the dependency that are not registered in the same container,
     /// therefore, they need to be passed in `resolve` call. This registration method doesn't have any scope parameter for a reason - the container
     /// should always return a new instance for dependencies with arguments.
+    /// Argument matching is based on compile-time types, so registering with `ConcreteType` and resolving with `any Protocol`
+    /// (or the other way around) creates different registrations.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency to register
@@ -95,6 +97,7 @@ public actor AsyncContainer: AsyncDependencyResolving, AsyncDependencyRegisterin
     /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If a dependency of the given type with the given arguments wasn't registered before this method call
     /// the method throws ``ResolutionError.dependencyNotRegistered``
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are treated as different argument lists.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved

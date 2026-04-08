@@ -22,6 +22,7 @@ public protocol AsyncDependencyResolving {
     /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If the container doesn't contain any registration for a dependency with the given type
     /// or if arguments of different types than expected are passed, ``ResolutionError`` is thrown
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are treated as different argument lists.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
@@ -52,6 +53,7 @@ public extension AsyncDependencyResolving {
     /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If the container doesn't contain any registration for a dependency with the given type
     /// or if arguments of different types than expected are passed, a runtime error occurs
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are treated as different argument lists.
     ///
     /// - Parameters:
     ///   - type: Type of the dependency that should be resolved
@@ -66,6 +68,7 @@ public extension AsyncDependencyResolving {
     /// Uses Swift parameter packs to support 1-3 arguments with a single method signature.
     /// If the container doesn't contain any registration for a dependency with the given type
     /// or if arguments of different types than expected are passed, a runtime error occurs
+    /// Argument matching is based on compile-time types, so `ConcreteType` and `any Protocol` are treated as different argument lists.
     ///
     /// - Parameters:
     ///   - arguments: Arguments that will be passed as input parameters to the factory method (1-3 arguments supported)

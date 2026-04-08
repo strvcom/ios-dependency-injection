@@ -86,6 +86,20 @@ container.register { container, number in
 }
 ```
 
+Argument matching is based on the compile-time type of each argument. That means `ConcreteType` and `any SomeProtocol` are different registrations even if the concrete value conforms to the protocol:
+```swift
+let container = Container()
+container.register { _, dependency: any DIProtocol in
+  DependencyWithProtocolParameter(subDependency: dependency)
+}
+
+let concrete = StructureDependency(property1: "42")
+let existential: any DIProtocol = concrete
+
+let service: DependencyWithProtocolParameter = container.resolve(arguments: existential) // works
+// container.resolve(arguments: concrete) throws because StructureDependency != any DIProtocol
+```
+
 ### Autoregistration
 
 Let's have look at an example from above:
