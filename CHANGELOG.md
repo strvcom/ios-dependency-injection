@@ -11,6 +11,16 @@ __Sections__
  - `Removed` for deprecated features removed in this release.
  - `Fixed` for any bug fixes.
 
+## [2.0.1]
+
+### Added
+
+- **Readable error messages** — `ResolutionError` messages now display human-readable Swift type names instead of raw `ObjectIdentifier` debug descriptions, making it easier to diagnose missing or mismatched registrations.
+
+### Fixed
+
+- **Argument type matching clarified** — Documented that argument matching is based on compile-time types, so registering with `ConcreteType` and resolving with `any Protocol` (or vice versa) creates distinct registrations.
+
 ## [2.0.0]
 
 ### Added
