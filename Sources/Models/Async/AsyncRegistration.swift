@@ -33,7 +33,7 @@ struct AsyncRegistration: Sendable {
         asyncRegistrationFactory = { resolver, arg in
             guard let arguments = arg as? (repeat each Argument) else {
                 throw ResolutionError.unmatchingArgumentType(
-                    message: "Registration of type \(registrationIdentifier.description) doesn't accept arguments of type \(Swift.type(of: arg))"
+                    message: "Registration of type \(registrationIdentifier.description) doesn't accept arguments of type \(runtimeTypeDescription(of: arg))"
                 )
             }
 

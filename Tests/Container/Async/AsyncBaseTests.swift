@@ -77,6 +77,8 @@ struct AsyncBaseTests {
             switch resolutionError {
             case .dependencyNotRegistered:
                 #expect(!resolutionError.localizedDescription.isEmpty)
+                #expect(resolutionError.localizedDescription.contains("SimpleDependency"))
+                #expect(!resolutionError.localizedDescription.contains("ObjectIdentifier"))
             default:
                 Issue.record("Incorrect resolution error")
             }
