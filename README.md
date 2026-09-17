@@ -9,7 +9,7 @@ The lightweight library for dependency injection in Swift. For detailed API docu
 
 ## Requirements
 
-- iOS/iPadOS 13.0+, macOS 10.15+, watchOS 6.0+, tvOS 13.0+
+- iOS/iPadOS 15.0+, macOS 12.0+, watchOS 8.0+, tvOS 15.0+
 - Xcode 11+
 - Swift 5.3+
 
