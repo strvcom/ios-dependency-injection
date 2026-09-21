@@ -3,15 +3,15 @@
 [![build](https://github.com/strvcom/ios-dependency-injection/actions/workflows/integrations.yml/badge.svg)](https://github.com/strvcom/ios-dependency-injection/actions/workflows/integrations.yml/badge.svg)
 [![Coverage](https://img.shields.io/badge/Coverage-100%25-darkgreen?style=flat-square)](https://img.shields.io/badge/Coverage-100%25-darkgreen?style=flat-square)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)](https://img.shields.io/badge/Platforms-iOS_iPadOS_macOS_tvOS_watchOS-lightgrey?style=flat-square)
-[![Swift](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)](https://img.shields.io/badge/Swift-5.3_5.4_5.5-blue?style=flat-square)
+[![Swift](https://img.shields.io/badge/Swift-5.9+-blue?style=flat-square)](https://img.shields.io/badge/Swift-5.9+-blue?style=flat-square)
 
 The lightweight library for dependency injection in Swift. For detailed API documentation, see the generated DocC documentation in Xcode (Product → Build Documentation) or browse the source code.
 
 ## Requirements
 
 - iOS/iPadOS 15.0+, macOS 12.0+, watchOS 8.0+, tvOS 15.0+
-- Xcode 11+
-- Swift 5.3+
+- Xcode 15+
+- Swift 5.9+
 
 ## Installation
 
@@ -19,7 +19,7 @@ You can install the library with [Swift Package Manager](https://swift.org/packa
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/strvcom/ios-dependency-injection.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/strvcom/ios-dependency-injection.git", .upToNextMajor(from: "2.0.0"))
 ]
 ```
 
@@ -32,12 +32,14 @@ If you are new to the concept of Dependency Injection, you can check [Wikipedia]
 A container is a key component of Dependency Injection. A container manages dependencies of your codebase. First, you register your dependencies within the container identified by either their types, or protocols or classes they conform to or inherit from respectively. Then, you use the container to get (i.e. resolve) instances of the registered dependencies.
 
 The library provides two container types:
-- **`Container`** - Synchronous container for traditional dependency injection
+- **`Container`** - Synchronous container for traditional dependency injection. It is not thread-safe, so use it from a single thread
 - **`AsyncContainer`** - Asynchronous, actor-based container for Swift concurrency (thread-safe)
+
+`AsyncContainer` is the one to prefer in new code, especially under the Swift 6 language mode: being an actor, it is genuinely data-race safe, and it requires `Sendable` dependencies and arguments. `Container` is declared `@unchecked Sendable` over dictionaries it mutates without a lock, which silences the concurrency checker instead of proving safety. Use `Container` when you need `@Injected`/`@LazyInjected` or `autoregister` — neither exists on the async side — and confine its use to a single isolation domain.
 
 Other terminology that might be useful:
 
-- **[Factory](Sources/Protocols/Registration/DependencyRegistering.swift)** - A function or closure instantiating a dependency
+- **[Factory](Sources/Protocols/Registration/Sync/DependencyRegistering.swift)** - A function or closure instantiating a dependency
 - **[Scope](Sources/Models/DependencyScope.swift)** - A scope of a registered dependency can be either `new` or `shared`. When a dependency is registered with `new` scope, a new instance of the dependency is created each time the dependency is resolved from the container. When a dependency is registered with `shared` scope, a new instance of the dependency is created only the first time it is resolved from the container. The created instance is cached and it is returned for all upcoming resolution requests, i.e. it is a singleton
 - **Registration with arguments** - All dependencies must be initialized and their initializers often have parameters. Typically, the objects that are passed as the input parameters are resolved from the same container. But you might want to have a registered dependency which requires a parameter in its initializer that can't be registered in the container. In such case, you register the dependency with variable arguments (1, 2, or 3 arguments supported) and you specify values of the arguments when the dependency is being resolved; the values are passed as input parameters to the dependency factory.
 
@@ -54,15 +56,17 @@ container.register(type: Dependency.self, in: .shared) { container in
   )
 }
 ```
-We can also use the fact that the type is by default inferred from the factory return type and `shared` is the default scope so we can simplify the above snippet into this:
+We can also use the fact that the type is by default inferred from the factory return type so we can simplify the above snippet into this:
 ```swift
 let container = Container()
-container.register { container in
+container.register(in: .shared) { container in
   Dependency(
     manager: container.resolve(type: Manager.self)
   )
 }
 ```
+The scope, on the other hand, always has to be specified. If we leave it out, the dependency is registered with the `new` scope.
+
 Moreover, if we want to register a shared dependency that has no sub-dependencies from the container we can use an overloaded registration method with an autoclosure like this:
 ```swift
 let container = Container()
@@ -89,7 +93,7 @@ container.register { container, number in
 Argument matching is based on the compile-time type of each argument. That means `ConcreteType` and `any SomeProtocol` are different registrations even if the concrete value conforms to the protocol:
 ```swift
 let container = Container()
-container.register { _, dependency: any DIProtocol in
+container.register { _, dependency -> DependencyWithProtocolParameter in
   DependencyWithProtocolParameter(subDependency: dependency)
 }
 
@@ -105,7 +109,7 @@ let service: DependencyWithProtocolParameter = container.resolve(arguments: exis
 Let's have look at an example from above:
 ```swift
 let container = Container()
-container.register { container in
+container.register(in: .shared) { container in
   Dependency(
     manager: container.resolve(type: Manager.self)
   )
@@ -139,7 +143,7 @@ Dependency resolution is very straightforward. You can use either the container'
 You can resolve a registered dependency like this:
 ```swift
 let container = Container()
-container.register { container in
+container.register(in: .shared) { container in
   Dependency(
     manager: container.resolve(type: Manager.self)
   )
@@ -159,18 +163,20 @@ container.register { container, number in
   )
 }
 
-let dependency = container.resolve(type: Dependency.self, argument: 42)
-let dependency2: Dependency = container.resolve(argument: 42)
+let dependency = container.resolve(type: Dependency.self, arguments: 42)
+let dependency2: Dependency = container.resolve(arguments: 42)
 ```
 
 The library also supports 2 and 3 arguments:
 ```swift
-container.register { container, userId, apiKey in
+container.register { _, userId, apiKey in
   AuthenticatedService(userId: userId, apiKey: apiKey)
 }
 
-let service: AuthenticatedService = container.resolve(argument1: "user123", argument2: "key456")
+let service: AuthenticatedService = container.resolve(arguments: "user123", "key456")
 ```
+
+If we try to resolve a dependency with more than 3 arguments, the container throws `ResolutionError.tooManyArguments`.
 
 ### Property wrappers
 
@@ -220,7 +226,7 @@ For Swift concurrency, use `AsyncContainer` which is an actor-based container pr
 let container = AsyncContainer.shared
 
 // Register dependencies (async)
-await container.register { resolver in
+await container.register(in: .shared) { resolver in
   await MyService(
     apiClient: await resolver.resolve(type: APIClient.self)
   )
@@ -230,7 +236,7 @@ await container.register { resolver in
 let service: MyService = await container.resolve()
 ```
 
-All `AsyncContainer` operations are `async` and thread-safe. Use it when working with Swift concurrency or when thread safety is required.
+All `AsyncContainer` operations are `async` and thread-safe. Dependencies registered in `AsyncContainer` have to be `Sendable`, and so does every argument. Prefer it for new code under Swift 6; the trade-off is that `autoregister` and the property wrappers are not available, so factories are written out by hand.
 
 **Note:** Property wrappers (`@Injected` and `@LazyInjected`) work only with `Container`, not `AsyncContainer`.
 
