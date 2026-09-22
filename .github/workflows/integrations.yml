@@ -13,6 +13,10 @@ on:
   pull_request:
       types: [opened, edited, reopened, synchronize]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   integrations:
     # runs-on: macos-latest # use this for repos outside of the STRV Github org
@@ -20,15 +24,12 @@ jobs:
     timeout-minutes: 10
     steps:
 
-      # cancel in-progress integrations - not yet supported by Github Actions out of the box
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.4.1
-        with:
-          access_token: ${{ github.token }}
-
       # checkout the project repository
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
       # Install Ruby and Danger via Mise
       - name: Install Mise
