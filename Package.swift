@@ -22,6 +22,8 @@ let package = Package(
             name: "DependencyInjection",
             dependencies: [],
             path: "Sources",
+            // Agent instructions live alongside the code; they are documentation, not a resource.
+            exclude: ["AGENTS.md"],
             swiftSettings: [
                 .define("APPLICATION_EXTENSION_API_ONLY"),
                 .enableUpcomingFeature("StrictConcurrency"),
@@ -30,7 +32,8 @@ let package = Package(
         .testTarget(
             name: "DependencyInjectionTests",
             dependencies: ["DependencyInjection"],
-            path: "Tests"
+            path: "Tests",
+            exclude: ["AGENTS.md"]
         ),
     ]
 )
